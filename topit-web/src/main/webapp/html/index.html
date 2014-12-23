@@ -1,0 +1,80 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>整体布局</title>
+<link rel="stylesheet" type="text/css" href="../css/easyui.css" />
+<link rel="stylesheet" type="text/css" href="../css/icon.css" />
+<link rel="stylesheet" type="text/css" href="../css/ManageStyle.css" />
+<link rel="stylesheet" type="text/css" href="../css/MyCenter.css" />
+<link rel="stylesheet" type="text/css" href="../css/jquery.marquee.css" />
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+<script type="text/javascript" src="../js/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../js/myjs.js"></script>
+<style type="text/css">
+.footer {
+	width: 100%;
+	text-align: center;
+	line-height: 25px;
+}
+</style>
+</head>
+
+<body class="easyui-layout">
+	<div region="north" border="true"
+		style="overflow: hidden; height: 60px; resize: none;">
+		<iframe align="center" width="100%" height="130px" src="header.html"
+			frameborder="no" border="0" marginwidth="0" marginheight="0"
+			scrolling="no"></iframe>
+	</div>
+	<div region="south" border="true"
+		style="overflow: hidden; height: 30px; resize: none;">
+		<iframe align="center" width="100%" height="130px" src="footer.html"
+			frameborder="no" border="0" marginwidth="0" marginheight="0"
+			scrolling="no"></iframe>
+	</div>
+	<div region="west" title="导航菜单" style="width: 200px; resize: none;">
+		<div id="aa" class="easyui-accordion"
+			style="position: absolute; top: 27px; left: 0px; right: 0px; bottom: 0px">
+			<div title="系统维护" data-options="iconCls:'icon-',collapsed:false"
+				style="">
+				<ul style="list-style-type: none;">
+					<li><a href="#" class="easyui-linkbutton" style="width: 90px"
+						data-options="plain:true,iconCls:'icon-large-picture',size:'large',iconAlign:'top'"
+						onclick="openModule(2, '模块维护','moduel.html')">模块维护</a></li>
+					<li><a href="#" class="easyui-linkbutton" style="width: 90px"
+						data-options="plain:true,iconCls:'icon-large-clipart',size:'large',iconAlign:'top'">测试</a>
+					</li>
+					<li><a href="#" class="easyui-linkbutton" style="width: 90px"
+						data-options="plain:true,iconCls:'icon-large-shapes',size:'large',iconAlign:'top'">测试</a>
+					</li>
+					<li><a href="#" class="easyui-linkbutton" style="width: 90px"
+						data-options="plain:true,iconCls:'icon-large-smartart',size:'large',iconAlign:'top'">测试</a>
+					</li>
+					<li><a href="#" class="easyui-linkbutton" style="width: 90px"
+						data-options="plain:true,iconCls:'icon-large-chart',size:'large',iconAlign:'top'">测试</a>
+					</li>
+					<li><a href="#" class="easyui-linkbutton" style="width: 90px"
+						data-options="plain:true,iconCls:'icon-large-clipart',size:'large',iconAlign:'top'">测试</a>
+					</li>
+					<li><a href="#" class="easyui-linkbutton" style="width: 90px"
+						data-options="plain:true,iconCls:'icon-large-smartart',size:'large',iconAlign:'top'">测试</a>
+					</li>
+				</ul>
+			</div>
+
+
+			<div title="用户管理" iconcls="icon-reload" style="padding: 10px;">
+				content1</div>
+			<div title="权限管理" iconcls="icon-reload" style="padding: 10px;">
+				content3</div>
+		</div>
+	</div>
+
+	<div id="mainPanle" title="主面板" region="center"
+		style="overflow: hidden; resize: none;">
+		<div id="mainTab" class="easyui-tabs"
+			style="width: 100%; height: 960px;"></div>
+	</div>
+</body>
+</html>

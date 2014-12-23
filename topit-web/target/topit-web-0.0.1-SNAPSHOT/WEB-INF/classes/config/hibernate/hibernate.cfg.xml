@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+                                         "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+ <session-factory>
+  <mapping class="com.topit.frame.core.entity.data.SysModule"/>
+  <mapping class="com.topit.frame.core.entity.data.SysSequence"/>
+  <mapping class="com.topit.frame.core.entity.data.SysOption"/>
+  <mapping class="com.topit.frame.core.entity.data.SysUserErrorLoginLog"/>
+  <mapping class="com.topit.frame.core.entity.data.SysUserGroup"/>
+  <mapping class="com.topit.frame.core.entity.data.ComObjectSortCategory"/>
+  <mapping class="com.topit.frame.core.entity.data.SysUser"/>
+  <mapping class="com.topit.frame.core.entity.data.SysModuleAction"/>
+  <mapping class="com.topit.frame.core.entity.data.SysUserGroupModuleActionRight"/>
+  <mapping class="com.topit.frame.core.entity.data.SysUserUserGroup"/>
+  <mapping class="com.topit.frame.core.entity.data.SysMenuItem"/>
+  <mapping class="com.topit.frame.core.entity.data.ComObjectSortType"/>
+  <mapping class="com.topit.frame.core.entity.data.SysUserGroupModuleRight"/>
+  </session-factory>
+</hibernate-configuration>

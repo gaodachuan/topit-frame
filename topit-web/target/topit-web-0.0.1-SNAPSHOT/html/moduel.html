@@ -1,0 +1,153 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>模块添加</title>
+<link rel="stylesheet" type="text/css" href="../css/easyui.css" />
+<link rel="stylesheet" type="text/css" href="../css/icon.css" />
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+<script type="text/javascript" src="../js/jquery.easyui.min.js"></script>
+<script type="text/javascript">
+     $(document).ready(function(e) {
+         $("#dialog").window('close');
+    });
+     function create()
+	 {    
+	 $('#dialog').window({
+      modal:true
+     });   
+	   $("#dialog").window('open');
+	 }
+</script>
+</head>
+
+<body>
+	<div id="dataContainer"
+		data-options="region:'center',title:'',iconCls:'icon-ok',border:false"
+		style="margin-left: auto; margin-right: auto">
+		<div style="padding: 5px;">
+			<div class="easyui-panel" style="padding: 5px; margin-bottom: 5px;">
+				<label style="padding-left: 6px;">模块：</label> <input id=" " name=" "
+					class="textbox" style="width: 130px"> <label
+					style="padding-left: 6px;">分类：</label> <select id=" " name=" "
+					class="easyui-combotree" value="2"
+					data-options="url:'category.json',required:true"
+					style="width: 130px;"></select> <a href="#"
+					class="easyui-linkbutton" data-options="iconcls:'icon-search'"
+					onclick="doSearch(-1)" style="width: 90px;">搜索</a>
+			</div>
+			<div id="toolbar">
+				<a href="#" class="easyui-linkbutton"
+					data-options="plain:true,iconCls:'icon-add'" onclick="create()">新增</a>
+				<a href="#" class="easyui-linkbutton"
+					data-options="plain:true,iconCls:'icon-delete',disabled:true">删除</a>
+			</div>
+			<div>
+				<ul class="tabs filter-tabs"
+					style="height: 26px; border: none; width: 100%;">
+
+					<li id="filter-custom"><a class="tabs-inner"
+						style="height: 25px; line-height: 25px;" href="#"
+						onclick="doSearch(-1)"> <span class="tabs-title">自助搜索</span> <span
+							class="tabs-icon"></span>
+					</a></li>
+				</ul>
+			</div>
+			<div>
+				<table id="dg" title="" class="easyui-datagrid"
+					style="height: 530px;"
+					data-options="url:'',toolbar:'#toolbar',pagination:true,pageList:[10,17,30,50,100],pageSize:17,rownumbers:true,fit:false,fitColumns:true,singleSelect:true">
+					<thead>
+						<tr>
+							<th data-options="field:'f1',width:60">field1</th>
+							<th data-options="field:'f2',width:60">field2</th>
+							<th data-options="field:'f3',width:60">field3</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>d1</td>
+							<td>d2</td>
+							<td>d3</td>
+						</tr>
+						<tr>
+							<td>d11</td>
+							<td>d21</td>
+							<td>d31</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	<!--添加弹出框 -->
+	<div id="dialog" class="easyui-window" title="添加模块"
+		style="width: 750px; height: 450;"
+		data-options="iconCls:'icon-save',inline:'false'">
+		<div class="dv-form-container" style="width: 690px;">
+			<div class="easyui-tabs" data-options="plain:true"
+				style="width: 600px; margin-left: 50px; margin-top: 20px">
+				<div title="基本信息" style="padding: 10px">
+					<div class="dv-form-row">
+						<div class="dv-form-item" style="width: 320px;">
+							<label for="name"> 名称：</label> <input id="name" name="name"
+								value="" class="easyui-validatebox textbox"
+								style="width: 200px;" data-options="required:true"> <span></span>
+						</div>
+						<br />
+						<div class="dv-form-item" style="width: 320px;">
+							<label for="category">分类：</label> <select id="category"
+								name="category" class="easyui-combobox"
+								data-options="editable:false,panelheight:'auto',valueField:'Lid',
+                       textField:'Name',url:'',method:'post',required:true"
+								style="width: 200px">
+							</select>
+						</div>
+						<br />
+						<div class="dv-form-row">
+							<div class="dv-form-item">
+								<label for="url">路径：</label> <input name="url" value=""
+									class="easyui-validatebox textbox" style="width: 516px;"
+									data-options="required:true"> <span></span>
+							</div>
+
+						</div>
+						<br />
+						<div class="dv-form-row">
+							<div class="dv-form-item">
+								<label for="className">类名：</label> <input name="className"
+									value="" class="easyui-validatebox textbox"
+									style="width: 516px;"> <span></span>
+							</div>
+						</div>
+						<br />
+						<div class="dv-form-row">
+							<div class="dv-form-item">
+								<label for="interface">接口：</label> <input name="interface"
+									value="" class="easyui-validatebox textbox"
+									style="width: 516px;"> <span></span>
+							</div>
+						</div>
+						<br />
+						<div class="dv-form-row">
+							<div class="dv-form-item">
+								<label for="desc">说明：</label>
+								<textarea name="desc" rows="4"
+									class="easyui-validatebox textbox"
+									style="width: 516px; resize: none;"></textarea>
+								<span></span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div data-options="region:'south',border:false"
+				style="text-align: center; padding: 5px 0; margin-top: 15px">
+				<a class="easyui-linkbutton" data-options="iconCls:'icon-ok'"
+					href="javascript:void(0)" onclick="javascript:alert('ok')">Ok</a> <a
+					class="easyui-linkbutton" data-options="iconCls:'icon-cancel'"
+					href="javascript:void(0)" onclick="javascript:alert('cancel')">Cancel</a>
+			</div>
+		</div>
+</body>
+</html>
