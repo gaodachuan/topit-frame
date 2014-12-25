@@ -189,6 +189,8 @@ public class SysUserDAOImpl extends BaseDAO<SysUser> implements ISysUserDAO{
                    	user.setLastLoginTime(rs.getTimestamp("LastLoginTime"));
                    	user.setVersion(rs.getInt("Version"));
                    	user.setGroupName(rs.getString("GroupName"));
+                   	user.setAllowLoginWeekDay(rs.getString("AllowLoginWeekDay"));
+                   	user.setVersion(rs.getInt("version"));
                    	list.add(user);
 				}
 			

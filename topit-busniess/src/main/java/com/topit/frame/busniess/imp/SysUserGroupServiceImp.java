@@ -160,15 +160,15 @@ public class SysUserGroupServiceImp implements ISysUserGroupService {
 	/**   
 	 * <p>Title: getListForPageBySql</p>   
 	 * <p>Description: 使用jdbctemplate创建多表关联的分页查询</p>   
-	 * @param firstResult
+	 * @param pageNow
 	 * @param pageSize
 	 * @return
 	 * @throws Exception   
 	 * @see com.topit.frame.busniess.base.ISysUserGroupService#getListForPageBySql(java.lang.String, int, int)   
 	 */
 	 
-	public List<Map<String, Object>> getListForPageBySql(int firstResult, int pageSize) throws Exception {
-		return sysUserGroupDAOImp.getListForPageBySql(firstResult, pageSize);
+	public List<Map<String, Object>> getListForPageBySql(int pageNow, int pageSize) throws Exception {
+		return sysUserGroupDAOImp.getListForPageBySql(pageNow, pageSize);
 	}
 	
 	/**   

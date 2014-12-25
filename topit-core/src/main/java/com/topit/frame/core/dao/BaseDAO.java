@@ -332,10 +332,11 @@ public class BaseDAO<T> extends HqlUtil implements IBaseDAO<T> {
 			throws Exception {
 		Query query = this.getSessionFactory().getCurrentSession()
 				.createQuery(hql);
-
-		query.setFirstResult(firstResult);
-		query.setMaxResults(pageSize);
-
+        if(firstResult!=0 && pageSize!=0)
+        {
+        	query.setFirstResult(firstResult);
+    		query.setMaxResults(pageSize);
+        }
 		List<T> list = query.list();
 		return list;
 	}

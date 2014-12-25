@@ -110,11 +110,18 @@ public interface ISysMenuService {
 	public boolean deleteMenuItem(BigInteger menuItemId)
 			throws Exception;
 	/**
-	 * 
-	 * @Title: getMenusByUserId   
-	 * @Description: 根据用户Id加载用户特有菜单 
+	 * 根据用户Id加载用户特有菜单 
+	 * @param id 用户Id
+	 * @param menuId 菜单号
 	 * @return
 	 * @throws Exception
 	 */
-	public  List<MenuPanle> getMenusByUserId(Serializable id) throws Exception;
+	public  List<MenuPanle> getMenusByUserId(Serializable id,int menuId) throws Exception;
+	/**
+	 * 修改菜单图标
+	 * @param parseInt
+	 * @param path
+	 * @throws Exception 
+	 */
+	public void setMenuIcon(int id, String path) throws Exception;
 }

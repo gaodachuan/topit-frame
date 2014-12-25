@@ -11,15 +11,22 @@
 
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.hibernate.criterion.DetachedCriteria;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -27,22 +34,32 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.topit.frame.busniess.base.ISysUserService;
 import com.topit.frame.busniess.imp.SysUserServiceImp;
+import com.topit.frame.busniess.imp.SysUserUserGroupServiceImp;
 import com.topit.frame.common.util.MD5Encrypt;
 import com.topit.frame.common.view.servlet.ResultObject;
 import com.topit.frame.common.view.servlet.ResultPageObject;
 import com.topit.frame.core.entity.dao.base.IIdGenerator;
+import com.topit.frame.core.entity.dao.base.ISysUserUserGroupDAO;
 import com.topit.frame.core.entity.data.SysModule;
 import com.topit.frame.core.entity.data.SysUser;
 import com.topit.frame.core.entity.data.SysUserGroup;
+import com.topit.frame.core.entity.data.SysUserUserGroup;
 import com.topit.frame.core.util.DataDicDAO;
  /** 
  * @ClassName: SysUserController 
- * @Description: ϵͳ�û�������
+ * @Description: 系统用户控制器
  * @author doc.zhou
  * @date 2014��11��27�� ����11:46:45 
  *  
- */
- @Controller
+*/ 
+/** 
+* @ClassName: SysUserController 
+* @Description: TODO(这里用一句话描述这个类的作用) 
+* @author ivan.zhang 
+* @date 2014年12月22日 下午6:29:32 
+*  
+*/ 
+@Controller
  @RequestMapping("/users")
 public class SysUserController {
 	@Resource(name="sysUserServiceImp")
@@ -52,6 +69,8 @@ public class SysUserController {
 	//id生成策略
 	@Resource(name="idGenerator")
 	IIdGenerator idGenerator;
+    @Resource(name="sysUserUserGroupServiceImp")
+    SysUserUserGroupServiceImp sysUserUserGroupServiceImp;
 	@RequestMapping("/sysuser")
 	public String load(){
 		return "/users/sysuser";
@@ -134,38 +153,31 @@ public class SysUserController {
 	@SuppressWarnings("unused")
 	@RequestMapping(value = "/sysuser.do", params = "method=save")
 	@ResponseBody
-	public ResultObject save(HttpServletRequest req, HttpServletResponse reps,
-			ModelMap map) throws UnsupportedEncodingException {
-		
-		req.setCharacterEncoding("utf-8");
-		reps.setContentType("text/html;charset=utf-8");
-		String loginName = req.getParameter("loginName");
-		System.out.println("loginName"+loginName);
-		String password = req.getParameter("password");
-		String realName=req.getParameter("realName");
-		String remark=req.getParameter("remark");
-		//String quni=req.getParameter("qunimei");
-		//System.out.println("quni"+quni);
-		String AllowLoginWeekDay[]=req.getParameterValues("AllowLoginWeekDay");
-		for(String str : AllowLoginWeekDay){
-			System.out.println("ji"+str);
-		}
-		System.out.println("wodenagequ"+AllowLoginWeekDay.length);
-		SysUser user=saveOrUpdateUser(null,password, loginName, realName, remark);
-        ResultObject result = new ResultObject();
+	@Transactional
+	public ResultObject save(HttpServletRequest request, HttpServletResponse response,
+			ModelMap map) {
+		Map maps=null;
+		ResultObject result = new ResultObject();
 		try {
-		  if(sysUserServiceImpl.add(user)){
-			  result.setErrorCode(0);
-			  result.setErrorDetail("添加成功！");  
-		  }else{
-			  result.setErrorCode(1);
-		      result.setErrorDetail("添加失败！");
+			maps = getFrontSource(request,response);
+			SysUser user=saveOrUpdateUser(maps);
+		  if(saveSysUserUserGroupId( maps, user , request,  response)){
+			  if(sysUserServiceImpl.add(user)){
+				  result.setErrorCode(0);
+				  result.setErrorDetail("添加成功！");  
+			  }  
 		  }
-		} catch (Exception e) {
+			else{
+				  result.setErrorCode(1);
+			      result.setErrorDetail("添加失败！");
+			  }
+		} catch (Exception e1) {
 			result.setErrorCode(1);
 			result.setErrorDetail("添加失败！");
-			e.printStackTrace();
+			e1.printStackTrace();			 
 		}
+		
+     
 		return result;
 	}
 	/**   
@@ -179,13 +191,19 @@ public class SysUserController {
 	@SuppressWarnings("unused")
 	@RequestMapping(value = "/sysuser.do", params = "method=delete")
 	@ResponseBody
+	@Transactional
 	public ResultObject delete(HttpServletRequest request, HttpServletResponse response){
 		ResultObject result=null;
 		try {
 			String[]ids=request.getParameter("ids").split(",");
 			 result=new ResultObject();
 			for(int i=0;i<ids.length;i++){
+				int id=Integer.parseInt(ids[i]);
 				BigInteger element=new BigInteger(ids[i]);
+			List<SysUserUserGroup>list =sysUserUserGroupServiceImp.findByUserId(id);
+		     for(SysUserUserGroup entity:list){
+		    	 sysUserUserGroupServiceImp.deleteSysUserUserGroup(entity);
+		     }
 				sysUserServiceImpl.deleteById(element);
 				
 			}
@@ -210,20 +228,21 @@ public class SysUserController {
 	@SuppressWarnings("unused")
 	@RequestMapping(value = "/sysuser.do", params = "method=update")
 	@ResponseBody
+	@Transactional
     public ResultObject update(HttpServletRequest request, HttpServletResponse response){
-		String id=request.getParameter("id");
-		String loginName = request.getParameter("loginName");
-		String password = request.getParameter("password");
-		String realName=request.getParameter("realName");
-		String remark=request.getParameter("remark");
-		SysUser user=saveOrUpdateUser(id, password, loginName, realName, remark);
-        ResultObject result = new ResultObject();
-		
+		Map maps = null;
+		 ResultObject result=null;
 		try {
-		  if(sysUserServiceImpl.updateSysUser(user)){
+			result=new ResultObject();
+			maps = getFrontSource(request,response);
+			SysUser user=saveOrUpdateUser(maps);
+			//SysUser sysUser=user;
+	     if(updateSysUserGroupId( maps, user , request,  response)){
+		 if(sysUserServiceImpl.updateSysUser(user)){
 			  result.setErrorCode(0);
 			  result.setErrorDetail("修改成功！");  
-		  }else{
+		  } 
+	      }else{
 			  result.setErrorCode(1);
 		      result.setErrorDetail("修改失败！");
 		  }
@@ -240,26 +259,43 @@ public class SysUserController {
 	 * @return        
 	 */
 	 
-	private SysUser saveOrUpdateUser(String id,String password,String loginName,String realName,String remark){
-		SysUser user=new SysUser();
-		BigInteger element=null;
-		if(id==null||id.equals("")){
-			element=idGenerator.getNextId("SysUser.id");
-		}else{
-			element = new BigInteger(id);
+	private SysUser saveOrUpdateUser(Map map){
+		String id=(String)map.get("id");
+		System.out.println("id为"+id);
+		String loginName =(String)map.get("loginName");
+		String password = (String)map.get("password");
+		String realName=(String)map.get("realName");
+		String remark=(String)map.get("remark");
+		String AllowLoginWeekDay[]=(String[])map.get("AllowLoginWeekDay");
+		Date allowLoginTime1=(Date)map.get("allowLoginTime1");
+		Date allowLoginTime2=(Date)map.get("allowLoginTime2");
+		String ver=(String) map.get("version");
+		System.out.println("ver"+ver);
+		Integer version=null;
+		if(ver!=null&&!ver.equals("")){
+		 version=Integer.parseInt(ver);
 		}
-	    user.setId(element);
-	    if(password.length()!=32){
-		password=MD5Encrypt.encipher(password);
-	    }
-		user.setPassWord(password);
-		user.setLoginName(loginName);
+		SysUser user=new SysUser();
+		//设置用户Id
+		setUserId(id,user);
+		//设置用户密码
+		 setUserPassword(password, user);
+	    user.setLoginName(loginName);
         user.setRealName(realName);
-        if(remark!=null&&!remark.equals("")){
-        System.out.println("update:"+remark);
-        user.setRemark(remark);
+        //允许登陆的星期
+        setAllowLoginWeekDay(AllowLoginWeekDay, user);
+        //设置允许的开始时间
+        user.setAllowLoginTime1(allowLoginTime1);
+        //设置允许的结束时间
+        user.setAllowLoginTime2(allowLoginTime2);
+        //设置备注
+        setRemark(remark, user);
+        if(version!=null){
+        	user.setVersion(version);
         }
+        else{
         user.setVersion(21);
+        }
         return user;
 	}
 	/**   
@@ -281,21 +317,141 @@ public class SysUserController {
 		return list;
 	}
 	/**   
+	 * @Title: setUserId   
+	 * @Description:设置用户Id  
+	 * @param id
+	 * @param user        
+	 */ 
+	private void setUserId(String id,SysUser user){
+		BigInteger element=null;
+		if(id==null||id.equals("")){
+			element=idGenerator.getNextId("SysUser.id");
+		}else{
+			element = new BigInteger(id);
+		}
+	    user.setId(element);
+	} 
+	/**   
+	 * @Title: setUserPassword   
+	 * @Description:设置用户密码   
+	 * @param password
+	 * @param user        
+	 */ 
+	private void setUserPassword(String password,SysUser user){
+		 if(password.length()!=32){
+				password=MD5Encrypt.encipher(password);
+			    }
+				user.setPassWord(password);
+	}
+	
+	/**   
+	 * @Title: setAllowLoginWeekDay   
+	 * @Description: 设置允许用户登陆的星期时间           
+	 */ 
+	private void setAllowLoginWeekDay(String[]AllowLoginWeekDay,SysUser user){
+		  if(AllowLoginWeekDay!=null){
+	        	String loginWeekDay="";
+	        	for(int i=0;i<AllowLoginWeekDay.length;i++){
+	        		loginWeekDay+=AllowLoginWeekDay[i]+",";
+	        	}
+	            loginWeekDay=loginWeekDay.substring(0,loginWeekDay.length()-1);
+	            user.setAllowLoginWeekDay(loginWeekDay);	
+	        }
+	}	
+	/**   
+	 * @Title: setSysUserGroupId   
+	 * @Description:设置系统用户组Id   
+	 * @param SysUserGroup        
+	 * @throws Exception 
+	 */ 
+	private Boolean saveSysUserUserGroupId(Map map,SysUser user,HttpServletRequest request, HttpServletResponse response) throws Exception{
+		String SysUserGroup[]=(String[])map.get("SysUserGroup");
+		BigInteger id=user.getId();//需要添加的用户的id
+		BigInteger localSysUserId= getSessionSysUser(request,response).getId();
+		//Date date=getCurrentTime();
+		 boolean flag=false;
+		//System.out.println(date);
+		//List<SysUserUserGroup> sysUserUserGroup=new ArrayList();
+		SysUserUserGroup sysUserUsergroup=new SysUserUserGroup();
+		for(int i=0;i<SysUserGroup.length;i++){
+			
+			 sysUserUsergroup.setUserId(Integer.parseInt(id+""));
+			 sysUserUsergroup.setGroupId(Integer.parseInt(SysUserGroup[i]));
+			 sysUserUsergroup.setCreator(Integer.parseInt(localSysUserId+""));
+			 sysUserUsergroup.setCreateTime(getCurrentTime());
+			 sysUserUserGroupServiceImp.saveSysUserUserGroup(sysUserUsergroup);
+			 flag=true;
+		}
+	   
+		// flag=sysUserUserGroupServiceImp.saveSysUserUserGroup(sysUserUserGroup);
+		// System.out.println(flag);
+		 return flag;
+	}
+	/**   
+	 * @Title: updateSysUserGroupId   
+	 * @Description: TODO(修改用户组)   
+	 * @param map
+	 * @param user
+	 * @param request
+	 * @param response
+	 * @return        
+	 * @throws Exception 
+	 */
+	@Transactional 
+	private Boolean updateSysUserGroupId(Map map,SysUser user,HttpServletRequest request, HttpServletResponse response) throws Exception{
+		String SysUserGroup[]=(String[])map.get("SysUserGroup");
+		 boolean flag=true;
+		BigInteger id=user.getId();//需要修改的用户的id
+		List<SysUserUserGroup>list=sysUserUserGroupServiceImp.findByUserId(id);
+		//删除系统用户用户组
+		if(list.size()>0){
+		for(SysUserUserGroup sysUserUserGroup:list){
+			System.out.println("sysUserUserGroup"+sysUserUserGroup.getGroupId());
+			sysUserUserGroupServiceImp.deleteSysUserUserGroup(sysUserUserGroup);
+		}
+		}
+		BigInteger localSysUserId= getSessionSysUser(request,response).getId();
+		//Date date=getCurrentTime();
+		
+		SysUserUserGroup sysUserUsergroup=new SysUserUserGroup();
+		sysUserUsergroup.setCreator(Integer.parseInt(localSysUserId+""));
+		sysUserUsergroup.setCreateTime(getCurrentTime());
+	    sysUserUsergroup.setUserId(Integer.parseInt(id+""));
+		for(int i=0;i<SysUserGroup.length;i++){
+			 sysUserUsergroup.setGroupId(Integer.parseInt(SysUserGroup[i]));
+			 if(!sysUserUserGroupServiceImp.saveSysUserUserGroup(sysUserUsergroup)){
+				   return false;
+		 }
+			
+		}
+		 
+	   
+		// flag=sysUserUserGroupServiceImp.saveSysUserUserGroup(sysUserUserGroup);
+		// System.out.println(flag);
+		 return flag;
+	}
+    /**   
+     * @Title: setRemark   
+     * @Description:设置备注   
+     * @param remark        
+     */ 
+    private void setRemark(String remark,SysUser user){
+    	  if(remark!=null&&!remark.equals("")){
+    	        user.setRemark(remark);
+    	        }
+    }
+	/**   
 	 * @Title: 根据条件查询分页（系统户名，系统用户分组ID）   
 	 * @Description:    
 	 * @return        
 	 */ 
 	private  ResultPageObject getlistByUserNameAndGroupId(String sysUserName,String sysUserGroupId, int firstResult,int pageSize){
 		List<SysUser> list = null;
+		ResultPageObject resultPageObject=null;
 		try {
 			list = sysUserServiceImpl.getListBySysUserNameAndGroupId(sysUserName, sysUserGroupId, firstResult, pageSize);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		ResultPageObject resultPageObject = new ResultPageObject();
-		resultPageObject.setRows(list);
-		try {
+		    resultPageObject = new ResultPageObject();
+			resultPageObject.setRows(list);
 			resultPageObject.setTotal(String.valueOf(sysUserServiceImpl.getCountBySysUserNameAndGroupId(sysUserName, sysUserGroupId)));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -304,6 +460,81 @@ public class SysUserController {
 		}
 		return resultPageObject;
 		
+	}
+	/**   
+	 * @Title: getFrontSource   
+	 * @Description:获取前端数据来源   
+	 * @return        
+	 * @throws UnsupportedEncodingException 
+	 */
+	 
+	 private Map getFrontSource(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException{
+		Map maps=new HashMap();
+		request.setCharacterEncoding("utf-8");
+		response.setContentType("text/html;charset=utf-8");
+		String id=request.getParameter("sysUserId");
+		String loginName = request.getParameter("loginName");
+		String password = request.getParameter("password");
+		String realName=request.getParameter("realName");
+		String remark=request.getParameter("remark");
+		String AllowLoginWeekDay[]=request.getParameterValues("AllowLoginWeekDay");
+		Date AllowLoginTime1=StringToDate(request.getParameter("AllowLoginTime1"));
+		Date AllowLoginTime2=StringToDate(request.getParameter("AllowLoginTime2"));
+		String SysUserGroup[]=request.getParameterValues("SysUserGroup");
+		String version=request.getParameter("vers");
+		maps.put("id", id);
+		maps.put("loginName",loginName);
+		maps.put("password", password);
+		maps.put("realName",realName);
+		maps.put("remark", remark);
+		maps.put("AllowLoginWeekDay",AllowLoginWeekDay);
+		maps.put("AllowLoginTime1",AllowLoginTime1);
+		maps.put("AllowLoginTime2",AllowLoginTime2);
+		maps.put("SysUserGroup",SysUserGroup);
+		maps.put("version",version);
+		return maps;
+	}
+	 /**   
+	 * @Title: StringToDate   
+	 * @Description: String转换Date  
+	 * @param dateString
+	 * @return        
+	 */
+	private Date StringToDate(String dateString){
+		     Date date=null;
+		     SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");  
+		     try {
+		    	 if(dateString!=null&&!dateString.equals("")){
+			   date = sdf.parse(dateString);
+			   }else{
+				 date=new Date();
+			   }
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				 e.printStackTrace(); 
+			}  
+		     return date;
+	 }
+	 /**   
+	 * @Title: getCurrentTime   
+	 * @Description:获得系统当前时间   
+	 * @return        
+	 */
+	private  Date getCurrentTime(){
+	    	long currentTime = System.currentTimeMillis();
+	    	Date date = new Date(currentTime);
+	         return date;
+	    }
+	/**   
+	 * @Title: getSessionSysUser   
+	 * @Description:获得当前登录用户   
+	 * @return        
+	 */
+	 
+	private SysUser getSessionSysUser(HttpServletRequest request, HttpServletResponse response){
+	    HttpSession session=request.getSession();
+	    SysUser sysUser=(SysUser)session.getAttribute("SysUser");
+		return sysUser;
 	}
 }
 

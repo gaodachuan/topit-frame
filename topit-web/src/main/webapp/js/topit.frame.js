@@ -65,6 +65,31 @@ var Common = {
 
 	}
 };
+
+function TimeFormater(value)
+{
+	if (value == undefined) {
+		return "";
+	}
+	/* json格式时间转js时间格式 */
+	// value = value.substr(1, value.length - 2);
+	var datetime = new Date(parseInt(value.toString().replace("/Date(", "")
+			.replace(")/", ""), 10));
+	var year = datetime.getFullYear();
+	var month = datetime.getMonth() + 1 < 10 ? "0"
+			+ (datetime.getMonth() + 1) : datetime.getMonth() + 1;
+	var date = datetime.getDate() < 10 ? "0" + datetime.getDate()
+			: datetime.getDate();
+	var hour = datetime.getHours() < 10 ? "0" + datetime.getHours()
+			: datetime.getHours();
+	var minute = datetime.getMinutes() < 10 ? "0" + datetime.getMinutes()
+			: datetime.getMinutes();
+	var second = datetime.getSeconds() < 10 ? "0" + datetime.getSeconds()
+			: datetime.getSeconds();
+	return year + "-" + month + "-" + date + " " + hour + ":" + minute
+			+ ":" + second;
+
+}
 (function ($) {
     $.fn.serializeJson = function (serializeObj) {
         if (!serializeObj) {

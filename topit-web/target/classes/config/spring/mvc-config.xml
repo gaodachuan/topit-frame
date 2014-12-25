@@ -10,18 +10,7 @@
 
 	<context:component-scan
 		base-package="com.topit.frame.web.controller,com.housemanagersystem.web.controller" />
-	<mvc:annotation-driven>
-		<mvc:message-converters>
-			<bean class="org.springframework.http.converter.StringHttpMessageConverter">
-				<property name="supportedMediaTypes">
-					<list>
-						<value>application/json;charset=UTF-8</value>
-					</list>
-				</property>
-			</bean>
-		</mvc:message-converters>
-	</mvc:annotation-driven>
-
+	<mvc:annotation-driven/>
 	<bean
 		class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
 		<property name="cacheSeconds" value="0"></property>
@@ -31,12 +20,19 @@
 					class="org.springframework.http.converter.BufferedImageHttpMessageConverter" />
 				<bean
 					class="org.springframework.http.converter.ByteArrayHttpMessageConverter" />
-				<bean
-					class="org.springframework.http.converter.StringHttpMessageConverter" />
+
 				<bean
 					class="org.springframework.http.converter.xml.XmlAwareFormHttpMessageConverter" />
 				<bean
 					class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter" />
+				<bean
+					class="org.springframework.http.converter.StringHttpMessageConverter">
+					<property name="supportedMediaTypes">
+						<list>
+							<value>application/json;charset=UTF-8</value>
+						</list>
+					</property>
+				</bean>
 			</list>
 		</property>
 	</bean>

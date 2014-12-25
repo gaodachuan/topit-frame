@@ -4,7 +4,7 @@
 <hibernate-configuration>
 	<session-factory>
 		
-		<mapping class="com.topit.frame.core.entity.data.SysModule"/>
+		<mapping class="com.topit.frame.core.entity.data.SysModule" />
 		<mapping class="com.topit.frame.core.entity.data.SysSequence"/>
 		<mapping class="com.topit.frame.core.entity.data.SysOption"/>
 		<mapping class="com.topit.frame.core.entity.data.SysUserErrorLoginLog"/>

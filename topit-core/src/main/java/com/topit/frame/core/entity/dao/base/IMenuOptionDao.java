@@ -125,10 +125,11 @@ public interface IMenuOptionDao extends IBaseDAO<SysMenuItem> {
 	 * 根据用户的Id加载菜单
 	 * 
 	 * @param userId
+	 * @param menuId 菜单号
 	 * @return
 	 * @throws Exception
 	 */
-	public List<Map<String, Object>> getMenuItemsByUserId(int userId)
+	public List<Map<String, Object>> getMenuItemsByUserId(int userId, int menuId)
 			throws Exception;
 
 	public Session getSession() throws Exception;

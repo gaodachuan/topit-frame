@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.topit.frame.busniess.base.ISysMenuService;
+import com.topit.frame.common.util.MenuConstant;
 import com.topit.frame.core.entity.data.SysUser;
 import com.topit.frame.core.ui.entity.MenuPanle;
 
@@ -33,8 +34,11 @@ public class MainController {
 		SysUser sysUser = (SysUser) request.getSession()
 				.getAttribute("SysUser");
 		try {
+			
+			MenuConstant.MENU_INCON_PATH=request.getRealPath("/")+"//icons//menuIcons";
+			//加载主菜单
 			List<MenuPanle> list = sysMenuService.getMenusByUserId(sysUser
-					.getId().intValue());
+					.getId().intValue(),MenuConstant.MENU_MAIN);
 			mv.setViewName("/main/index");
 			mv.addObject("menus", list);
 

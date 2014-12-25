@@ -38,13 +38,13 @@ public interface ISysUserGroupDAO extends IBaseDAO<SysUserGroup> {
 	/**   
 	 * @Title: getListForPageBySql   
 	 * @Description: 使用JDBCTemplate进行多张表的关联分页查询   
-	 * @param firstResult
+	 * @param pageNow
 	 * @param pageSize
 	 * @return
 	 * @throws Exception        
 	 */
 	 
-	public List<Map<String, Object>> getListForPageBySql(final int firstResult,final int pageSize) throws Exception;
+	public List<Map<String, Object>> getListForPageBySql(final int pageNow,final int pageSize) throws Exception;
 	/**   
 	 * @Title: getListForCombox   
 	 * @Description:查询所有的系统用户组   

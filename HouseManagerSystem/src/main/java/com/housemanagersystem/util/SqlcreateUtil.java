@@ -24,30 +24,33 @@ public class SqlcreateUtil {
 		while (io.hasNext()) {
 			Map.Entry<String, Object> me = (Map.Entry<String, Object>) io
 					.next();
-			String valueType = me.getValue().getClass().getSimpleName();
-			if (valueType.equals("String")&&!valueType.equals("")) {
-				sql.append(" and " + me.getKey() + " like '%" + me.getValue()
-						+ "%'");
-			}
-			if (valueType.equals("Integer")) {
-				sql.append(" and " + me.getKey() + " = '" + me.getValue() + "'");
+			
+				String valueType = me.getValue().getClass().getSimpleName();
+				if (valueType.equals("String")&&!valueType.equals("")) {
+					sql.append(" and " + me.getKey() + " like '%" + me.getValue()
+							+ "%'");
+				}
+				if (valueType.equals("Integer")) {
+					sql.append(" and " + me.getKey() + " = '" + me.getValue() + "'");
 
+				}
+				if ("startTime".equals(me.getKey()) && !"".equals(me.getValue())) {
+					sql.append(" and " + me.getKey() + " >= '" + me.getValue()
+							+ "'");
+				}
+				if ("endTime".equals(me.getKey()) && !"".equals(me.getValue())) {
+					sql.append(" and " + me.getKey() + " <= '" + me.getValue()
+							+ "'");
+				}
+				if ("sort".equals(me.getKey()) && !"".equals(me.getValue())) {
+					sql.append(" order by " + me.getValue());
+				}
+				if ("order".equals(me.getKey()) && !"".equals(me.getValue())) {
+					sql.append(" " + me.getValue());
+				}	
 			}
-			if ("startTime".equals(me.getKey()) && !"".equals(me.getValue())) {
-				sql.append(" and " + me.getKey() + " >= '" + me.getValue()
-						+ "'");
-			}
-			if ("endTime".equals(me.getKey()) && !"".equals(me.getValue())) {
-				sql.append(" and " + me.getKey() + " <= '" + me.getValue()
-						+ "'");
-			}
-			if ("sort".equals(me.getKey()) && !"".equals(me.getValue())) {
-				sql.append(" order by " + me.getValue());
-			}
-			if ("order".equals(me.getKey()) && !"".equals(me.getValue())) {
-				sql.append(" " + me.getValue());
-			}
-		}
+			
+		
 		return sql.toString();
 	}
 }

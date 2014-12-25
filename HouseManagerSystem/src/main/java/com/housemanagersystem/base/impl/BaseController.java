@@ -1,10 +1,21 @@
 package com.housemanagersystem.base.impl;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -27,6 +38,21 @@ public class BaseController implements IBaseController {
 	protected ComboxdataServiceImpl comboxdataServiceImpl;
 	@Resource(name = "idGenerator")
 	protected IIdGenerator idGenerator;
+	
+	
+	
+	
+	@InitBinder   
+    public void initBinder(WebDataBinder binder) {   
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");   
+        dateFormat.setLenient(true);   
+        binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));   
+    }
+	
+	
+	
+	
+	
 
 	@RequestMapping(value = "/getComboxdata", params = "type")
 	@ResponseBody
@@ -36,6 +62,7 @@ public class BaseController implements IBaseController {
 		List<ComboxDTO> list = comboxdataServiceImpl.getComboxdata(string);
 		return list;
 	}
+
 	public ResultObject creatResult(boolean flag) {
 		ResultObject result = new ResultObject();
 		if (flag) {
@@ -47,5 +74,20 @@ public class BaseController implements IBaseController {
 		}
 
 		return result;
+	}
+
+	public Map<String, Object> createParam(HttpServletRequest request) {
+
+		Map<String, String[]> parmMap = request.getParameterMap();
+		Map<String, Object> conditions = new HashMap<String, Object>();
+		Set<Entry<String, String[]>> set = parmMap.entrySet();
+		for (Entry<String, String[]> temp : set) {
+			String key = temp.getKey();
+			String value = temp.getValue()[0];
+			if (value != null && !"".equals(value.trim())) {
+				conditions.put(key, value);
+			}
+		}
+		return conditions;
 	}
 }

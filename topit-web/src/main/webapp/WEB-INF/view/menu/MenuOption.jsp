@@ -9,6 +9,7 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/treegrid_dnd.js"></script>
 <script type="text/javascript">
 	$(function() {
+		 
 		$('#mudletree')
 				.tree(
 						{
@@ -35,6 +36,8 @@
 	});
      
 	var isFirst=true;
+	var editRow;
+	var MenuIcon;
 	$(function() {
 		$('#MenuItemsList')
 				.treegrid(
@@ -62,8 +65,30 @@
 								field : 'iconfile',
 								title : '图标',
 								width : '15%',
-								align : 'center'
-									
+								align : 'center',
+								editor:{  
+									 type : "combobox",
+						                options : {
+						                	 data : [ {
+						                         "name" : "cut.png",
+						                         "path" : "D:\\Tomcat7\\apache-tomcat-7.0.56\\webContent\\topit-web\\icons\\menuIcons\\cut.png"
+						                     }, {
+						                    	 "name" : "cut.png",
+						                    	 "path" : "D:\\Tomcat7\\apache-tomcat-7.0.56\\webContent\\topit-web\\icons\\menuIcons\\cut.png"
+						                     } ],
+						                    valueField : 'path',
+						                    textField : 'name',
+						                    editable : false,
+						                    // required : true,
+						                    panelHeight : "auto",
+						                    missingMessage : "请选择图标",
+						                    onSelect : function(record) {
+						                    	
+						                        alert(editRow.id+''+record.id);
+						                    },
+						                }  
+						                 
+						                }	
 							},{
 								field : 'tip',
 								title : '提示信息',
@@ -77,6 +102,10 @@
 							    formatter : Common.DateFormatter
 							}
 							] ],
+							onClickRow:function(row){
+								editRow=row;
+								$('#MenuItemsList').treegrid('beginEdit', row.id);
+							},
 							onLoadSuccess : loadMenuSuccess,
 							onBeforeDrag : onBeforeDrag,
 							onBeforeDrop : onBeforeDrop,
@@ -85,8 +114,7 @@
 							onBeforeLoad:function(row,param)
 							{
 								if(isFirst)
-								{
-									
+								{									
 										param.id="#"+${menuId.rootitemid};
 										isFirst=false;
 								}
@@ -97,7 +125,14 @@
 
 						});
 	});
-
+	
+	function loadMenuSuccess(row) {
+		$(this).treegrid('enableDnd', row && row.Lid > 1 ? row.Lid : null);
+		$.post('${pageContext.request.contextPath}/MenuOption/getMenuIcons.do', null, function(result) {
+			MenuIcon=result;
+		}, 'json');
+	
+	}
 	//拖动插入
 	function onDrop(targetRow, sourceRow, point) {
 		var sourceId = sourceRow.id;
@@ -130,7 +165,6 @@
 					href="javascript:void(0)">新增菜单分组</a> <a class="easyui-linkbutton " onclick="doDelete('${pageContext.request.contextPath}/MenuOption/DeleteMenuItem.do')"
 					data-options="plain:true,iconCls:'icon-remove'" href="javascript:void(0)">删除选中菜单</a>
 			</div>
-			<input id="currentMenuId" type="hidden" value="${menuId.rootitemid}"> 
 			<table id="MenuItemsList" style="width: 100%; height: 100%" fit="true"></table>
 		</div>
 	</div>

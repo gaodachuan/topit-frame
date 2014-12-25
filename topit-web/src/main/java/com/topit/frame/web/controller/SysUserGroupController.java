@@ -16,13 +16,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.topit.frame.busniess.base.IComObjectSortTypeService;
+import com.topit.frame.busniess.base.ISysModuleActionService;
 import com.topit.frame.busniess.base.ISysUserGroupService;
+import com.topit.frame.busniess.base.ISysUserUserGroupService;
 import com.topit.frame.common.util.CategoryConstant;
 import com.topit.frame.common.view.servlet.ResultObject;
 import com.topit.frame.common.view.servlet.ResultPageObject;
 import com.topit.frame.core.entity.dao.base.IIdGenerator;
+import com.topit.frame.core.entity.data.SysModuleAction;
 import com.topit.frame.core.entity.data.SysUser;
 import com.topit.frame.core.entity.data.SysUserGroup;
+import com.topit.frame.core.ui.entity.ResultRightObject;
 import com.topit.frame.core.util.entity.Node;
 
 /** 
@@ -38,6 +42,12 @@ public class SysUserGroupController {
 
 	@Resource(name = "sysUserGroupServiceImp")
 	ISysUserGroupService sysUserGroupServiceImp;
+	
+	@Resource(name="sysUserUserGroupServiceImp")
+	ISysUserUserGroupService sysUserUserGroupServiceImp;
+	
+	@Resource(name="sysModuleActionServiceImp")
+	ISysModuleActionService sysModuleActionServiceImp;
 	
 	@Resource(name="idGenerator")
 	IIdGenerator idGenerator;
@@ -77,32 +87,36 @@ public class SysUserGroupController {
 	 * @return
 	 * @throws Exception        
 	 */
-	 
-	@RequestMapping(value = "/sysusergroup", params = "method=getList")
-	public @ResponseBody ResultPageObject getList(HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
+	@RequestMapping(value="/sysusergroup",params="method=getList")
+	@ResponseBody
+	public ResultRightObject getList(HttpServletRequest request,HttpServletResponse response){
+		ResultRightObject resultRightObject=new ResultRightObject();
+		ResultPageObject resultPageObject = new ResultPageObject();
+		
 		SysUser sysUser=(SysUser) request.getSession().getAttribute("SysUser");
-		
-		System.out.println(sysUser.getId());
-		
 		
 		int pageNow = Integer.parseInt(request.getParameter("page"));
 		int pageSize = Integer.parseInt(request.getParameter("rows"));
-		int firstResult = (pageNow - 1) * pageSize;
-
-		List<Map<String, Object>> list = null;
-
+		int userId=sysUser.getId().intValue();
+		String modulePath="/usergroup/sysusergroup.do";
+		
+		List<Map<String, Object>> resultPageObjectList = null;
+		List<SysModuleAction> sysModuleActionList=null;
 		try {
-			list = sysUserGroupServiceImp.getListForPageBySql(firstResult, pageSize);
+			resultPageObjectList = sysUserGroupServiceImp.getListForPageBySql(pageNow, pageSize);
+			sysModuleActionList = sysModuleActionServiceImp.getListAction(modulePath, userId);
+			
+			resultPageObject.setTotal(String.valueOf(sysUserGroupServiceImp.getCount()));
+			
+			resultPageObject.setRows(resultPageObjectList);
+			resultRightObject.setListAction(sysModuleActionList);
+			resultRightObject.setResultPageObject(resultPageObject);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		ResultPageObject resultPageObject = new ResultPageObject();
-		resultPageObject.setRows(list);
-		resultPageObject.setTotal(String.valueOf(sysUserGroupServiceImp
-				.getCount()));
-		return resultPageObject;
+		return resultRightObject;
 	}
 	
 	/**   

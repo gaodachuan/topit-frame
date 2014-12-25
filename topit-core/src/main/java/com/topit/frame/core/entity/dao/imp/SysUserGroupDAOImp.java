@@ -1,11 +1,7 @@
  package com.topit.frame.core.entity.dao.imp;
 
 import java.io.Serializable;
-import java.lang.reflect.Field;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -14,13 +10,11 @@ import javax.annotation.Resource;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.springframework.context.annotation.Scope;
-import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.stereotype.Repository;
 
 import com.topit.frame.core.dao.BaseDAO;
 import com.topit.frame.core.dao.SqlQuery;
 import com.topit.frame.core.entity.dao.base.ISysUserGroupDAO;
-import com.topit.frame.core.entity.data.SysUser;
 import com.topit.frame.core.entity.data.SysUserGroup;
  /** 
 * @ClassName: SysUserGroupDAOImp 
@@ -148,35 +142,20 @@ public class SysUserGroupDAOImp extends BaseDAO<SysUserGroup> implements ISysUse
 	/**   
 	 * <p>Title: getListForPageBySql</p>   
 	 * <p>Description: 使用JDBCTemplate进行多张表的关联分页查询</p>   
-	 * @param firstResult
+	 * @param pageNow
 	 * @param pageSize
 	 * @return
 	 * @throws Exception   
 	 * @see com.topit.frame.core.entity.dao.base.ISysUserGroupDAO#getListForPageBySql(java.lang.String, int, int)   
 	 */
 	 
-	public List<Map<String, Object>> getListForPageBySql(int firstResult, int pageSize) throws Exception {
+	public List<Map<String, Object>> getListForPageBySql(int pageNow, int pageSize) throws Exception {
+		
 		String sql="SELECT A.id,A.name,A.description,A.lastRightEditTime,A.createTime,COUNT(B.userId) AS usernum,A.inactive"
 				+ " FROM sys_user_group AS A LEFT JOIN sys_user_user_group AS B "
 				+ "ON A.id=B.groupId "
-				+ "GROUP BY A.id LIMIT ?,?";
-		final List<Map<String, Object>> list=new ArrayList<Map<String,Object>>();
-		
-		sqlQuery.getJdbcTemplate().query(sql,new Object[]{firstResult, pageSize},new RowCallbackHandler() {
-			
-			public void processRow(ResultSet rs) throws SQLException {
-				Map<String, Object> map=new HashMap<String, Object>();
-				map.put("id", rs.getInt("Id"));
-				map.put("name", rs.getString("Name"));
-				map.put("description", rs.getString("Description"));
-				map.put("lastRightEditTime", rs.getTimestamp("LastRightEditTime"));
-				map.put("createTime", rs.getTimestamp("CreateTime"));
-				map.put("usernum", rs.getInt("usernum"));
-				map.put("inactive", rs.getInt("Inactive"));
-				list.add(map);
-			}
-		});
-		
+				+ "GROUP BY A.id ";
+		List<Map<String, Object>> list=sqlQuery.Page(sql, pageNow, pageSize);
 		 return list;
 		 
 	}
@@ -189,9 +168,9 @@ public class SysUserGroupDAOImp extends BaseDAO<SysUserGroup> implements ISysUse
 	 * @see com.topit.frame.core.entity.dao.base.ISysUserGroupDAO#getListForCombox()   
 	 */
 	 
+	@SuppressWarnings("unchecked")
 	public List<SysUserGroup> getListForCombox() throws Exception {
-		// TODO Auto-generated method stub
-		List<SysUserGroup> list=new ArrayList();
+		List<SysUserGroup> list=new ArrayList<SysUserGroup>();
 		String hql= "from SysUserGroup ";
 	     list=(List<SysUserGroup>)this.getHibernateTemplate().find(hql);
 		 return list; 

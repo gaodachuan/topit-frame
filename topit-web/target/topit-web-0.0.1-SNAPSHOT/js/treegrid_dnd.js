@@ -447,14 +447,7 @@ function loadModuleSuccess(node) {
 	}
 }
 
-function loadMenuSuccess(row) {
-	$(this).treegrid('enableDnd', row && row.Lid > 1 ? row.Lid : null);
 
-	/*
-	 * var root = $('#MenuItemsList').treegrid('getRoot'); if (root) {
-	 * setMenuNodeIcon(root); }
-	 */
-}
 
 var parentId = -1;
 // 开始拖动

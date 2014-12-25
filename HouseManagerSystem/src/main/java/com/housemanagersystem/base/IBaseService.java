@@ -16,7 +16,7 @@ public interface IBaseService<T> extends IBaseDAO<T> {
 	 * @return
 	 * @throws Exception 
 	 */
-	public ResultPageObject getEntityinfo(int currentPage, int pageSize  ,Map<String ,Object> conditions) throws Exception;
+	public ResultPageObject getEntityinfo(Map<String ,Object> conditions) throws Exception;
     /**
      * 
      * @param houseinfo

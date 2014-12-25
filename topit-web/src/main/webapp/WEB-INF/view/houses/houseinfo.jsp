@@ -100,6 +100,19 @@
 								width : 100,
 								align : 'center',
 							}, {
+								field : 'electricStart',
+								title : '电表度数',
+								width : 100,
+								align : 'center',
+								
+							},
+							{
+								field : 'waterStart',
+								title : '水表度数',
+								width : 100,
+								align : 'center',
+								
+							},{
 								field : 'rentstart',
 								title : '合同开始时间',
 								width : 100,
@@ -158,7 +171,7 @@
 													title : '提示信息!',
 													msg : '请选择一行记录进行修改!'
 												});
-											} else {
+											} else {	
 												$('#houseInfodialog').dialog({
 													title : '修改模块'
 												});
@@ -166,6 +179,7 @@
 														.reset();
 												$('#houseInfodialog').dialog(
 												'open');
+												
 												$('#houseInfoform').form('load',
 																{
 																	id : arr[0].id,
@@ -179,16 +193,18 @@
 																	monthrentpri:arr[0].monthrentpri,
 																	dealType:arr[0].dealType,
 																	housetype:arr[0].housetype,
-																	description:arr[0].description
+																	description:arr[0].description,
+																	ElectricStart:arr[0].electricStart,
+																	WaterStart:arr[0].waterStart,
+																	rentstart:TimeFormater(arr[0].rentstart),
+																	rentend:TimeFormater(arr[0].rentend)
 																});
 												
-												$('#usetype').combobox('select',arr[0].usetype);
-												$('#decorate').combobox('select',arr[0].decorate);
-												$('#equipment').combobox('select',arr[0].equipment);
-												$('#dealType').combobox('select',arr[0].dealType);
-												$('#housetype').combobox('select',arr[0].housetype);
+										
 												
 											}
+											
+											
 
 										}
 
@@ -345,13 +361,16 @@
 			<table id="houseinfo_data"></table>
 		</div>
 		<div id="houseInfodialog" modal=true draggable=false
-			class="easyui-dialog" closed=true style="width: 50%; height: 55%;">
+			class="easyui-dialog" closed=true style="width: 50%; height: 60%;">
 			<div id="dialogtab" class="easyui-tabs" fit=false plain=true
 				style="padding: 3%;">
 				<div title="房源信息" align="center" style="width: 100%;" fit=true>
 					<form id="houseInfoform" action="" method="post"
 						style="margin-top: 20px; margin-bottom: 20px">
 						<input type="hidden" name="id" value="-1" />
+						
+						<input type="hidden" name="rentstart" value="-1" />
+						<input type="hidden" name="rentend" value="-1" />
 						<table>
 							<tr>
 								<td style="width: 30%;"><label for="number"
@@ -378,7 +397,7 @@
 								</select></td>
 
 							</tr>
-							<tr>
+							 <tr>
 								<td style="width: 30%;"><label for="housetype"
 									style="padding-left: 6px;">房源类型: </label> <select class="easyui-combobox "
 									id="housetype" name="housetype"
@@ -398,8 +417,6 @@
 									style="width: 188px;height: auto">
 								</select></td>
 							</tr>
-
-
 							<tr>
 								<td style="width: 30%;"><label for="usetype"
 									style="padding-left: 6px;">房源用途:</label> <select id="usetype" class="easyui-combobox "
@@ -415,6 +432,18 @@
 									url="getComboxdata.do?type=<%=Constant.Comboxdata.HOUSEINFO_DEALTYPE%>"
 									valueField="name" textField="name" value=""
 									style="width: 188px;height: auto"></select></td>
+							</tr>
+							<tr>
+
+								<td style="width: 30%;"><label for="ElectricStart"
+									style="padding-left: 6px;">电表度数:</label> <input
+									class="easyui-validatebox " type="text" name="ElectricStart"
+									style="width: 182px;" required=true /></td>
+								<td style="width: 30%;"><label for="WaterStart"
+									style="padding-left: 6px;">水表度数:</label> <input
+									class="easyui-validatebox " type="text" name="WaterStart"
+									style="width: 182px;" required=true /></td>
+
 							</tr>
 							<tr>
 								<td style="width: 30%;"><label for="dayrentpri"

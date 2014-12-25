@@ -30,6 +30,46 @@ public interface ISysUserUserGroupService {
 	 */
 	 
 	List<SysUserUserGroup> findByUserId(Serializable userid) throws Exception;
+	/**   
+	 * @Title: saveSysUserUserGroup   
+	 * @Description: 保存一个用户用户组   
+	 * @param entity
+	 * @return
+	 * @throws Exception        
+	 */ 
+	public Boolean saveSysUserUserGroup(SysUserUserGroup entity) throws Exception;
+	/**   
+	 * @Title: updateSysUserUserGroup   
+	 * @Description:修改一个用户用户组   
+	 * @param entity
+	 * @return
+	 * @throws Exception        
+	 */ 
+	public Boolean updateSysUserUserGroup(SysUserUserGroup entity) throws Exception;
+	/**   
+	 * @Title: saveSysUserUserGroup   
+	 * @Description: 保存多个系统用户用户组   
+	 * @param entityList
+	 * @return
+	 * @throws Exception        
+	 */ 
+	public Boolean saveSysUserUserGroup(List<SysUserUserGroup> entityList)throws Exception;
+	/**   
+	 * @Title: deleteSysUserUserGroup   
+	 * @Description: 删除系统用户用户组   
+	 * @param entity
+	 * @return
+	 * @throws Exception        
+	 */ 
+	public Boolean deleteSysUserUserGroup(SysUserUserGroup entity) throws Exception;
+	/**   
+	 * @Title: deleteSysUserUserGroupById   
+	 * @Description:按照id删除系统用户用户组    
+	 * @param id
+	 * @return
+	 * @throws Exception        
+	 */
+	public Boolean deleteSysUserUserGroupById(Serializable id) throws Exception;
 }
 
  

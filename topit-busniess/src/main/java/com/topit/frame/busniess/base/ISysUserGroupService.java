@@ -96,13 +96,13 @@ public interface ISysUserGroupService {
 	/**   
 	 * @Title: getListForPageBySql   
 	 * @Description: 使用jdbctemplate创建多表关联的分页查询   
-	 * @param firstResult
+	 * @param pageNow
 	 * @param pageSize
 	 * @return
 	 * @throws Exception        
 	 */
 	 
-	public List<Map<String, Object>> getListForPageBySql(final int firstResult,final int pageSize) throws Exception;
+	public List<Map<String, Object>> getListForPageBySql(final int pageNow,final int pageSize) throws Exception;
 	
 	/**   
 	 * @Title: getCount   

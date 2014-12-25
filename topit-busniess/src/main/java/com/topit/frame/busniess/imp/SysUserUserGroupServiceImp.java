@@ -46,7 +46,32 @@ public class SysUserUserGroupServiceImp implements ISysUserUserGroupService{
 		 return sysUserUserGroupDaoImp.findByUserId(userid);
 		 
 	}
-
+	//保存系统用户用户组
+	public Boolean saveSysUserUserGroup(SysUserUserGroup entity) throws Exception{
+		 return sysUserUserGroupDaoImp.save(entity);
+	}
+	/**   
+	 * @Title: saveSysUserUserGroup   
+	 * @Description:保存多个系统用户用户组   
+	 * @param entityList
+	 * @return
+	 * @throws Exception        
+	 */ 
+	public Boolean saveSysUserUserGroup(List<SysUserUserGroup> entityList)throws Exception{
+		return sysUserUserGroupDaoImp.save(entityList);
+	}
+	//更改系统用户用户组
+	public Boolean updateSysUserUserGroup(SysUserUserGroup entity) throws Exception{
+		return sysUserUserGroupDaoImp.update(entity);
+	}
+	//删除系统用户组用户
+	public Boolean deleteSysUserUserGroup(SysUserUserGroup entity) throws Exception{
+		return sysUserUserGroupDaoImp.delete(entity);
+	}
+	//按照用户Id删除用户
+	public Boolean deleteSysUserUserGroupById(Serializable id) throws Exception{
+		return sysUserUserGroupDaoImp.delete(id);
+	}
 }
 
  

@@ -34,7 +34,7 @@ import com.topit.frame.core.ui.entity.MenuUI;
 @Service("sysMenuService")
 @Transactional
 public class SysMenuServiceImp implements ISysMenuService {
-    
+
 	@Resource
 	private ISysMenuDao sysMenuDao;
 	@Resource
@@ -48,63 +48,68 @@ public class SysMenuServiceImp implements ISysMenuService {
 	@Resource
 	private ISysUserGroupModuleRightDAO sysUserGroupModuleRightDAOImpl;
 	static SysMenuItem sortItem = null;
-    
-	public ResultObject  wrapResult(boolean flag)
-	{
-		ResultObject resultObject=new ResultObject();
-		if(flag)
-		{
+
+	public ResultObject wrapResult(boolean flag) {
+		ResultObject resultObject = new ResultObject();
+		if (flag) {
 			resultObject.setErrorCode(0);
 			resultObject.setErrorDetail("操作成功");
-		}else {
+		} else {
 			resultObject.setErrorCode(1);
 			resultObject.setErrorDetail("操作失败");
 		}
 		return resultObject;
 	}
+
 	public SysMenu getSysMenuById(Serializable id) throws Exception {
-		
+
 		return sysMenuDao.findById(id);
 	}
 
-	public ResultPageObject getSysMenus(int offset, int length) throws Exception {
-		DetachedCriteria criteria=DetachedCriteria.forClass(SysMenu.class);
-		ResultPageObject res=new ResultPageObject();
-	    res.setRows(sysMenuDao.getListForPage(criteria, offset, length));
-	    res.setTotal(sysMenuDao.getCount()+"");
+	public ResultPageObject getSysMenus(int offset, int length)
+			throws Exception {
+		DetachedCriteria criteria = DetachedCriteria.forClass(SysMenu.class);
+		ResultPageObject res = new ResultPageObject();
+		res.setRows(sysMenuDao.getListForPage(criteria, offset, length));
+		res.setTotal(sysMenuDao.getCount() + "");
 		return res;
 	}
-	
+
 	public ResultObject createMenu(SysMenu sysMenu) throws Exception {
-		sysMenu.setId(idGenerator.getNextId(SysMenu.class.getSimpleName()).intValue());
+		sysMenu.setId(idGenerator.getNextId(SysMenu.class.getSimpleName())
+				.intValue());
 		SysMenuItem sysMenuItem = new SysMenuItem();
 		sysMenuItem.setId(idGenerator.getNextId(
 				SysMenuItem.class.getSimpleName()).intValue());
+		sysMenuItem.setMenuId(sysMenu.getId());
 		sysMenuItem.setModuleid(-1);
 		sysMenuItem.setParentId(-1);
 		sysMenuItem.setName(sysMenu.getName());
 		sysMenuItem.setState("closed");
-	    sysMenu.setRootitemid(sysMenuItem.getId());
-	    menuOptionDao.save(sysMenuItem);
+		sysMenu.setRootitemid(sysMenuItem.getId());
+		menuOptionDao.save(sysMenuItem);
 		return wrapResult(sysMenuDao.save(sysMenu));
 	}
+
 	public ResultObject updateMenu(SysMenu sysMenu) throws Exception {
 		return wrapResult(sysMenuDao.update(sysMenu));
-		
+
 	}
+
 	public ResultObject delelteMenu(int id) throws Exception {
-		
+
 		return wrapResult(sysMenuDao.delete(id));
 	}
+
 	public ResultObject changestatus(int id) throws Exception {
-		SysMenu sysMenu=sysMenuDao.load(id);
-		sysMenu.setInactive(sysMenu.getInactive()==0?1:0);
+		SysMenu sysMenu = sysMenuDao.load(id);
+		sysMenu.setInactive(sysMenu.getInactive() == 0 ? 1 : 0);
 		return wrapResult(sysMenuDao.update(sysMenu));
 	}
-	
+
 	public List<SysMenuItem> getMenuTree(BigInteger MenuGroupId)
 			throws Exception {
-		
+
 		List<SysMenuItem> list = menuOptionDao.getMenuTree(MenuGroupId);
 		if (list.size() > 1) {
 			for (SysMenuItem s : list) {
@@ -176,6 +181,7 @@ public class SysMenuServiceImp implements ISysMenuService {
 		// 得到插入组位置的信息
 		SysMenuItem targetMenuItem = menuOptionDao
 				.findById(targetId.intValue());
+		
 		// 判断目标位置的类型
 		if (targetMenuItem.getModuleid() == -1)// 文件夹
 		{
@@ -183,6 +189,7 @@ public class SysMenuServiceImp implements ISysMenuService {
 		} else {// 普通菜单,直接插入到菜单后
 			menuOptionDao.InsertAfterTarget(sysMenuItem, targetMenuItem);
 		}
+		sysMenuItem.setMenuId(targetMenuItem.getMenuId());
 		// 保存
 		menuOptionDao.save(sysMenuItem);
 		menuOptionDao.update(targetMenuItem);
@@ -263,9 +270,9 @@ public class SysMenuServiceImp implements ISysMenuService {
 
 	}
 
-	public List<MenuPanle> getMenusByUserId(Serializable id) throws Exception {
+	public List<MenuPanle> getMenusByUserId(Serializable id,int menuId) throws Exception {
 		List<Map<String, Object>> list = menuOptionDao
-				.getMenuItemsByUserId((Integer) id);
+				.getMenuItemsByUserId((Integer) id,menuId);
 		List<Integer> parentIds = new ArrayList<Integer>();
 		for (Map<String, Object> m : list) {
 			if (!parentIds.contains(m.get("parentId"))) {
@@ -274,8 +281,10 @@ public class SysMenuServiceImp implements ISysMenuService {
 
 		}
 		Set<Integer> set = new HashSet<Integer>(parentIds);
+		//当前菜单
+		SysMenu currMenu=sysMenuDao.findById(menuId);
 		// 首先对父菜单进行排序
-		List<SysMenuItem> groups = getMenuTree(new BigInteger(1 + ""));
+		List<SysMenuItem> groups = getMenuTree(new BigInteger(currMenu.getRootitemid()+""));
 		// 排序后的父节点
 		List<SysMenuItem> parentGroups = new ArrayList<SysMenuItem>();
 
@@ -331,14 +340,18 @@ public class SysMenuServiceImp implements ISysMenuService {
 		}
 		return res;
 	}
+
 	public List<SysMenuItem> getTopMenuById(Serializable id) throws Exception {
-		SysMenuItem menu=menuOptionDao.findById(id);
-		List<SysMenuItem> list= new ArrayList<SysMenuItem>();
-		list.add(menu);		
+		SysMenuItem menu = menuOptionDao.findById(id);
+		List<SysMenuItem> list = new ArrayList<SysMenuItem>();
+		list.add(menu);
 		return list;
 	}
 
-	
-	
+	public void setMenuIcon(int id, String path) throws Exception {
+		SysMenuItem menuItem=menuOptionDao.findById(id);
+		menuItem.setIconfile(path);
+		menuOptionDao.update(menuItem);
+	}
 
 }

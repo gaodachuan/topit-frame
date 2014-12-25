@@ -41,6 +41,7 @@ public class MenuOptionDaoImpl extends BaseDAO<SysMenuItem> implements
 	@Resource
 	private SqlQuery sqlQuery;
 	private SysMenuItem preItem;
+
 	public List<SysMenuItem> getMenuTree(BigInteger MenuGroupId)
 			throws Exception {
 		String hql = "From " + entityClass.getSimpleName()
@@ -254,7 +255,7 @@ public class MenuOptionDaoImpl extends BaseDAO<SysMenuItem> implements
 
 	}
 
-	public List<Map<String, Object>> getMenuItemsByUserId(int userId)
+	public List<Map<String, Object>> getMenuItemsByUserId(int userId, int menuId)
 			throws Exception {
 		String sql = "select A.id,A.name,A.IconFile,A.parentId,A.moduleid,B.modulepath "
 				+ "from"
@@ -262,11 +263,11 @@ public class MenuOptionDaoImpl extends BaseDAO<SysMenuItem> implements
 				+ "in"
 				+ "( select distinct(moduleid) from sys_user_group_module_right where GroupId "
 				+ "in"
-				+ "(select distinct(groupid) from sys_user_user_group where UserId =?))) A,sys_module B"
+				+ "(select distinct(groupid) from sys_user_user_group where UserId =?)) and menuId=?) A,sys_module B"
 				+ " where " + "A.moduleid=B.id";
 
 		final List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
-		sqlQuery.getJdbcTemplate().query(sql, new Object[] { userId },
+		sqlQuery.getJdbcTemplate().query(sql, new Object[] { userId, menuId },
 				new RowCallbackHandler() {
 
 					public void processRow(ResultSet rs) throws SQLException {

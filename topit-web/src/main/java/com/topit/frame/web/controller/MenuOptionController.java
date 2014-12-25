@@ -16,6 +16,9 @@ import com.housemanagersystem.util.Constant;
 import com.topit.frame.busniess.base.IComObjectSortTypeService;
 import com.topit.frame.busniess.base.ISysMenuService;
 import com.topit.frame.common.util.CategoryConstant;
+import com.topit.frame.common.util.MenuConstant;
+import com.topit.frame.common.util.ResourceUtils;
+import com.topit.frame.common.view.servlet.ImageIcon;
 import com.topit.frame.common.view.servlet.ResultObject;
 import com.topit.frame.common.view.servlet.ResultPageObject;
 import com.topit.frame.core.entity.data.SysMenu;
@@ -64,6 +67,7 @@ public class MenuOptionController {
 	@RequestMapping("/createMenu")
 	@ResponseBody
 	public ResultObject createMenu(SysMenu menu) throws Exception {
+
 		return sysMenuService.createMenu(menu);
 	}
 
@@ -89,13 +93,28 @@ public class MenuOptionController {
 	}
 
 	@RequestMapping("/addMenus")
-	public ModelAndView openMenuOptionUI(HttpServletRequest request) throws Exception {
-		String id=request.getParameter("id");
+	public ModelAndView openMenuOptionUI(HttpServletRequest request)
+			throws Exception {
+		String id = request.getParameter("id");
 		ModelAndView mv = new ModelAndView();
 		mv.setViewName("/menu/MenuOption");
-		
-		mv.addObject("menuId",sysMenuService.getSysMenuById(Integer.parseInt(id)));
+
+		mv.addObject("menuId",
+				sysMenuService.getSysMenuById(Integer.parseInt(id)));
 		return mv;
+	}
+
+	@RequestMapping("/getMenuIcons")
+	@ResponseBody
+	public List<ImageIcon> getImageIcon() {
+		return ResourceUtils.getIcons(MenuConstant.MENU_INCON_PATH);
+	}
+
+	@RequestMapping("/setMenuIcon")
+	public void setMenuIcon(HttpServletRequest request) throws  Exception {
+		String id = request.getParameter("id");
+		String path = request.getParameter("path");
+		sysMenuService.setMenuIcon(Integer.parseInt(id),path);
 	}
 
 	/**
@@ -110,12 +129,11 @@ public class MenuOptionController {
 	public List<SysMenuItem> getMenuOptions(HttpServletRequest request)
 			throws Exception {
 		String id = request.getParameter("id");
-		 if(id.contains("#"))
-		 {
-			id=id.substring(id.indexOf("#")+1); 
+		if (id.contains("#")) {
+			id = id.substring(id.indexOf("#") + 1);
 			return sysMenuService.getTopMenuById(Integer.parseInt(id));
-		 }
-				
+		}
+
 		return sysMenuService.getMenuTree(new BigInteger(id));
 	}
 

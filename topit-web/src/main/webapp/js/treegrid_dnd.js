@@ -246,6 +246,27 @@
 																				state.disabledNodes) >= 0) {
 																	return
 
+																	
+
+																																		
+
+																	
+
+																																																			
+
+																	
+
+																																		
+
+																	
+
+																																																			
+
+																	
+
+																																		
+
+																	
 
 																}
 																var pageY = source.pageY;
@@ -447,14 +468,7 @@ function loadModuleSuccess(node) {
 	}
 }
 
-function loadMenuSuccess(row) {
-	$(this).treegrid('enableDnd', row && row.Lid > 1 ? row.Lid : null);
 
-	/*
-	 * var root = $('#MenuItemsList').treegrid('getRoot'); if (root) {
-	 * setMenuNodeIcon(root); }
-	 */
-}
 
 var parentId = -1;
 // 开始拖动
@@ -535,7 +549,6 @@ function insertNewMenuItem(url, moduleLid, name) {
 	}
 }
 
-
 // 添加菜单分组
 function createFolder(url) {
 	if (checkNewPosition()) {
@@ -557,7 +570,7 @@ function createFolder(url) {
 function doDelete(url) {
 	// debugger
 	var row = $('#MenuItemsList').treegrid('getSelected');
-	parentId=row._parentId;
+	parentId = row._parentId;
 	if (!row) {
 		$.messager.alert('提示', '请先选择需要删除的菜单项！', 'info');
 
@@ -603,7 +616,6 @@ function setMenuNodeIcon(root) {
 
 }
 
-
 function refreshTree() {
 	var children = $('#MenuItemsList').treegrid('getChildren', parentId);
 	if (children.length == 0) {
@@ -611,3 +623,6 @@ function refreshTree() {
 		setMenuNodeIcon(parent);
 	}
 }
+
+
+
