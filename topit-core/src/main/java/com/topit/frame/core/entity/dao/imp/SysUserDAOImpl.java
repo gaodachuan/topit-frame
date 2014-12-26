@@ -286,8 +286,8 @@ public class SysUserDAOImpl extends BaseDAO<SysUser> implements ISysUserDAO{
 	                   	SysUser user=new SysUser();
 	                   	user.setId(new BigInteger(rs.getInt("Id")+""));
 	                   	user.setLoginName(rs.getString("LoginName"));
-	                   	user.setPassWord(rs.getString("Password"));
-	                   	user.setRealName(rs.getString("RealName"));
+	                   	 user.setPassWord(rs.getString("Password"));
+	                    user.setRealName(rs.getString("RealName"));
 	                   	user.setRemark(rs.getString("Remark"));
 	                   	user.setLoginTimes(rs.getInt("LoginTimes"));
 	                   	user.setLastLoginTime(rs.getTimestamp("LastLoginTime"));

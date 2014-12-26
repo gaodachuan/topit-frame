@@ -1,16 +1,16 @@
 /*
 Navicat MySQL Data Transfer
 
-Source Server         : devserver
-Source Server Version : 50610
-Source Host           : 192.168.4.123:3306
-Source Database       : dbtopit
+Source Server         : localhost_3306
+Source Server Version : 50532
+Source Host           : localhost:3306
+Source Database       : housemanagesystem
 
 Target Server Type    : MYSQL
-Target Server Version : 50610
+Target Server Version : 50532
 File Encoding         : 65001
 
-Date: 2014-12-10 10:25:49
+Date: 2014-12-26 18:01:57
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -21,6 +21,7 @@ SET FOREIGN_KEY_CHECKS=0;
 DROP TABLE IF EXISTS `sys_menu_item`;
 CREATE TABLE `sys_menu_item` (
   `Id` int(11) NOT NULL COMMENT '菜单节点编号。',
+  `MenuId` int(11) DEFAULT '0' COMMENT '菜单号',
   `Name` varchar(50) NOT NULL COMMENT '菜单项显示名称。',
   `ParentId` int(11) DEFAULT NULL COMMENT '所属组的ID',
   `LeftChildId` int(11) DEFAULT NULL COMMENT '菜单项的第一个左孩子节点编号。',
@@ -42,14 +43,22 @@ CREATE TABLE `sys_menu_item` (
 -- ----------------------------
 -- Records of sys_menu_item
 -- ----------------------------
-INSERT INTO `sys_menu_item` VALUES ('1', '主菜单', '-1', '307', '-1', '-1', null, null, '主菜单', null, '1', '2014-12-10 09:14:27', '1', 'closed', '2014-12-22 09:14:42', '3');
-INSERT INTO `sys_menu_item` VALUES ('261', '张毅', '1', '310', '262', '-1', null, null, '张毅', null, '0', '2014-12-10 09:15:12', '0', 'closed', '2014-12-10 09:15:12', '14');
-INSERT INTO `sys_menu_item` VALUES ('262', '邱桂', '1', '271', '276', '-1', null, null, '邱桂', null, '0', '2014-12-10 09:15:23', '0', 'closed', '2014-12-10 09:15:23', '6');
-INSERT INTO `sys_menu_item` VALUES ('271', '用户组', '262', '-1', '-1', '24', null, null, '2321321323', null, '0', '2014-12-10 09:16:06', '0', 'open', '2014-12-10 09:16:06', '2');
-INSERT INTO `sys_menu_item` VALUES ('276', '周方旭', '1', '277', '-1', '-1', null, null, '周方旭', null, '0', '2014-12-10 09:17:50', '0', 'closed', '2014-12-10 09:17:50', '4');
-INSERT INTO `sys_menu_item` VALUES ('277', '用户组', '276', '-1', '-1', '24', null, null, '2321321323', null, '0', '2014-12-10 09:17:54', '0', 'open', '2014-12-10 09:17:54', '2');
-INSERT INTO `sys_menu_item` VALUES ('307', '高达川', '1', '308', '261', '-1', null, null, '高达川', null, '0', '2014-12-10 10:22:33', '0', 'closed', '2014-12-10 10:22:33', '3');
-INSERT INTO `sys_menu_item` VALUES ('308', '系统选项项', '307', '-1', '309', '25', null, null, '系统选项', null, '0', '2014-12-10 10:22:50', '0', 'open', '2014-12-10 10:22:50', '1');
-INSERT INTO `sys_menu_item` VALUES ('309', '用户组', '307', '-1', '-1', '24', null, null, '2321321323', null, '0', '2014-12-10 10:22:53', '0', 'open', '2014-12-10 10:22:53', '0');
-INSERT INTO `sys_menu_item` VALUES ('310', '模块维护', '261', '-1', '311', '22', null, null, '12121', null, '0', '2014-12-10 10:22:57', '0', 'open', '2014-12-10 10:22:57', '1');
-INSERT INTO `sys_menu_item` VALUES ('311', '系统选项项', '261', '-1', '-1', '25', null, null, '系统选项', null, '0', '2014-12-10 10:22:59', '0', 'open', '2014-12-10 10:22:59', '0');
+INSERT INTO `sys_menu_item` VALUES ('1', '9', '主菜单', '-1', '344', '-1', '-1', null, null, '主菜单', '', '1', '2014-12-10 09:14:27', '1', 'closed', '2014-12-22 09:14:42', '9');
+INSERT INTO `sys_menu_item` VALUES ('344', '9', '面板一', '1', '347', '345', '-1', null, null, '面板一', '', '0', '2014-12-25 13:56:05', '0', 'closed', '2014-12-25 13:56:05', '4');
+INSERT INTO `sys_menu_item` VALUES ('345', '9', '面板二', '1', '349', '358', '-1', null, null, '面板二', '', '0', '2014-12-25 13:56:26', '0', 'closed', '2014-12-25 13:56:26', '3');
+INSERT INTO `sys_menu_item` VALUES ('346', '9', '系统选项项', '344', '-1', '348', '25', null, null, '系统选项', 'large-picture.png', '0', '2014-12-25 13:56:30', '0', 'open', '2014-12-25 13:56:30', '12');
+INSERT INTO `sys_menu_item` VALUES ('347', '9', '模块维护', '344', '-1', '346', '22', null, null, '12121', 'large-clipart.png', '0', '2014-12-25 13:56:32', '0', 'open', '2014-12-25 13:56:32', '14');
+INSERT INTO `sys_menu_item` VALUES ('348', '9', '用户组', '344', '-1', '-1', '24', null, null, '2321321323', 'large-chart.png', '0', '2014-12-25 13:56:33', '0', 'open', '2014-12-25 13:56:33', '9');
+INSERT INTO `sys_menu_item` VALUES ('349', '9', '模块维护', '345', '-1', '350', '22', null, null, '12121', 'large-smartart.png', '0', '2014-12-25 13:56:36', '0', 'open', '2014-12-25 13:56:36', '4');
+INSERT INTO `sys_menu_item` VALUES ('350', '9', '系统选项项', '345', '-1', '-1', '25', null, null, '系统选项', 'large-chart.png', '0', '2014-12-25 13:56:37', '0', 'open', '2014-12-25 13:56:37', '3');
+INSERT INTO `sys_menu_item` VALUES ('351', '16', '菜单2', '-1', '352', '-1', '-1', null, null, null, '', '0', '2014-12-25 13:57:46', '0', 'closed', '2014-12-25 13:57:46', '1');
+INSERT INTO `sys_menu_item` VALUES ('352', '16', '测试1', '351', '354', '353', '-1', null, null, '测试1', '', '0', '2014-12-25 13:58:04', '0', 'closed', '2014-12-25 13:58:04', '4');
+INSERT INTO `sys_menu_item` VALUES ('353', '16', '测试2', '351', '356', '-1', '-1', null, null, '测试2', '', '0', '2014-12-25 13:58:11', '0', 'closed', '2014-12-25 13:58:11', '2');
+INSERT INTO `sys_menu_item` VALUES ('354', '16', '系统选项项', '352', '-1', '355', '25', null, null, '系统选项', 'large-shapes.png', '0', '2014-12-25 13:58:16', '0', 'open', '2014-12-25 13:58:16', '1');
+INSERT INTO `sys_menu_item` VALUES ('355', '16', '用户组', '352', '-1', '357', '24', null, null, '2321321323', 'large-shapes.png', '0', '2014-12-25 13:58:21', '0', 'open', '2014-12-25 13:58:21', '1');
+INSERT INTO `sys_menu_item` VALUES ('356', '16', '系统选项项', '353', '-1', '-1', '25', null, null, '系统选项', 'large-shapes.png', '0', '2014-12-25 13:58:24', '0', 'open', '2014-12-25 13:58:24', '2');
+INSERT INTO `sys_menu_item` VALUES ('357', '16', '模块维护', '352', '-1', '-1', '22', null, null, '12121', 'large-shapes.png', '0', '2014-12-25 13:58:25', '0', 'open', '2014-12-25 13:58:25', '1');
+INSERT INTO `sys_menu_item` VALUES ('358', '9', '面板三', '1', '361', '-1', '-1', null, null, '面板三', null, '0', '2014-12-26 15:01:02', '0', 'closed', '2014-12-26 15:01:02', '3');
+INSERT INTO `sys_menu_item` VALUES ('359', '9', '模块维护', '358', '-1', '360', '22', null, null, '12121', 'large-clipart.png', '0', '2014-12-26 15:01:06', '0', 'open', '2014-12-26 15:01:06', '4');
+INSERT INTO `sys_menu_item` VALUES ('360', '9', '系统选项项', '358', '-1', '-1', '25', null, null, '系统选项', 'large-smartart.png', '0', '2014-12-26 15:01:08', '0', 'open', '2014-12-26 15:01:08', '4');
+INSERT INTO `sys_menu_item` VALUES ('361', '9', '用户组', '358', '-1', '359', '24', null, null, '2321321323', 'large-chart.png', '0', '2014-12-26 15:01:09', '0', 'open', '2014-12-26 15:01:09', '3');

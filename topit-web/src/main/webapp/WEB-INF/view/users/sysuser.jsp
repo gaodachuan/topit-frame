@@ -23,22 +23,6 @@ html, body {
 }
 </style>
 <script type="text/javascript">
-   var sysUserForm={
-		loginName:function(){
-			return document.getElementById("loginName").value;
-		},
-		password:function(){
-			return document.getElementById("password").value;
-		},
-		realName:function(){
-			return document.getElementById("realName").value;
-		},
-		remark:function(){
-			return document.getElementById("remark").value;
-		}
-   }
-</script>
-<script type="text/javascript">
    
 	$(
 			function() {
@@ -70,22 +54,27 @@ html, body {
 					$('#SysUserGroup').combobox('clear');
 					/*获取用户组Id*/
 					groupName=array.groupIds;
-					//if(groupName.indexOf(",")==-1){
 						groupNames=groupName.split(",");
-						console.info(groupNames);
-					//}else{
-					//	groupNames=groupName;
-					//}
-		
-				
-					/*combobox提前选中*/
 					for(var i=0;i<groupNames.length;i++){
 						var j;
 						j=parseInt(groupNames[i]);
-						console.info(j);
 						$('#SysUserGroup').combobox('select',j);	
 					}
 				}
+				
+				function  LoginWeekDayselect(array){
+					var loginWeekday;
+					var loginWeekdays=[];
+					 $('#AllowLoginWeekDay').combobox('clear');
+					 /*获取登陆的星期天*/
+					 loginWeekday=array.allowLoginWeekDay;
+					 loginWeekdays= loginWeekday.split(","); 
+					 for(var i=0;i< loginWeekdays.length;i++){
+							var j;
+							j=parseInt( loginWeekdays[i]);
+							$('#AllowLoginWeekDay').combobox('select',j);	
+						}
+				    }
 				$('#sys_user').datagrid({
 					idField : 'id', //只要创建数据表格 就必须要加 ifField
 					title : '系统用户',
@@ -199,7 +188,7 @@ html, body {
 									}
 								}]);
 						}
-							if(option.actionId===2){
+							if(option.actionId===3){
 								$('#sys_user').datagrid('addToolbarItem',[{
 									'text' : option.name,
 									'iconCls' : 'icon-edit',
@@ -216,25 +205,44 @@ html, body {
 										}else{
 											$('#sysuser').dialog('open');//打开窗口
 											$('#sysuserform').get(0).reset();//清空表单数据
-											console.info(arr[0]);
-											comboxselect(arr[0]);
+											//console.info(arr[0]);
+											  comboxselect(arr[0]);
+										     LoginWeekDayselect(arr[0]);
+										     //日期字符串截取
+										     var allowTime=function (array){
+										    	 if(array!=null&&array!=undefined){
+											     var i= array.lastIndexOf(":");
+											     array= array.substring(0,i);
+										         }
+											     return array;
+										     }
+										   //  var allowLoginTimes;
+										     //allowLoginTimes=arr[0].allowLoginTime1;
+										     //var i=allowLoginTimes.lastIndexOf(":");
+										     //allowLoginTimes=allowLoginTimes.substring(0,i);
+										     //console.info(allowLoginTimes);
+										   // $('#AllowLoginTime1').timespinner('setValue', allowLoginTime[1]);
+										   
 											$('#sysuserform').form('load',{ 
 										        sysUserId:arr[0].id,
-												  vers:arr[0].version,
+										        vers:arr[0].version,
                                                 loginName:arr[0].loginName,
                                                 realName:arr[0].realName,  
                                                 password:arr[0].passWord,  
                                                 repassword:arr[0].passWord,
 												remark:arr[0].remark,
-                                                AllowLoginWeekDay:arr[0].allowLoginWeekDay,
+                                               // AllowLoginWeekDay:arr[0].allowLoginWeekDay,
+                                                //  AllowLoginTime1:allowLoginTimes,
+                                                  AllowLoginTime1:allowTime(arr[0].allowLoginTime1),
+                                                  AllowLoginTime2:allowTime(arr[0].allowLoginTime2)
 												}
-											
 											);
+									  
 										}
 									}
 								}]);
 							}//end of 2
-							if(option.actionId===3){
+							if(option.actionId===2){
 								$('#sys_user').datagrid('addToolbarItem',[{
 									'text' : option.name,
 									'iconCls' : 'icon-remove',
@@ -281,6 +289,7 @@ html, body {
 						.click(
 								function() {
 									if ($('#sysuserform').form('validate')) {
+										clear();//清空搜索框
 										$
 												.ajax({
 													type : 'post',
@@ -333,7 +342,33 @@ html, body {
 					var sysUserGroupId=$("#SysUserGroupSearch").combobox('getValue');
 					//console.info(sysUserGroupId);
 					$('#sys_user')
-									.datagrid('load',{sysUserName:sysUserName,sysUserGroupId:sysUserGroupId});
+									.datagrid('reload',{sysUserName:sysUserName,sysUserGroupId:sysUserGroupId});
+				});
+				/*
+				*重置方法
+				*/
+				function clear(){
+					   $('#module_search').get(0).reset();
+					     $('#SysUserGroupSearch').combobox('select',-1);
+						 $('#SysUserGroupSearch').combobox({
+								formatter: function(row){
+									var opts = $(this).combobox('options');
+									if(opts.valueField==-1){
+										return "全部";
+									}else{
+										var ti=row[opts.textField];
+										var flag;
+										flag='<span style=color:red >'
+										flag+='<img src=\'${pageContext.request.contextPath}/icons/man.png\'/>'+ti+'</span>'
+										return flag;
+									}
+									
+								}
+							});
+					
+				}
+				$("#reset").click(function(){
+					 clear();
 				});
 				//js方法：序列化表单
 				/**function serializeForm(form){
@@ -385,27 +420,8 @@ html, body {
 				flag='<span style=color:blue title='+ti+'>'+'<img src=\'${pageContext.request.contextPath}/icons/datebox_arrow.png\'/>'+'&nbsp;&nbsp;&nbsp;'+ti+'</span>'
 				return flag;
 			}
-			//
-		
-	 /**  onUnselect:function(record){
-	    	
-	    	select.concat(record.id);
-	    	console.info(record.id);
-	    	console.info(record.val);
-	    	//console.info(record.length);
-	    	
-	 },
-	   onSelect:function(record){
-		   for(var key in select)
-           {
-			   if(select[key]=record){
-				   
-			   }
-
-           }
-	      // console.info(record.id);
-	   }**/	
 	 });
+   
  })
  </script>
 </head>
@@ -492,10 +508,10 @@ html, body {
 						<td><label style="padding-left: 6px;">安全登录时间:</label></td>
 						<td > <input type="text" name="AllowLoginWeekDay" style="width:200px;height:25px;" id="AllowLoginWeekDay"
 							class="easyui-combobox" /></td>
-						<td><input type="text" name="AllowLoginTime1" style="width:70px;height:25px;"
-							class="easyui-timespinner" data-options=" "  /></td><td>
-						<input type="text" name="AllowLoginTime2" style="width:70px;height:25px;"
-							class="easyui-timespinner" data-options=" "  /></td>
+						<td><input type="text" id="AllowLoginTime1" name="AllowLoginTime1" style="width:70px;height:25px;"
+							class="easyui-timespinner" data-options=""  />-</td><td>
+						<input type="text" id="AllowLoginTime2" name="AllowLoginTime2" style="width:70px;height:25px;"
+							class="easyui-timespinner" data-options=""  /></td>
 					</tr>
 					
 					<tr >

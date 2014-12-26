@@ -10,7 +10,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
-import com.housemanagersystem.util.Constant;
 import com.topit.frame.busniess.base.IComObjectSortTypeService;
 import com.topit.frame.busniess.base.ISysMenuService;
 import com.topit.frame.common.util.CategoryConstant;
@@ -55,9 +54,9 @@ public class MenuOptionController {
 	public ResultPageObject getSysMenus(HttpServletRequest request)
 			throws Exception {
 		int currentPage = Integer.parseInt(request
-				.getParameter(Constant.Entity_Field.CURRENT_PAGE));
+				.getParameter("page"));
 		int pageSize = Integer.parseInt(request
-				.getParameter(Constant.Entity_Field.PAGE_SIZE));
+				.getParameter("rows"));
 		return sysMenuService.getSysMenus((currentPage - 1) * pageSize,
 				pageSize);
 	}

@@ -11,6 +11,7 @@
 
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
+import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -87,9 +88,7 @@ public class SysUserController {
 	//@RequestMapping(value = "/sysuser.do", params = "method=getList")
 	public @ResponseBody ResultPageObject getList(HttpServletRequest req,
 			HttpServletResponse reps) throws Exception {
-		// ��ǰҳ��
 		int page = Integer.parseInt(req.getParameter("page"));
-//		// ��ǰÿҳ����
 		int rows = Integer.parseInt(req.getParameter("rows"));
 		int offset = (page - 1) * rows;
 		List<SysUser> list = null;
@@ -180,6 +179,11 @@ public class SysUserController {
 		try {
 			maps = getFrontSource(request,response);
 			SysUser user=saveOrUpdateUser(maps);
+			if(user==null){
+				result.setErrorCode(1);
+				result.setErrorDetail("用户名重复！");
+				return result;
+			}
 		  if(saveSysUserUserGroupId( maps, user , request,  response)){
 			  if(sysUserServiceImpl.add(user)){
 				  result.setErrorCode(0);
@@ -191,9 +195,9 @@ public class SysUserController {
 			      result.setErrorDetail("添加失败！");
 			  }
 		} catch (Exception e1) {
+			e1.printStackTrace();	
 			result.setErrorCode(1);
 			result.setErrorDetail("添加失败！");
-			e1.printStackTrace();			 
 		}
 		
      
@@ -250,21 +254,29 @@ public class SysUserController {
 	@Transactional
     public ResultObject update(HttpServletRequest request, HttpServletResponse response){
 		Map maps = null;
-		 ResultObject result=null;
+		ResultObject result=null;
+		boolean flag=false; 
 		try {
 			result=new ResultObject();
 			maps = getFrontSource(request,response);
 			SysUser user=saveOrUpdateUser(maps);
-			//SysUser sysUser=user;
+			if(user==null){
+			  result.setErrorCode(1);
+			  result.setErrorDetail("用户名重复！");
+			  return result;
+			}
 	     if(updateSysUserGroupId( maps, user , request,  response)){
 		 if(sysUserServiceImpl.updateSysUser(user)){
-			  result.setErrorCode(0);
-			  result.setErrorDetail("修改成功！");  
-		  } 
-	      }else{
-			  result.setErrorCode(1);
-		      result.setErrorDetail("修改失败！");
-		  }
+			  flag=true; 
+		    }
+	      }
+	     if(flag){
+	     result.setErrorCode(0);
+		  result.setErrorDetail("修改成功！");
+	     }else{
+	     result.setErrorCode(1);
+	      result.setErrorDetail("修改失败！");
+	     }
 		} catch (Exception e) {
 			result.setErrorCode(1);
 			result.setErrorDetail("修改失败！");
@@ -280,23 +292,21 @@ public class SysUserController {
 	 
 	private SysUser saveOrUpdateUser(Map map){
 		String id=(String)map.get("id");
-		System.out.println("id为"+id);
 		String loginName =(String)map.get("loginName");
 		String password = (String)map.get("password");
 		String realName=(String)map.get("realName");
 		String remark=(String)map.get("remark");
 		String AllowLoginWeekDay[]=(String[])map.get("AllowLoginWeekDay");
-		Date allowLoginTime1=(Date)map.get("allowLoginTime1");
-		Date allowLoginTime2=(Date)map.get("allowLoginTime2");
+		String str=(String)map.get("AllowLoginTime1");
+		String str2=(String)map.get("AllowLoginTime2");
 		SysUser user=null;
-		if(id!=null){
-			try {
-				 user=sysUserServiceImpl.findSysUserByLoginName(loginName);
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				 e.printStackTrace();
-				 
-			}
+		try {
+			
+			
+		if(id!=null&&!id.equals("")){
+			
+				 user=sysUserServiceImpl.findById(new BigInteger(id));
+		
 		}else{
 		 user=new SysUser();
 		//设置用户Id
@@ -305,13 +315,56 @@ public class SysUserController {
 		}
 		//设置用户密码
 		 setUserPassword(password, user);
-	    user.setLoginName(loginName);
+		 SysUser usercheck=sysUserServiceImpl.findSysUserByLoginName(loginName);
+		 //判断用户或修改时用户名是否重复
+		 if(id.equals("")||id==null){
+			 if(usercheck==null){
+				user.setLoginName(loginName); 
+			 }else{
+				 return null;
+			 }
+		 }else{
+			 if( usercheck==null){
+				 user.setLoginName(loginName);
+			 }else{
+				 if(!(id).equals((usercheck.getId()+""))){
+					return null; 
+				 }
+			 }
+		 }
+		 if(usercheck==null||id.equals("")){
+			 
+		 }
+		 if(!(id).equals((usercheck.getId()+""))){
+			 if(sysUserServiceImpl.findSysUserByLoginName(loginName)==null){
+				 user.setLoginName(loginName); 
+			 }else{
+				 return null;
+			 }	
+		 }
+	
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			 e.printStackTrace();
+			 
+		}
+		
         user.setRealName(realName);
         //允许登陆的星期
         setAllowLoginWeekDay(AllowLoginWeekDay, user);
         //设置允许的开始时间
+        Time allowLoginTime1=null;
+        if(!str.equals("")&&str!=null){
+    		allowLoginTime1=Time.valueOf((str+":00"));
+    		
+    		}
         user.setAllowLoginTime1(allowLoginTime1);
         //设置允许的结束时间
+        Time allowLoginTime2=null;
+        if(!str2.equals("")&&str2!=null){
+    	   allowLoginTime2=Time.valueOf((str2+":00"));
+    	
+    		}
         user.setAllowLoginTime2(allowLoginTime2);
         //设置备注
         setRemark(remark, user);
@@ -498,8 +551,8 @@ public class SysUserController {
 		String realName=request.getParameter("realName");
 		String remark=request.getParameter("remark");
 		String AllowLoginWeekDay[]=request.getParameterValues("AllowLoginWeekDay");
-		Date AllowLoginTime1=StringToDate(request.getParameter("AllowLoginTime1"));
-		Date AllowLoginTime2=StringToDate(request.getParameter("AllowLoginTime2"));
+		String AllowLoginTime1=request.getParameter("AllowLoginTime1");
+		String AllowLoginTime2=request.getParameter("AllowLoginTime2");
 		String SysUserGroup[]=request.getParameterValues("SysUserGroup");
 		String version=request.getParameter("vers");
 		maps.put("id", id);
