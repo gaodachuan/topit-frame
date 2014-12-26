@@ -25,6 +25,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.stereotype.Repository;
 
+
 import com.topit.frame.core.dao.BaseDAO;
 import com.topit.frame.core.dao.SqlQuery;
 import com.topit.frame.core.entity.dao.base.ISysUserDAO;
@@ -189,8 +190,10 @@ public class SysUserDAOImpl extends BaseDAO<SysUser> implements ISysUserDAO{
                    	user.setLastLoginTime(rs.getTimestamp("LastLoginTime"));
                    	user.setVersion(rs.getInt("Version"));
                    	user.setGroupName(rs.getString("GroupName"));
+                   	user.setGroupIds(rs.getString("GroupIds"));
                    	user.setAllowLoginWeekDay(rs.getString("AllowLoginWeekDay"));
-                   	user.setVersion(rs.getInt("version"));
+                	user.setAllowLoginTime1(rs.getTime("allowLoginTime1"));
+                   	user.setAllowLoginTime2(rs.getTime("allowLoginTime2"));
                    	list.add(user);
 				}
 			
@@ -233,8 +236,16 @@ public class SysUserDAOImpl extends BaseDAO<SysUser> implements ISysUserDAO{
 				}
 			
 		});
-		
-		 return (Integer) list.get(0);
+		int result=0;
+	
+				 try{
+					result=(Integer) list.get(0); 
+				 }
+		          catch(Exception ex){
+		        	  //ex.getStackTrace();
+		        	  result=0;
+		          }
+				 return result;	
 		 
 	}
 
@@ -254,7 +265,7 @@ public class SysUserDAOImpl extends BaseDAO<SysUser> implements ISysUserDAO{
 			String groupId, int firstResult, int pageSize) throws Exception {
 		// TODO Auto-generated method stub
 		StringBuffer sql=new StringBuffer();
-		sql.append("  select A.*,GROUP_CONCAT(E.Name) as GroupName from sys_user A");
+		sql.append("  select A.*,GROUP_CONCAT(E.Name) as GroupName,GROUP_CONCAT(E.GroupId) as GroupIds from sys_user A");
 		sql.append("  left join (select B.GroupId,B.`UserId`,C.Name");
 		sql.append("  from `sys_user_user_group` B inner join `sys_user_group` C");
 		sql.append("  on B.GroupId=C.Id	) as E on A.`Id`=E.`UserId` where 1=1 ");
@@ -282,6 +293,10 @@ public class SysUserDAOImpl extends BaseDAO<SysUser> implements ISysUserDAO{
 	                   	user.setLastLoginTime(rs.getTimestamp("LastLoginTime"));
 	                   	user.setVersion(rs.getInt("Version"));
 	                   	user.setGroupName(rs.getString("GroupName"));
+	                	user.setAllowLoginWeekDay(rs.getString("AllowLoginWeekDay"));
+	                	user.setAllowLoginTime1(rs.getTime("allowLoginTime1"));
+	                   	user.setAllowLoginTime2(rs.getTime("allowLoginTime2"));
+	                	user.setGroupIds(rs.getString("GroupIds"));
 	                   	list.add(user);
 					}
 				

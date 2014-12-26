@@ -442,6 +442,11 @@
 					});
 })(jQuery);
 
+function loadMenuSuccess(row) {
+	$(this).treegrid('enableDnd', row && row.Lid > 1 ? row.Lid : null);
+		
+}
+
 /**
  * 操作菜单树
  * 

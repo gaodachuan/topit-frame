@@ -15,27 +15,31 @@ import com.topit.frame.common.view.servlet.ImageIcon;
  */
 public class ResourceUtils {
 	private static List<ImageIcon> iconList = new ArrayList<ImageIcon>();
-	private static ImageIcon imageIcon = new ImageIcon();
 	private static String[] accept = { ".png" };
 	private static boolean isFirst = true;
 
 	public static List<ImageIcon> getIcons(String path) {
 		if (isFirst) {
-			sweep(path);
-			isFirst = false;
+			sweep(path);		
 		}
 		return iconList;
 	}
 
-	public void updateResource(String path) {
+	public static  void updateResource(String path) {
+		iconList.clear();
 		sweep(path);
 	}
-
+    
 	private static void isImageIcon(File file) {
 		if (isAccept(file)) {
+			ImageIcon imageIcon = new ImageIcon();				
 			imageIcon.setName(file.getName());
 			imageIcon.setPath(file.getPath());
-			iconList.add(imageIcon);
+			if(!iconList.contains(imageIcon))
+			{
+				iconList.add(imageIcon);
+			}
+			
 		}
 	}
 
@@ -50,7 +54,8 @@ public class ResourceUtils {
 		return false;
 	}
 
-	private static void sweep(String path) {
+	private  static void sweep(String path) {
+		isFirst = false;
 		//File file=new File(URI.create(path));
 		File target = new File(path);
 		File[] listFiles = target.listFiles();

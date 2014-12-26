@@ -11,6 +11,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.topit.frame.busniess.base.ISysMenuService;
 import com.topit.frame.common.util.MenuConstant;
+import com.topit.frame.common.util.ResourceUtils;
 import com.topit.frame.core.entity.data.SysUser;
 import com.topit.frame.core.ui.entity.MenuPanle;
 
@@ -36,6 +37,8 @@ public class MainController {
 		try {
 			
 			MenuConstant.MENU_INCON_PATH=request.getRealPath("/")+"//icons//menuIcons";
+			//刷新图标库
+			ResourceUtils.updateResource(MenuConstant.MENU_INCON_PATH);
 			//加载主菜单
 			List<MenuPanle> list = sysMenuService.getMenusByUserId(sysUser
 					.getId().intValue(),MenuConstant.MENU_MAIN);

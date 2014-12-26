@@ -8,10 +8,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
-
 import com.housemanagersystem.util.Constant;
 import com.topit.frame.busniess.base.IComObjectSortTypeService;
 import com.topit.frame.busniess.base.ISysMenuService;
@@ -107,13 +105,14 @@ public class MenuOptionController {
 	@RequestMapping("/getMenuIcons")
 	@ResponseBody
 	public List<ImageIcon> getImageIcon() {
+				
 		return ResourceUtils.getIcons(MenuConstant.MENU_INCON_PATH);
 	}
 
 	@RequestMapping("/setMenuIcon")
 	public void setMenuIcon(HttpServletRequest request) throws  Exception {
 		String id = request.getParameter("id");
-		String path = request.getParameter("path");
+		String path = request.getParameter("name");
 		sysMenuService.setMenuIcon(Integer.parseInt(id),path);
 	}
 

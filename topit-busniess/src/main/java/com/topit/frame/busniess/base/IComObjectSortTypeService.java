@@ -11,4 +11,11 @@ public interface IComObjectSortTypeService {
 			throws Exception;
 	
 	public List<Node> getTreeWithModule(String sql) throws Exception;
+	
+	
+	public boolean save(ComObjectSortType comObjectSortType) throws Exception;
+	
+	public boolean update(String hql, Object... params) throws Exception;
+	
+	public ComObjectSortType find(int id) throws Exception;
 }

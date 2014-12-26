@@ -7,6 +7,12 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>模块添加</title>
+<style type="text/css">
+html, body {
+	height: 100%;
+	overflow: hidden;
+}
+</style>
 <link rel="stylesheet" type="text/css" href="../css/easyui.css" />
 <link rel="stylesheet" type="text/css" href="../css/icon.css" />
 <link rel="stylesheet" type="text/css" href="../css/ManageStyle.css" />
@@ -25,13 +31,56 @@
 							idField : 'id', //只要创建数据表格 就必须要加 ifField
 							title : '模块信息',
 							fit : true,
-							height : 600,
+							height :600,
 							url : 'sysmodule.do?method=getList',
 							fitColumns : true,
 							striped : true, //隔行变色特性 
 							loadMsg : '数据正在加载,请耐心的等待...',
 							rownumbers : true,
 							singleSelect : true,
+							loadFilter : function(data) {
+								flag = data.listAction;
+								return data.resultPageObject
+							},
+							onLoadSuccess : function(data) {
+								for (var i = 0; i < flag.length; i++) {
+									var option = flag[i];
+									if (option.actionId == 0) {
+										$('#sys_module').datagrid(
+												"addToolbarItem", [ {
+													"text" : option.name,
+													"iconCls" : "icon-ok",
+													"actionId":option.actionId,
+													"handler" : function() {
+														alert(option.name);
+													}
+												} ]);
+									}
+									if (option.actionId == 1) {
+										$('#sys_module').datagrid(
+												"addToolbarItem", [ {
+													"text" : option.name,
+													"iconCls" : "icon-ok",
+													"actionId":option.actionId,
+													"handler" : function() {
+														alert(option.name);
+													}
+												} ]);
+									}
+									if (option.actionId == 2) {
+										$('#sys_module').datagrid(
+												"addToolbarItem", [ {
+													"text" : option.name,
+													"iconCls" : "icon-ok",
+													"actionId":option.actionId,
+													"handler" : function() {
+														alert(option.name);
+													}
+												} ]);
+									}
+								}
+								$('#sys_module').datagrid("resize");
+							},
 							columns : [ [
 									{
 										field : 'id',
@@ -78,88 +127,8 @@
 							pagination : true,
 							pageSize : 10,
 							pageList : [ 5, 10, 15, 20, 50 ],
-							//工具栏
-							toolbar : [ {
-								text : '新增模块',
-								iconCls : 'icon-add',
-								handler : function() {
-									flag = 'save';
-									$('#moduledialog').dialog({
-										title : '新增模块'
-									});
-									$('#moduleform').get(0).reset();
-									$('#moduledialog').dialog('open');
-
-								}
-
-							}, {
-								text : '编辑模块',
-								iconCls : 'icon-edit',
-								handler : function() {
-									flag = 'edit';
-									var arr =$('#sys_module').datagrid('getSelections');
-									if(arr.length != 1){
-										$.messager.show({
-											title:'提示信息!',
-											msg:'请选择一行记录进行修改!'
-										});
-									} else {
-										$('#moduledialog').dialog({
-											title:'修改模块'
-										});
-										$('#moduleform').get(0).reset();    
-										$('#moduleform').form('load',{	   
-											id:arr[0].id ,
-											name:arr[0].name ,
-											categoryId:arr[0].categoryId ,
-											modulePath:arr[0].modulePath ,
-											description:arr[0].description
-										});
-										$('#moduledialog').dialog('open'); 
-									}
-								
-
-								}
-
-							}, {
-								text : '删除模块',
-								iconCls : 'icon-remove',
-								handler : function() {
-									flag = 'del';
-									var arr = $('#sys_module').datagrid('getSelections');
-									if(arr.length <= 0 ){
-										$.messager.show({
-											title:'提示信息',
-											msg:'请选择进行需要删除的记录!'
-										});											
-									} else {
-										$.messager.confirm('提示信息' , '确认删除?' , function(r){
-											if(r){
-												var id = '';
-												for(var i = 0 ; i < arr.length ; i++){
-													id += arr[i].id + ',';
-												}
-												id = id.substring(0,id.length-1);
-												$.post('sysmodule.do?method=del' , {id:id},function(result){
-													    $('#sys_module').datagrid('reload');
-													    if (result.errorCode == 0) {
-															$.messager.alert('提示信息',
-																	result.errorDetail, 'info');
-														} else {
-															$.messager.alert('提示信息',
-																	result.errorDetail, 'error');
-														}
-												});
-												
-											} else {
-												 return ;
-											}
-										});
-									}
-								}
-
-							} ]
-
+							toolbar : []
+						//工具栏
 						});
 		$('#btnSave').click(
 				function() {
@@ -232,14 +201,14 @@
 				</div>
 			</form>
 		</div>
-		<div region="center">
-			<table id="sys_module"></table>
+		<div region="center"  fit=false >
+			<table id="sys_module"  ></table>
 		</div>
 		<div id="moduledialog" modal=true draggable=false
-			class="easyui-dialog" closed=true style="width: 480px; height: auto;">
+			class="easyui-dialog" closed=true style="width: 480px;">
 			<div id="dialogtab" class="easyui-tabs" fit=false plain=true
 				style="padding: 3%;">
-				<div title="模块信息" align="center" style="width: 100%;" fit=true>
+				<div title="模块信息" align="center" style="width: 100%;heigth:auto;" fit=true>
 					<form id="moduleform" action="" method="post"
 						style="margin-top: 20px; margin-bottom: 20px">
 

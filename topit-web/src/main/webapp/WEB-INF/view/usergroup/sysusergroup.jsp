@@ -380,6 +380,7 @@ function setAuthorization(id){
 											toolbar : []
 										});
 										$('#sys_user_group').datagrid('reload');
+										$('#sys_module').datagrid("resize");
 									}		
 								});
 							}
@@ -433,6 +434,7 @@ function setAuthorization(id){
 														toolbar : []
 													});
 													$('#sys_user_group').datagrid('reload');
+													$('#sys_module').datagrid("resize");
 												}		
 											});
 										}	
@@ -472,8 +474,15 @@ function setAuthorization(id){
 				$.each(data.rows,function(index,item){
 						if(item.groupId != 0){
 							$('#sys_module_action').datagrid('checkRow',index);
-						}					
+						}
 				});	
+			},
+			onUncheck : function(rowIndex,rowData){
+				if (rowData.groupId===1 && rowData.moduleId===24 && rowData.actionId===5) {
+					$.messager.alert('提示消息','超级管理员的该权限无法取消！','warning');
+					$('#sys_module_action').datagrid('checkRow',rowIndex); 
+
+				}	
 			}
 		});
 		

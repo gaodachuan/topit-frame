@@ -20,6 +20,7 @@ import com.topit.frame.core.entity.data.SysModule;
  * 
  */
 @Repository("sysModuleService")
+@Transactional
 public class SysModuleServiceImp implements ISysModuleService {
 
 	/**

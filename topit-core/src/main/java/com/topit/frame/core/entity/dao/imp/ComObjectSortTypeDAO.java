@@ -34,8 +34,7 @@ public class ComObjectSortTypeDAO extends BaseDAO<ComObjectSortType> implements
 	 */
 	public List<Node> getListTree(String sql) throws Exception {
 		final List<Node> list = new ArrayList<Node>();
-         
-		
+
 		sqlQuery.getJdbcTemplate().query(sql, new RowCallbackHandler() {
 			/**
 			 * <p>
@@ -63,6 +62,7 @@ public class ComObjectSortTypeDAO extends BaseDAO<ComObjectSortType> implements
 				node.setText(rs.getString("NAME"));
 				node.setNodeParent(rs.getInt("PARENT"));
 				node.setTablename(rs.getString("TABLENAME"));
+
 				list.add(node);
 
 			}

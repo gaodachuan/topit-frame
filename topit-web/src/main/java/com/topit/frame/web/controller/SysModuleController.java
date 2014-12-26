@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.annotation.Resources;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -16,7 +17,10 @@ import com.topit.frame.busniess.imp.SysModuleServiceImp;
 import com.topit.frame.common.view.servlet.ResultObject;
 import com.topit.frame.common.view.servlet.ResultPageObject;
 import com.topit.frame.core.entity.dao.base.IIdGenerator;
+import com.topit.frame.core.entity.dao.base.ISysModuleActionDAO;
 import com.topit.frame.core.entity.data.SysModule;
+import com.topit.frame.core.entity.data.SysModuleAction;
+import com.topit.frame.core.ui.entity.ResultRightObject;
 import com.topit.frame.core.util.DataDicDAO;
 import com.topit.frame.core.util.entity.DataDic;
 
@@ -32,6 +36,9 @@ public class SysModuleController {
 
 	@Resource(name = "sysModuleService")
 	private SysModuleServiceImp sysModuleService;
+
+	@Resource(name = "sysModuleActionDAOImp")
+	private ISysModuleActionDAO sysModuleActionDAOImp;
 
 	@Resource(name = "dataDicDAO")
 	private DataDicDAO dataDicDAO;
@@ -59,8 +66,14 @@ public class SysModuleController {
 	 */
 	@SuppressWarnings("unused")
 	@RequestMapping(value = "/module/sysmodule.do", params = "method=getList")
-	public @ResponseBody ResultPageObject getList(HttpServletRequest req,
+	public @ResponseBody ResultRightObject getList(HttpServletRequest req,
 			HttpServletResponse reps) throws Exception {
+
+		int userId = 0;
+		String modulePath = "/usergroup/sysusergroup.do";
+		List<SysModuleAction> listAction = sysModuleActionDAOImp.getListAction(
+				modulePath, userId);
+
 		// 当前页码
 		int page = Integer.parseInt(req.getParameter("page"));
 		// 当前每页条数
@@ -77,7 +90,11 @@ public class SysModuleController {
 		ResultPageObject resultPageObject = new ResultPageObject();
 		resultPageObject.setRows(list);
 		resultPageObject.setTotal(String.valueOf(sysModuleService.getCount()));
-		return resultPageObject;
+
+		ResultRightObject resultRightObject = new ResultRightObject();
+		resultRightObject.setListAction(listAction);
+		resultRightObject.setResultPageObject(resultPageObject);
+		return resultRightObject;
 	}
 
 	/**

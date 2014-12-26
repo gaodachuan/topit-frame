@@ -36,6 +36,7 @@
 	});
      
 	var isFirst=true;
+	var menuSelect;
 	var editRow;
 	var MenuIcon;
 	$(function() {
@@ -69,22 +70,21 @@
 								editor:{  
 									 type : "combobox",
 						                options : {
-						                	 data : [ {
-						                         "name" : "cut.png",
-						                         "path" : "D:\\Tomcat7\\apache-tomcat-7.0.56\\webContent\\topit-web\\icons\\menuIcons\\cut.png"
-						                     }, {
-						                    	 "name" : "cut.png",
-						                    	 "path" : "D:\\Tomcat7\\apache-tomcat-7.0.56\\webContent\\topit-web\\icons\\menuIcons\\cut.png"
-						                     } ],
-						                    valueField : 'path',
+						                	url:'${pageContext.request.contextPath}/MenuOption/getMenuIcons.do',
+						                    valueField : 'name',
 						                    textField : 'name',
 						                    editable : false,
 						                    // required : true,
 						                    panelHeight : "auto",
 						                    missingMessage : "请选择图标",
-						                    onSelect : function(record) {
-						                    	
-						                        alert(editRow.id+''+record.id);
+						                    formatter : function(row) {
+											   var res;										
+                                               res='<div align=\'center\'><img src=\'${pageContext.request.contextPath}/icons/menuIcons/'+row.name+'\'><br>'+row.name+'<\/div>';
+											   return res;
+											},
+						                    onSelect : function(record) {					                    	
+						                        menuSelect=record.name;						                        
+						                        $('#MenuItemsList').treegrid('endEdit', editRow.id);
 						                    },
 						                }  
 						                 
@@ -102,9 +102,20 @@
 							    formatter : Common.DateFormatter
 							}
 							] ],
-							onClickRow:function(row){
-								editRow=row;
-								$('#MenuItemsList').treegrid('beginEdit', row.id);
+							onAfterEdit:function(index,row){
+								$.ajax({
+									url:'setMenuIcon.do',
+									data:{id:editRow.id,name:menuSelect},
+									success:function(res){}
+								});
+							},
+							onDblClickRow:function(row){
+								if(row.moduleid!=-1)
+								{
+									editRow=row;
+									$('#MenuItemsList').treegrid('beginEdit', row.id);
+								}	
+								
 							},
 							onLoadSuccess : loadMenuSuccess,
 							onBeforeDrag : onBeforeDrag,
@@ -126,13 +137,13 @@
 						});
 	});
 	
+	
 	function loadMenuSuccess(row) {
 		$(this).treegrid('enableDnd', row && row.Lid > 1 ? row.Lid : null);
-		$.post('${pageContext.request.contextPath}/MenuOption/getMenuIcons.do', null, function(result) {
-			MenuIcon=result;
-		}, 'json');
-	
+			
 	}
+	
+	
 	//拖动插入
 	function onDrop(targetRow, sourceRow, point) {
 		var sourceId = sourceRow.id;

@@ -78,6 +78,7 @@ public class SysUserGroupServiceImp implements ISysUserGroupService {
 	 */
 	 
 	public boolean deleteById(int id) throws Exception {
+		
 		return sysUserGroupDAOImp.deleteById(id);
 	}
 
@@ -168,7 +169,9 @@ public class SysUserGroupServiceImp implements ISysUserGroupService {
 	 */
 	 
 	public List<Map<String, Object>> getListForPageBySql(int pageNow, int pageSize) throws Exception {
+		
 		return sysUserGroupDAOImp.getListForPageBySql(pageNow, pageSize);
+		
 	}
 	
 	/**   
@@ -180,6 +183,7 @@ public class SysUserGroupServiceImp implements ISysUserGroupService {
 	 */
 	 
 	public int getCount() throws Exception {
+		
 		return sysUserGroupDAOImp.getCount();
 
 	}
@@ -194,6 +198,7 @@ public class SysUserGroupServiceImp implements ISysUserGroupService {
 	 */
 	 
 	public boolean changestatus(SysUserGroup sysUserGroup) throws Exception {
+		
 		return sysUserGroupDAOImp.changestatus(sysUserGroup);
 
 	}
@@ -207,7 +212,7 @@ public class SysUserGroupServiceImp implements ISysUserGroupService {
 	 */
 	 
 	public List<SysUserGroup> getListForCombox() throws Exception {
-		// TODO Auto-generated method stub
+
 		 return sysUserGroupDAOImp.getListForCombox();
 		 
 	}

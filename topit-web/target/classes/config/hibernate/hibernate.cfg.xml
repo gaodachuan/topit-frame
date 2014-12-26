@@ -12,9 +12,9 @@
 		<mapping class="com.topit.frame.core.entity.data.ComObjectSortCategory"/>
 		<mapping class="com.topit.frame.core.entity.data.SysUser"/>
 		<mapping class="com.topit.frame.core.entity.data.SysModuleAction"/>
-		<mapping class="com.topit.frame.core.entity.data.SysUserGroupModuleActionRight"/>
+		<mapping class="com.topit.frame.core.entity.data.SysUserGroupActionRight"/>
 		<mapping class="com.topit.frame.core.entity.data.SysUserUserGroup"/>
-		
+		<mapping class="com.topit.frame.core.entity.data.SysUserGroupActionRight"/>
 		<mapping class="com.topit.frame.core.entity.data.SysMenu"/>
 		<mapping class="com.topit.frame.core.entity.data.SysMenuItem"/>
 		<mapping class="com.topit.frame.core.entity.data.ComObjectSortType"/>

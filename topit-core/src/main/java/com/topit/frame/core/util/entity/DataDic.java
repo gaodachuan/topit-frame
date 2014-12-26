@@ -16,23 +16,23 @@ public class DataDic implements Serializable {
 	/** 
 	* @Fields id : 类型代码
 	*/ 
-	private String id;
+	private int id;
 	/** 
 	* @Fields name :类型名称 
 	*/ 
 	private String name;
 
-	public DataDic(String id, String name) {
+	public DataDic(int id, String name) {
 		this.id = id;
 		this.name = name;
 
 	}
 
-	public String getId() {
+	public int getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 

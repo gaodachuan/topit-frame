@@ -324,8 +324,9 @@ public class SysMenuServiceImp implements ISysMenuService {
 
 				for (Map<String, Object> s : list) {
 					if (sysMenuItem.getId() == (Integer) s.get("id")) {
-						MenuUI menuUI = new MenuUI();
-						menuUI.setMenuIcon(sysMenuItem.getIconfile());
+						MenuUI menuUI = new MenuUI();					
+					    String simpleName=sysMenuItem.getIconfile().substring(0, sysMenuItem.getIconfile().lastIndexOf("."));	
+						menuUI.setMenuIcon(simpleName);
 						menuUI.setMenuName(sysMenuItem.getName());
 						menuUI.setModuleId(sysMenuItem.getModuleid());
 						menuUI.setPath(s.get("modulepath").toString());

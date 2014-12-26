@@ -108,7 +108,7 @@ public class SysModuleActionDAOImp extends BaseDAO<SysModuleAction> implements
 		String sql="SELECT * FROM sys_module_action A "
 				+ "LEFT JOIN "
 				+ "(SELECT B.GroupId,B.ModuleId BModuleId,B.ActionId BActionId "
-				+ "FROM sys_user_group_module_action_right B "
+				+ "FROM sys_user_group_action_right B "
 				+ "WHERE B.GroupId =?) C "
 				+ "ON A.ModuleId=C.BModuleId AND A.ActionId=C.BActionId "
 				+ "WHERE A.ModuleId = ?;";
@@ -146,10 +146,10 @@ public class SysModuleActionDAOImp extends BaseDAO<SysModuleAction> implements
 	public void saveAllAuthorization(String groupId, String moduleId)
 			throws Exception {
 		
-		 String sql="INSERT INTO sys_user_group_module_action_right "
+		 String sql="INSERT INTO sys_user_group_action_right "
 		 		+ "SELECT "+groupId+" AS GroupId,A.ModuleId,A.ActionId,0,sysdate() "
 		 		+ "FROM sys_module_action A LEFT JOIN ("
-		 		+ "SELECT * FROM sys_user_group_module_action_right WHERE GroupId = "+groupId+") B "
+		 		+ "SELECT * FROM sys_user_group_action_right WHERE GroupId = "+groupId+") B "
 		 		+ "ON A.ModuleId=B.ModuleId AND A.ActionId=B.ActionId "
 		 		+ "WHERE A.ModuleId = "+moduleId+" AND B.GroupId is null;";
 		 
@@ -168,13 +168,13 @@ public class SysModuleActionDAOImp extends BaseDAO<SysModuleAction> implements
 	public void saveCheckedAuthorization(String groupId,String moduleIds, String values)
 			throws Exception {
 
-		String hql="DELETE FROM SysUserGroupModuleActionRight where groupId="+groupId+" AND moduleId IN "+moduleIds;
+		String hql="DELETE FROM SysUserGroupActionRight WHERE groupId="+groupId+" AND moduleId IN "+moduleIds;
 		
 		Session session=this.getHibernateTemplate().getSessionFactory().getCurrentSession();
 		
 		session.createQuery(hql).executeUpdate();
 		if(!"".equals(values)){
-			String sql="INSERT INTO sys_user_group_module_action_right values "+values+";";
+			String sql="INSERT INTO sys_user_group_action_right VALUES "+values+";";
 			
 			session.createSQLQuery(sql).executeUpdate();
 		}

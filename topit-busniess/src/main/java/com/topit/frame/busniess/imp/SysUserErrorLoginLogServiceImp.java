@@ -33,7 +33,7 @@ public class SysUserErrorLoginLogServiceImp implements ISysUserErrorLoginLogServ
 	 
 	public boolean save(SysUserErrorLoginLog sysUserErrorLoginLog)
 			throws Exception {
-		// TODO Auto-generated method stub
+
 		return sysUserErrorLoginLogDAOImp.save(sysUserErrorLoginLog);
 
 	}

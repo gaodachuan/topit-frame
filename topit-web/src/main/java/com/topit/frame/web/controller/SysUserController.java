@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.topit.frame.busniess.base.ISysModuleActionService;
 import com.topit.frame.busniess.base.ISysUserService;
 import com.topit.frame.busniess.imp.SysUserServiceImp;
 import com.topit.frame.busniess.imp.SysUserUserGroupServiceImp;
@@ -41,9 +42,11 @@ import com.topit.frame.common.view.servlet.ResultPageObject;
 import com.topit.frame.core.entity.dao.base.IIdGenerator;
 import com.topit.frame.core.entity.dao.base.ISysUserUserGroupDAO;
 import com.topit.frame.core.entity.data.SysModule;
+import com.topit.frame.core.entity.data.SysModuleAction;
 import com.topit.frame.core.entity.data.SysUser;
 import com.topit.frame.core.entity.data.SysUserGroup;
 import com.topit.frame.core.entity.data.SysUserUserGroup;
+import com.topit.frame.core.ui.entity.ResultRightObject;
 import com.topit.frame.core.util.DataDicDAO;
  /** 
  * @ClassName: SysUserController 
@@ -69,8 +72,12 @@ public class SysUserController {
 	//id生成策略
 	@Resource(name="idGenerator")
 	IIdGenerator idGenerator;
+	
     @Resource(name="sysUserUserGroupServiceImp")
     SysUserUserGroupServiceImp sysUserUserGroupServiceImp;
+    
+    @Resource(name="sysModuleActionServiceImp")
+	ISysModuleActionService sysModuleActionServiceImp;
 	@RequestMapping("/sysuser")
 	public String load(){
 		return "/users/sysuser";
@@ -108,35 +115,48 @@ public class SysUserController {
 	 * @throws Exception        
 	 */ 
 	@RequestMapping(value = "/sysuser.do", params = "method=getList")
-	public @ResponseBody ResultPageObject getListBySql(HttpServletRequest request,
+	public @ResponseBody ResultRightObject getListBySql(HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
+		ResultPageObject resultPageObject = new ResultPageObject();
+		ResultRightObject resultRightObject=new ResultRightObject();
+		//当前用户Id
+		SysUser sysUser=(SysUser) request.getSession().getAttribute("SysUser");
+		
+		int userId=sysUser.getId().intValue();
+		
+		String modulePath="/users/sysuser.do";
+		
 		int pageNow = Integer.parseInt(request.getParameter("page"));
 		int pageSize = Integer.parseInt(request.getParameter("rows"));
 		String sysUserName=request.getParameter("sysUserName");
 		String sysUserGroupId=request.getParameter("sysUserGroupId");
 		int firstResult = (pageNow - 1) * pageSize;
+		
+		List<SysModuleAction> sysModuleActionList=null;
 	   if((sysUserName!=null||sysUserGroupId!=null)){
 		   if(!("").equals(sysUserName)||!("全部").equals(sysUserGroupId)){
 		   return getlistByUserNameAndGroupId( sysUserName, sysUserGroupId,firstResult,pageSize);
 		   }
 	   }
 		List<SysUser> list = null;
-		String sql="select A.*,GROUP_CONCAT(E.Name) as GroupName from sys_user A "
+		String sql="select A.*,GROUP_CONCAT(E.Name) as GroupName,GROUP_CONCAT(E.GroupId) as GroupIds from sys_user A "
 				+ "left join (select B.GroupId,B.`UserId`,C.Name "
 				+ "from `sys_user_user_group` B inner join `sys_user_group` C "
 				+ "on B.GroupId=C.Id	) as E on A.`Id`=E.`UserId` "
 				+ "group by A.`Id` LIMIT ?,?";
 
 		try {
+			sysModuleActionList= sysModuleActionServiceImp.getListAction(modulePath, userId);
 			list = sysUserServiceImpl.getListForPageBysql(sql, firstResult, pageSize);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		ResultPageObject resultPageObject = new ResultPageObject();
 		resultPageObject.setRows(list);
 		resultPageObject.setTotal(String.valueOf(sysUserServiceImpl.getCount()));
-		return resultPageObject;
+		resultRightObject.setListAction(sysModuleActionList);
+		resultRightObject.setResultPageObject(resultPageObject);
+		return resultRightObject;
 	}
 	
 	
@@ -154,8 +174,7 @@ public class SysUserController {
 	@RequestMapping(value = "/sysuser.do", params = "method=save")
 	@ResponseBody
 	@Transactional
-	public ResultObject save(HttpServletRequest request, HttpServletResponse response,
-			ModelMap map) {
+	public ResultObject save(HttpServletRequest request, HttpServletResponse response,ModelMap map) {
 		Map maps=null;
 		ResultObject result = new ResultObject();
 		try {
@@ -269,15 +288,21 @@ public class SysUserController {
 		String AllowLoginWeekDay[]=(String[])map.get("AllowLoginWeekDay");
 		Date allowLoginTime1=(Date)map.get("allowLoginTime1");
 		Date allowLoginTime2=(Date)map.get("allowLoginTime2");
-		String ver=(String) map.get("version");
-		System.out.println("ver"+ver);
-		Integer version=null;
-		if(ver!=null&&!ver.equals("")){
-		 version=Integer.parseInt(ver);
-		}
-		SysUser user=new SysUser();
+		SysUser user=null;
+		if(id!=null){
+			try {
+				 user=sysUserServiceImpl.findSysUserByLoginName(loginName);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				 e.printStackTrace();
+				 
+			}
+		}else{
+		 user=new SysUser();
 		//设置用户Id
-		setUserId(id,user);
+		 setUserId(id,user);
+		 user.setVersion(21);
+		}
 		//设置用户密码
 		 setUserPassword(password, user);
 	    user.setLoginName(loginName);
@@ -290,12 +315,6 @@ public class SysUserController {
         user.setAllowLoginTime2(allowLoginTime2);
         //设置备注
         setRemark(remark, user);
-        if(version!=null){
-        	user.setVersion(version);
-        }
-        else{
-        user.setVersion(21);
-        }
         return user;
 	}
 	/**   
@@ -445,20 +464,21 @@ public class SysUserController {
 	 * @Description:    
 	 * @return        
 	 */ 
-	private  ResultPageObject getlistByUserNameAndGroupId(String sysUserName,String sysUserGroupId, int firstResult,int pageSize){
+	private  ResultRightObject  getlistByUserNameAndGroupId(String sysUserName,String sysUserGroupId, int firstResult,int pageSize){
 		List<SysUser> list = null;
+		ResultRightObject rightObject=new ResultRightObject();
 		ResultPageObject resultPageObject=null;
 		try {
 			list = sysUserServiceImpl.getListBySysUserNameAndGroupId(sysUserName, sysUserGroupId, firstResult, pageSize);
 		    resultPageObject = new ResultPageObject();
 			resultPageObject.setRows(list);
 			resultPageObject.setTotal(String.valueOf(sysUserServiceImpl.getCountBySysUserNameAndGroupId(sysUserName, sysUserGroupId)));
+			rightObject.setResultPageObject(resultPageObject);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			 e.printStackTrace();
-			 
 		}
-		return resultPageObject;
+		return rightObject;
 		
 	}
 	/**   

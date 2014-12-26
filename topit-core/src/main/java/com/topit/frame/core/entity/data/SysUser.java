@@ -196,7 +196,28 @@ public class SysUser implements Serializable {
     */ 
     @Transient
     private String GroupName;
+    @Transient
+    private String GroupIds;
 
+	/**  
+	 * @Title:  getGroupIds <BR>  
+	 * @Description: please write your description <BR>  
+	 * @return: String <BR>  
+	 */
+	
+	public String getGroupIds() {
+		return GroupIds;
+	}
+
+	/**  
+	 * @Title:  setGroupIds <BR>  
+	 * @Description: please write your description <BR>  
+	 * @return: String <BR>  
+	 */
+	
+	public void setGroupIds(String groupIds) {
+		GroupIds = groupIds;
+	}
 
 	/**  
 	 * @Title:  getGroupName <BR>  
