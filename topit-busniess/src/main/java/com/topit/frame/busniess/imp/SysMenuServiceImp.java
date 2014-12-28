@@ -169,6 +169,7 @@ public class SysMenuServiceImp implements ISysMenuService {
 			sysMenuItem = new SysMenuItem(sysModule);
 			sysMenuItem.setId(idGenerator.getNextId(
 					SysMenuItem.class.getSimpleName()).intValue());
+			
 
 		} else {
 			sysMenuItem = new SysMenuItem();

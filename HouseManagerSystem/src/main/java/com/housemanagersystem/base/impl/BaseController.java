@@ -51,15 +51,13 @@ public class BaseController implements IBaseController {
 	
 	
 	
-	
-	
 
 	@RequestMapping(value = "/getComboxdata", params = "type")
 	@ResponseBody
 	public List<ComboxDTO> getComboxdata(@RequestParam("type") String type)
 			throws Exception {
-		String string = new String(type.getBytes("ISO-8859-1"), "UTF-8");
-		List<ComboxDTO> list = comboxdataServiceImpl.getComboxdata(string);
+		/*String string = new String(type.getBytes("ISO-8859-1"), "UTF-8");*/
+		List<ComboxDTO> list = comboxdataServiceImpl.getComboxdata(type);
 		return list;
 	}
 
@@ -78,6 +76,7 @@ public class BaseController implements IBaseController {
 
 	public Map<String, Object> createParam(HttpServletRequest request) {
 
+		@SuppressWarnings("unchecked") 
 		Map<String, String[]> parmMap = request.getParameterMap();
 		Map<String, Object> conditions = new HashMap<String, Object>();
 		Set<Entry<String, String[]>> set = parmMap.entrySet();

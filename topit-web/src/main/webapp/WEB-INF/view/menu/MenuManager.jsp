@@ -386,7 +386,7 @@ html, body {
 
 		<!-- ######菜单设置面板######## -->
 		<div id="authorization" class="easyui-dialog" title="菜单项设置"
-			style="width: 80%; height: 600px"
+			style="width: 80%; height: 550px;"
 			data-options="iconCls:'icon-man',closed:true,modal:true">
 			<div id="authorization_lay" class="easyui-layout"
 				style="width: 100%; height: 100%">

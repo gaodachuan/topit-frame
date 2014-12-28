@@ -23,13 +23,9 @@
 							striped : true, //隔行变色特性 
 							loadMsg : '数据正在加载,请耐心的等待...',
 							rownumbers : true,
-							singleSelect : false,
-
+							singleSelect : true,
 							frozenColumns : [ [ //冻结列特性 ,不要与fitColumns 特性一起使用 
 							{
-								field : 'ck',
-								checkbox : true
-							}, {
 								field : 'id',
 								title : '房间编号',
 								width : 100,
@@ -113,22 +109,19 @@
 								width : 100,
 								align : 'center',
 								formatter : Common.DateFormatter,
-							}, 
-							 {
+							}, {
 								field : 'electricStart',
 								title : '电表度数',
 								width : 100,
 								align : 'center',
-								
-							},
-							{
+
+							}, {
 								field : 'waterStart',
 								title : '水表度数',
 								width : 100,
 								align : 'center',
-								
-							}, 
-							{
+
+							}, {
 								field : 'months',
 								title : '月份数',
 								width : 100,
@@ -184,9 +177,9 @@
 																	monthrentpri : arr[0].monthrentpri,
 																	dealType : arr[0].dealType,
 																	housetype : arr[0].housetype,
-																	ElectricStart:arr[0].electricStart,
-																	WaterStart:arr[0].waterStart
-																    
+																	ElectricStart : arr[0].electricStart,
+																	WaterStart : arr[0].waterStart
+
 																});
 
 											}
@@ -361,6 +354,8 @@
 			class="easyui-dialog" closed=true style="width: 55%; height: 70%;">
 			<div id="dialogtab" class="easyui-tabs" fit=false plain=true
 				style="padding: 3%;">
+
+				<!--选中的房间信息  -->
 				<div title="房源信息" align="center" style="width: 100%; height: 50%"
 					fit=true>
 					<form id="houseInfoform" action="" method="post"
@@ -435,7 +430,7 @@
 				</div>
 
 
-
+				<!--租售办理信息  -->
 				<div title="租房信息" align="center" style="width: 100%; height: 50%"
 					fit=true>
 					<form id="rentInfoform" action="" method="post"
@@ -454,9 +449,7 @@
 								</select></td>
 
 							</tr>
-
 							<tr>
-
 								<td style="width: 30%;"><label for="CustomerCounts"
 									style="padding-left: 6px;">房客人数:</label> <input
 									class="easyui-validatebox " type="text" name="CustomerCounts"
@@ -480,9 +473,7 @@
 
 							</tr>
 
-
-							<tr style="display:none">
-
+							<tr style="display: none">
 								<td style="width: 30%;"><label for="ElectricStart"
 									style="padding-left: 6px;">电表度数:</label> <input
 									class="easyui-validatebox " type="text" name="ElectricStart"
@@ -491,7 +482,6 @@
 									style="padding-left: 6px;">水表度数:</label> <input
 									class="easyui-validatebox " type="text" name="WaterStart"
 									style="width: 182px;" required="required" /></td>
-
 							</tr>
 						</table>
 					</form>
@@ -499,6 +489,22 @@
 
 
 
+
+				<!--添加收费项目，生成收费单+合同  -->
+				<div title="收费管理" align="center" style="width: 100%; height: 50%"
+					fit=true>
+					<form id="rentInfoform" action="" method="post"
+						style="margin-top: 20px; margin-bottom: 20px">
+						<input type="hidden" name="id" value="-1" />
+						
+						
+						
+						
+						
+						
+						
+					</form>
+				</div>
 			</div>
 
 			<div align="center" style="margin-bottom: 5%; position: relative;">
