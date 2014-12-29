@@ -1,8 +1,5 @@
 package com.housemanagersystem.base.impl;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,10 +9,7 @@ import java.util.Set;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
-import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -24,6 +18,7 @@ import com.housemanagersystem.base.IBaseController;
 import com.housemanagersystem.domain.ComboxDTO;
 import com.housemanagersystem.service.ICustomerInfoService;
 import com.housemanagersystem.service.IHouseInfoService;
+import com.housemanagersystem.service.impl.ChargeItemInfoServiceImpl;
 import com.housemanagersystem.service.impl.ComboxdataServiceImpl;
 import com.topit.frame.common.view.servlet.ResultObject;
 import com.topit.frame.core.entity.dao.base.IIdGenerator;
@@ -36,21 +31,10 @@ public class BaseController implements IBaseController {
 	protected ICustomerInfoService customerInfoService;
 	@Resource
 	protected ComboxdataServiceImpl comboxdataServiceImpl;
+	@Resource
+	protected ChargeItemInfoServiceImpl chargeItemInfoServiceImpl;
 	@Resource(name = "idGenerator")
 	protected IIdGenerator idGenerator;
-	
-	
-	
-	
-	@InitBinder   
-    public void initBinder(WebDataBinder binder) {   
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");   
-        dateFormat.setLenient(true);   
-        binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));   
-    }
-	
-	
-	
 	
 	
 

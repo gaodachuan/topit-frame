@@ -288,8 +288,10 @@ html, body {
 				$('#btnSave')
 						.click(
 								function() {
+								   //clear();//清空搜索框
+									
 									if ($('#sysuserform').form('validate')) {
-										clear();//清空搜索框
+									
 										$
 												.ajax({
 													type : 'post',
@@ -304,8 +306,7 @@ html, body {
 														$('#sysuser')
 																.dialog('close');
 														$('#sys_user')
-																.datagrid(
-																		'reload');
+														.datagrid('reload',{sysUserName:'',sysUserGroupId:'全部'});
 														$.messager
 																.show({
 																	title : result.status,

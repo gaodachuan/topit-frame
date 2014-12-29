@@ -26,5 +26,7 @@
 		<mapping class="com.housemanagersystem.domain.Houseinfo"/>
 		<mapping class="com.housemanagersystem.domain.ComboxDTO"/>
 		<mapping class="com.housemanagersystem.domain.Customer"/>
+		<mapping class="com.housemanagersystem.domain.Chargeitem"/>
+		
 	</session-factory>
 </hibernate-configuration>

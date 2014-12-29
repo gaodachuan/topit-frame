@@ -55,6 +55,7 @@ public class BaseService<T> extends BaseDAO<T> implements IBaseService<T> {
 	}
 
 	public boolean updateEntity(T entity) throws Exception {
+		
 		return update(entity);
 	}
 

@@ -62,12 +62,7 @@ public class SysUserServiceImp implements ISysUserService {
 	@Transactional
 	public boolean add(SysUser user) throws Exception {
 		// TODO Auto-generated method stub
-		boolean flag=false;
-        if(findSysUserByLoginName(user.getLoginName())==null){
-        	sysUserImpl.save(user);  
-        	flag=true;
-        }
-		return flag;
+        	return sysUserImpl.save(user);  
 
 	}
 	/**

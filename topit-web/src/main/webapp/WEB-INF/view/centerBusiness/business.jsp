@@ -23,13 +23,10 @@
 							striped : true, //隔行变色特性 
 							loadMsg : '数据正在加载,请耐心的等待...',
 							rownumbers : true,
-							singleSelect : false,
+							singleSelect : true,
 
 							frozenColumns : [ [ //冻结列特性 ,不要与fitColumns 特性一起使用 
 							{
-								field : 'ck',
-								checkbox : true
-							}, {
 								field : 'id',
 								title : '房间编号',
 								width : 100,
@@ -113,22 +110,19 @@
 								width : 100,
 								align : 'center',
 								formatter : Common.DateFormatter,
-							}, 
-							 {
+							}, {
 								field : 'electricStart',
 								title : '电表度数',
 								width : 100,
 								align : 'center',
-								
-							},
-							{
+
+							}, {
 								field : 'waterStart',
 								title : '水表度数',
 								width : 100,
 								align : 'center',
-								
-							}, 
-							{
+
+							}, {
 								field : 'months',
 								title : '月份数',
 								width : 100,
@@ -184,9 +178,9 @@
 																	monthrentpri : arr[0].monthrentpri,
 																	dealType : arr[0].dealType,
 																	housetype : arr[0].housetype,
-																	ElectricStart:arr[0].electricStart,
-																	WaterStart:arr[0].waterStart
-																    
+																	ElectricStart : arr[0].electricStart,
+																	WaterStart : arr[0].waterStart
+
 																});
 
 											}
@@ -254,6 +248,46 @@
 								align : 'center',
 							} ] ]
 						});
+		//加载资费信息
+		$('#ChargeitemSet')
+				.combogrid(
+						{
+							panelWidth : 400,
+							value : '选择项目',
+							idField : 'name',
+							textField : 'name',
+							url : '${pageContext.request.contextPath}/chargeitem/getChargeitems.do',
+							striped : true, //隔行变色特性 
+							loadMsg : '数据正在加载,请耐心的等待...',
+							rownumbers : true,
+							multiple : true,
+							separator:'|',
+							pagination : true,
+							pageSize : 5,
+							pageList : [ 5, 10, 15, 20, 50 ],
+							columns : [ [ {
+								field : 'name',
+								title : '资费名称',
+								width : 120,
+								align : 'center',
+							}, {
+								field : 'price',
+								title : '单价',
+								width : 120,
+								align : 'center',
+							}, {
+								field : 'description',
+								title : '备注信息',
+								width : 130,
+								align : 'center',
+							} ] ],
+							onSelect : function(record) {
+
+							},
+							onUnselect : function(record) {
+
+							}
+						});
 
 		//初始化日期组件
 		$('#rentstart').datetimebox({
@@ -308,6 +342,7 @@
 		 * 关闭窗口方法
 		 */
 		$('#btnCancel').click(function() {
+			$('#rentInfoform').get(0).reset();
 			$('#houseInfodialog').dialog('close');
 		});
 		/**
@@ -324,6 +359,11 @@
 				number : houseNumber,
 				housetype : houseType
 			});
+		});
+		
+		$('#nextStep').click(function(){
+			
+			$('#dialogtab').tabs('select','租房信息');
 		});
 
 	})
@@ -359,6 +399,9 @@
 		</div>
 		<div id="houseInfodialog" modal=true draggable=false
 			class="easyui-dialog" closed=true style="width: 55%; height: 70%;">
+
+			<!--当前业务处理的房源信息  -->
+
 			<div id="dialogtab" class="easyui-tabs" fit=false plain=true
 				style="padding: 3%;">
 				<div title="房源信息" align="center" style="width: 100%; height: 50%"
@@ -431,11 +474,14 @@
 
 							</tr>
 						</table>
+						<div align="center" style="margin-top: 5%">
+							<a id="nextStep" class="easyui-linkbutton" style="width: 90px;">业务办理-></a>
+						</div>
 					</form>
 				</div>
 
 
-
+				<!--业务办理信息  -->
 				<div title="租房信息" align="center" style="width: 100%; height: 50%"
 					fit=true>
 					<form id="rentInfoform" action="" method="post"
@@ -459,7 +505,7 @@
 
 								<td style="width: 30%;"><label for="CustomerCounts"
 									style="padding-left: 6px;">房客人数:</label> <input
-									class="easyui-validatebox " type="text" name="CustomerCounts"
+									class="easyui-numberbox " type="text" name="CustomerCounts"
 									style="width: 182px;" required="required" /></td>
 
 								<td style="width: 30%;"><label for="rentType"
@@ -481,19 +527,28 @@
 							</tr>
 
 
-							<tr style="display:none">
-
+							<tr style="display: none">
 								<td style="width: 30%;"><label for="ElectricStart"
 									style="padding-left: 6px;">电表度数:</label> <input
-									class="easyui-validatebox " type="text" name="ElectricStart"
+									class="easyui-numberbox " type="text" name="ElectricStart"
 									style="width: 182px;" required="required" /></td>
 								<td style="width: 30%;"><label for="WaterStart"
 									style="padding-left: 6px;">水表度数:</label> <input
-									class="easyui-validatebox " type="text" name="WaterStart"
+									class="easyui-numberbox " type="text" name="WaterStart"
 									style="width: 182px;" required="required" /></td>
-
+							</tr>
+							<tr>
+								<!--资费项目设置  -->
+								<td style="width: 30%;"><label for="ChargeitemSet"
+									style="padding-left: 6px;">资费设置:</label> <select
+									id="ChargeitemSet" name="ChargeitemSet" style="width: 182px;">
+								</select></td>
 							</tr>
 						</table>
+						<div align="center" style="margin-top: 5%">
+							<a id="btnSave" class="easyui-linkbutton" style="width: 90px;">确定</a>
+							<a id="btnCancel" class="easyui-linkbutton" style="width: 90px;">关闭</a>
+						</div>
 					</form>
 				</div>
 
@@ -501,10 +556,7 @@
 
 			</div>
 
-			<div align="center" style="margin-bottom: 5%; position: relative;">
-				<a id="btnSave" class="easyui-linkbutton" style="width: 90px;">确定</a>
-				<a id="btnCancel" class="easyui-linkbutton" style="width: 90px;">关闭</a>
-			</div>
+
 
 		</div>
 

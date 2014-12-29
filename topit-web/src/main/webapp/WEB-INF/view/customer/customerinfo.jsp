@@ -286,7 +286,7 @@
 			var customer_isruzhu = $('#customer_isruzhu').val();
 			$('#customerinfo_data').datagrid('load', {
 				name : customerName,
-				customer_isruzhu : customer_isruzhu
+				isruzhu : customer_isruzhu
 			});
 		});
 

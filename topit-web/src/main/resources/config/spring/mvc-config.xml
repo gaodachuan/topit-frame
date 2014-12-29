@@ -10,7 +10,7 @@
 
 	<context:component-scan
 		base-package="com.topit.frame.web.controller,com.housemanagersystem.web.controller" />
-	<mvc:annotation-driven/>
+	<mvc:annotation-driven />
 	<bean
 		class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
 		<property name="cacheSeconds" value="0"></property>
@@ -50,7 +50,6 @@
 		<mvc:interceptor>
 			<mvc:mapping path="/*/**/*.do" />
 			<bean class="com.topit.frame.web.interceptor.ControllerInterceptor" />
-			<!--<bean class="com.sxt.interceptor.MyInterceptor2"></bean> -->
 		</mvc:interceptor>
 	</mvc:interceptors>
 
