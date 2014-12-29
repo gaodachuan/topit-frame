@@ -2,42 +2,27 @@ package com.topit.frame.web.controller;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.hibernate.criterion.DetachedCriteria;
 import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
+
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.topit.frame.busniess.base.IComObjectSortCategoryService;
 import com.topit.frame.busniess.base.IComObjectSortTypeService;
-import com.topit.frame.busniess.imp.SysModuleServiceImp;
 import com.topit.frame.common.util.CategoryConstant;
 import com.topit.frame.common.view.servlet.ResultObject;
-import com.topit.frame.common.view.servlet.ResultPageObject;
-import com.topit.frame.core.dao.BaseDAO;
-import com.topit.frame.core.dao.HqlQuery;
-import com.topit.frame.core.dao.HqlUtil;
-import com.topit.frame.core.entity.dao.base.IComObjectSortTypeDAO;
 import com.topit.frame.core.entity.dao.base.IIdGenerator;
-import com.topit.frame.core.entity.dao.imp.ComObjectSortCategoryDAO;
-import com.topit.frame.core.entity.dao.imp.ComObjectSortTypeDAO;
 import com.topit.frame.core.entity.data.ComObjectSortCategory;
 import com.topit.frame.core.entity.data.ComObjectSortType;
-import com.topit.frame.core.entity.data.SysModule;
 import com.topit.frame.core.ui.entity.ResultRightObject;
 import com.topit.frame.core.util.DataDicDAO;
-import com.topit.frame.core.util.entity.DataDic;
 import com.topit.frame.core.util.entity.Node;
-import com.topit.frame.core.util.entity.TreeUtils;
 
 /**
  * @ClassName: SysModuleController
@@ -85,7 +70,6 @@ public class CategoryController {
 		return list;
 	}
 
-	@SuppressWarnings("unused")
 	@RequestMapping(value = "/category/category.do", params = "method=getTree")
 	public @ResponseBody List<Node> getTree(HttpServletRequest req,
 			HttpServletResponse reps) throws Exception {
@@ -100,7 +84,6 @@ public class CategoryController {
 		return list;
 	}
 
-	@SuppressWarnings("unused")
 	@RequestMapping(value = "/category/category.do", params = "method=move")
 	public @ResponseBody ResultRightObject move(HttpServletRequest req,
 			HttpServletResponse reps) throws Exception {
@@ -130,7 +113,6 @@ public class CategoryController {
 
 	}
 
-	@SuppressWarnings("unused")
 	@RequestMapping(value = "/category/category.do", params = "method=save")
 	public @ResponseBody ResultObject save(HttpServletRequest req,
 			HttpServletResponse reps) throws Exception {
@@ -183,7 +165,6 @@ public class CategoryController {
 
 	}
 
-	@SuppressWarnings("unused")
 	@RequestMapping(value = "/category/category.do", params = "method=update")
 	public @ResponseBody ResultObject update(HttpServletRequest req,
 			HttpServletResponse reps) throws Exception {
@@ -229,7 +210,6 @@ public class CategoryController {
 		return list;
 	}
 
-	@SuppressWarnings("unused")
 	@RequestMapping(value = "/category/category.do", params = "method=saveType")
 	public @ResponseBody ResultObject saveType(HttpServletRequest req,
 			HttpServletResponse reps) throws Exception {
@@ -287,7 +267,6 @@ public class CategoryController {
 
 	}
 
-	@SuppressWarnings("unused")
 	@RequestMapping(value = "/category/category.do", params = "method=updateType")
 	public @ResponseBody ResultObject updateType(HttpServletRequest req,
 			HttpServletResponse reps) throws Exception {
@@ -314,7 +293,6 @@ public class CategoryController {
 		return result;
 	}
 
-	@SuppressWarnings("unused")
 	@RequestMapping(value = "/category/category.do", params = "method=find")
 	public @ResponseBody ComObjectSortType find(HttpServletRequest req,
 			HttpServletResponse reps) throws Exception {

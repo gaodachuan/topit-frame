@@ -49,18 +49,18 @@ public class DataDicDAO extends HqlUtil {
 	 */
 	@SuppressWarnings("null")
 	@Transactional(propagation = Propagation.NEVER)
-	public DataDic getData(int type, String value) {
+	public DataDic getName(int type) {
 		DataDic dataDic = null;
-		String hql = "select new com.topit.frame.core.util.entity.DataDic(a.id ,a.categoryName)  from  ComObjectSortCategory a where a.sortXtypeId =? and a.categoryCode=?";
+		String hql = "select new com.topit.frame.core.util.entity.DataDic(a.id ,a.categoryName)  from  ComObjectSortCategory a where a.itemId =? ";
 		@SuppressWarnings("unchecked")
 		List<DataDic> list = (List<DataDic>) getHibernateTemplate().find(hql,
-				type, value);
+				type);
 		if (list.size() > 0) {
 			dataDic = list.get(0);
 
 		} else {
 			dataDic.setId(0);
-			dataDic.setName(value);
+			dataDic.setName(String.valueOf(type));
 		}
 		return dataDic;
 	}

@@ -4,11 +4,11 @@ import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
-import javax.annotation.Resources;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Property;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -20,9 +20,10 @@ import com.topit.frame.core.entity.dao.base.IIdGenerator;
 import com.topit.frame.core.entity.dao.base.ISysModuleActionDAO;
 import com.topit.frame.core.entity.data.SysModule;
 import com.topit.frame.core.entity.data.SysModuleAction;
+import com.topit.frame.core.entity.data.SysUser;
 import com.topit.frame.core.ui.entity.ResultRightObject;
 import com.topit.frame.core.util.DataDicDAO;
-import com.topit.frame.core.util.entity.DataDic;
+import com.topit.frame.core.util.entity.Node;
 
 /**
  * @ClassName: SysModuleController
@@ -68,25 +69,38 @@ public class SysModuleController {
 	@RequestMapping(value = "/module/sysmodule.do", params = "method=getList")
 	public @ResponseBody ResultRightObject getList(HttpServletRequest req,
 			HttpServletResponse reps) throws Exception {
-
-		int userId = 0;
+		SysUser sysUser = (SysUser) req.getSession()
+				.getAttribute("SysUser");
+		int userId=sysUser.getId().intValue();
 		String modulePath = "/usergroup/sysusergroup.do";
 		List<SysModuleAction> listAction = sysModuleActionDAOImp.getListAction(
 				modulePath, userId);
-
+		int counts = sysModuleService.getCount();
+		
 		// 当前页码
 		int page = Integer.parseInt(req.getParameter("page"));
 		// 当前每页条数
 		int rows = Integer.parseInt(req.getParameter("rows"));
+		if(page<=0){
+			page=1;
+		}
+		int offset=(counts/rows)>=page?(page - 1) * rows:(counts/rows)*rows;
 		String hql = " from SysModule ";
-		int offset = (page - 1) * rows;
 		List<SysModule> list = null;
 		DetachedCriteria criteria = DetachedCriteria.forClass(SysModule.class);
+		
+        if (req.getParameter("moduleType") != null) {  
+        	criteria.add(Property.forName("categoryId").eq(Integer.parseInt(req.getParameter("moduleType"))));  
+        } 
+        if (req.getParameter("moduleName") != null&&(!"".equals((req.getParameter("moduleName"))))) {  
+        	criteria.add(Property.forName("name").like("%"+req.getParameter("moduleName")+"%"));  
+        } 
 		try {
 			list = sysModuleService.getListForPage(criteria, offset, rows);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		int maxpage = sysModuleService.getCount();
 		ResultPageObject resultPageObject = new ResultPageObject();
 		resultPageObject.setRows(list);
 		resultPageObject.setTotal(String.valueOf(sysModuleService.getCount()));
@@ -95,21 +109,6 @@ public class SysModuleController {
 		resultRightObject.setListAction(listAction);
 		resultRightObject.setResultPageObject(resultPageObject);
 		return resultRightObject;
-	}
-
-	/**
-	 * @Title: getData
-	 * @Description: 页面下拉列表查询
-	 * @param req
-	 * @param reps
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping(value = "/module/datadic.do", params = "method=getData")
-	public @ResponseBody List<DataDic> getData(HttpServletRequest req,
-			HttpServletResponse reps) throws Exception {
-		List<DataDic> list = dataDicDAO.getData(1);
-		return list;
 	}
 
 	/**
@@ -136,7 +135,6 @@ public class SysModuleController {
 		sysModule.setId(idGenerator.getNextId("SysModule").intValue());
 		sysModule.setName(name);
 		sysModule.setCategoryId(categoryId);
-		sysModule.setCategoryId(4);
 		sysModule.setModulePath(modulePath);
 		sysModule.setDescription(description);
 		sysModule.setCreateTime(new Date(System.currentTimeMillis()));
@@ -229,5 +227,20 @@ public class SysModuleController {
 		}
 
 		return result;
+	}
+	
+	/**
+	 * @Title: getData
+	 * @Description: TODO(这里用一句话描述这个方法的作用)
+	 * @param req
+	 * @param reps
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/module/datadic.do", params = "method=getData")
+	public @ResponseBody List<Node> getData(HttpServletRequest req,
+			HttpServletResponse reps) throws Exception {
+		List<Node> list = dataDicDAO.getDataNode(2);
+		return list;
 	}
 }

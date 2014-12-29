@@ -45,17 +45,6 @@ html, body {
 							onLoadSuccess : function(data) {
 								for (var i = 0; i < flag.length; i++) {
 									var option = flag[i];
-									if (option.actionId == 0) {
-										$('#sys_module').datagrid(
-												"addToolbarItem", [ {
-													"text" : option.name,
-													"iconCls" : "icon-ok",
-													"actionId":option.actionId,
-													"handler" : function() {
-														alert(option.name);
-													}
-												} ]);
-									}
 									if (option.actionId == 1) {
 										$('#sys_module').datagrid(
 												"addToolbarItem", [ {
@@ -63,7 +52,13 @@ html, body {
 													"iconCls" : "icon-ok",
 													"actionId":option.actionId,
 													"handler" : function() {
-														alert(option.name);
+														flag = 'save';
+														$('#moduledialog').dialog({
+															title : '新增模块'
+														});
+														$('#moduleform').get(0).reset();
+														$('#moduledialog').dialog('open');
+
 													}
 												} ]);
 									}
@@ -74,7 +69,70 @@ html, body {
 													"iconCls" : "icon-ok",
 													"actionId":option.actionId,
 													"handler" : function() {
-														alert(option.name);
+														flag = 'del';
+														var arr = $('#sys_module').datagrid('getSelections');
+														if (arr.length <= 0) {
+															$.messager.show({
+																title : '提示信息',
+																msg : '请选择进行需要删除的记录!'
+															});
+														} else {
+															$.messager.confirm('提示信息','确认删除?',function(r) {
+															if (r) {
+																var id = '';
+																for (var i = 0; i < arr.length; i++) {
+																	id += arr[i].id+ ',';
+																}
+																id = id.substring(0,id.length - 1);
+																$.post('sysmodule.do?method=del',{id : id},function(result) {
+																	$('#sys_module').datagrid('reload');
+																	if (result.errorCode == 0) {
+																		$.messager.alert('提示信息',result.errorDetail,'info');
+																	} else {
+																		$.messager.alert('提示信息',result.errorDetail,'error');
+																	}
+																});
+
+															} else {
+																return;
+															}
+														});
+														}
+													}
+												} ]);
+									}
+									if (option.actionId == 3) {
+										$('#sys_module').datagrid(
+												"addToolbarItem", [ {
+													"text" : option.name,
+													"iconCls" : "icon-ok",
+													"actionId":option.actionId,
+													"handler" : function() {
+														flag = 'edit';
+														var arr = $('#sys_module')
+																.datagrid('getSelections');
+														if (arr.length != 1) {
+															$.messager.show({
+																title : '提示信息!',
+																msg : '请选择一行记录进行修改!'
+															});
+														} else {
+															$('#moduledialog').dialog({
+																title : '修改模块'
+															});
+															$('#moduleform').get(0).reset();
+															$('#moduleform').form('load',
+																			{
+																				id : arr[0].id,
+																				name : arr[0].name,
+																				categoryId : arr[0].categoryId,
+																				modulePath : arr[0].modulePath,
+																				description : arr[0].description
+																			});
+															$('#moduledialog').dialog(
+																	'open');
+														}
+
 													}
 												} ]);
 									}
@@ -117,6 +175,22 @@ html, body {
 										title : '模块分类',
 										width : 100,
 										align : 'center',
+										formatter : function(value, record,index) {
+											var s;
+											$.ajax({
+												url : '${pageContext.request.contextPath}/dataDic.do?method=getData',
+												data : {
+													type : value
+												},
+												async : false,
+												success : function(result) {
+													s = result.name;
+														
+												return s;}
+													})
+
+											return s;
+										}
 									}, {
 										field : 'createTime',
 										title : '创建时间',
@@ -169,6 +243,21 @@ html, body {
 					}
 				});
 
+		$('#dosearch').click(
+				function() {
+					$('#sys_module').datagrid(
+							{
+								url : 'sysmodule.do?method=getList&'
+										+ $('#module_search').serialize()
+							})
+				});
+
+		$('#reset').click(function() {
+			$('#module_search').get(0).reset()
+			$('#sys_module').datagrid({
+				url : 'sysmodule.do?method=getList&'
+			})
+		});
 		/**
 		 * 关闭窗口方法
 		 */
@@ -190,9 +279,10 @@ html, body {
 					<div class="dv-form-item">
 						<label for="moduleName"> 模块名称:</label> <input
 							class="easyui-validatebox " type="text" name="moduleName"
-							style="width: 200px;" required="true" /> <label for="moduleType">模块分类:</label>
-						<input class="easyui-validatebox " type="text" name="moduleType"
-							style="width: 200px;" required="true" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							style="width: 200px;"  /> <label for="type"
+							style="padding-left: 6px;">模块分类:</label> <input name="moduleType"
+							class="easyui-combotree" url="datadic.do?method=getData"
+							valueField="nodeCode" textField="text" value="" /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 						<a id="dosearch" href="#" class="easyui-linkbutton"
 							data-options="iconcls:'icon-search'" style="width: 90px;">搜索</a>
 						&nbsp;&nbsp;<a id="reset" href="#" class="easyui-linkbutton"
@@ -223,8 +313,8 @@ html, body {
 						<div class="dv-form-row">
 							<div class="dv-form-item" style="width: 80%;">
 								<label for="categoryId" style="padding-left: 6px;">模块分类:</label>
-								<input class="easyui-validatebox " type="text" name="categoryId"
-									style="width: 200px;" required=true /> <span></span>
+							 	<input class="easyui-combotree " type="text" url="datadic.do?method=getData" name="categoryId"
+									style="width: 200px;" required=true  valueField="nodeCode" textField="text"/> <span></span>
 							</div>
 						</div>
 						<div class="dv-form-row">

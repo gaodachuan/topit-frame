@@ -40,7 +40,6 @@ public class MD5Encrypt {
 			
 			return new String(str);
 		} catch (Exception e) {
-			// TODO: handle exception
 			e.printStackTrace();
 			return null;
 		}
