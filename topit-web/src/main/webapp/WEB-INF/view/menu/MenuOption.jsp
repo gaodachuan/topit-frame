@@ -6,10 +6,11 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>菜单设置</title>
 <%@ include file="../common/common.jspf"%>
-<script type="text/javascript" src="${pageContext.request.contextPath}/js/treegrid_dnd.js"></script>
+<script type="text/javascript"
+	src="${pageContext.request.contextPath}/js/treegrid_dnd.js"></script>
 <script type="text/javascript">
 	$(function() {
-		 
+
 		$('#mudletree')
 				.tree(
 						{
@@ -34,8 +35,8 @@
 						});
 
 	});
-     
-	var isFirst=true;
+
+	var isFirst = true;
 	var menuSelect;
 	var editRow;
 	var MenuIcon;
@@ -51,21 +52,17 @@
 							toolbar : '#toolbar',
 							rownumbers : true,
 							singleSelect : true,
-							fitColumns : true,
+							//fitColumns : true,
 							lines : true,
-							columns : [ [ {
+							frozenColumns : [ [ {//冻结列特性 ,不要与fitColumns 特性一起使用 
 								title : '菜单名称',
 								field : 'name',
-								width : '25%'
+								width : '30%'
 							}, {
-								field : 'tip',
-								title : '模块名称',
-								width : '20%',
-								align : 'center'
-							}, {
+								 
 								field : 'iconfile',
 								title : '图标',
-								width : '15%',
+								width : '20%',
 								align : 'center',
 								editor:{  
 									 type : "combobox",
@@ -89,61 +86,64 @@
 						                }  
 						                 
 						                }	
+							} ] ],
+							columns : [ [{
+								field : 'tip',
+								title : '模块名称',
+								width : '20%',
+								align : 'center'
 							},{
 								field : 'tip',
 								title : '提示信息',
 								width : '20%',
 								align : 'center'
-							} ,{
+							},{
 								field : 'lastedittime',
 								title : '最后修改时间',
 								width : '20%',
 								align : 'center',
-							    formatter : Common.DateFormatter
-							}
-							] ],
-							onAfterEdit:function(index,row){
+								formatter : Common.DateFormatter
+							} ] ],
+							onAfterEdit : function(index, row) {
 								$.ajax({
-									url:'setMenuIcon.do',
-									data:{id:editRow.id,name:menuSelect},
-									success:function(res){}
+									url : 'setMenuIcon.do',
+									data : {
+										id : editRow.id,
+										name : menuSelect
+									},
+									success : function(res) {
+									}
 								});
 							},
-							onDblClickRow:function(row){
-								if(row.moduleid!=-1)
-								{
-									editRow=row;
-									$('#MenuItemsList').treegrid('beginEdit', row.id);
-								}	
-								
+							onDblClickRow : function(row) {
+								if (row.moduleid != -1) {
+									editRow = row;
+									$('#MenuItemsList').treegrid('beginEdit',
+											row.id);
+								}
+
 							},
 							onLoadSuccess : loadMenuSuccess,
 							onBeforeDrag : onBeforeDrag,
 							onBeforeDrop : onBeforeDrop,
 							onDragEnter : onDragEnter,
 							onDrop : onDrop,
-							onBeforeLoad:function(row,param)
-							{
-								if(isFirst)
-								{									
-										param.id="#"+${menuId.rootitemid};
-										isFirst=false;
+							onBeforeLoad : function(row, param) {
+								if (isFirst) {
+									param.id = "#" + ${menuId.rootitemid};
+									isFirst = false;
 								}
-							
-												
 								return true;
 							}
 
 						});
 	});
-	
-	
+
 	function loadMenuSuccess(row) {
 		$(this).treegrid('enableDnd', row && row.Lid > 1 ? row.Lid : null);
-			
+
 	}
-	
-	
+
 	//拖动插入
 	function onDrop(targetRow, sourceRow, point) {
 		var sourceId = sourceRow.id;
@@ -153,9 +153,7 @@
 			target : targetId,
 			point : point
 		};
-		doMenuAction(
-				'${pageContext.request.contextPath}/MenuOption/MoveMenuItem.do',
-				data);
+		doMenuAction('${pageContext.request.contextPath}/MenuOption/MoveMenuItem.do',data);
 		refreshTree();
 	}
 </script>
@@ -164,19 +162,27 @@
 <!--选项分类  -->
 <body class="easyui-layout">
 	<div region="west" style="width: 200px; resize: none;">
-		<div id="p" class="easyui-panel" title="系统模块" fit="true" collapsible="false" border="false">
+		<div id="p" class="easyui-panel" title="系统模块" fit="true"
+			collapsible="false" border="false">
 			<ul id="mudletree"></ul>
 		</div>
 	</div>
 	<!-- 选项列表 -->
-	<div id="mainPanle" region="center" style="overflow: hidden; resize: none;" border="false">
-		<div id="p1" class="easyui-panel" title="选项列表" fit="true" collapsible="false" border="false">
+	<div id="mainPanle" region="center"
+		style="overflow: hidden; resize: none;" border="false">
+		<div id="p1" class="easyui-panel" title="选项列表" fit="true"
+			collapsible="false" border="false">
 			<div id="toolbar" class="datagrid-toolbar">
-				<a class="easyui-linkbutton " onclick="createFolder('${pageContext.request.contextPath}/MenuOption/addMenuItem.do')" data-options="plain:true,iconCls:'icon-add'"
-					href="javascript:void(0)">新增菜单分组</a> <a class="easyui-linkbutton " onclick="doDelete('${pageContext.request.contextPath}/MenuOption/DeleteMenuItem.do')"
-					data-options="plain:true,iconCls:'icon-remove'" href="javascript:void(0)">删除选中菜单</a>
+				<a class="easyui-linkbutton "
+					onclick="createFolder('${pageContext.request.contextPath}/MenuOption/addMenuItem.do')"
+					data-options="plain:true,iconCls:'icon-add'"
+					href="javascript:void(0)">新增菜单分组</a> <a class="easyui-linkbutton "
+					onclick="doDelete('${pageContext.request.contextPath}/MenuOption/DeleteMenuItem.do')"
+					data-options="plain:true,iconCls:'icon-remove'"
+					href="javascript:void(0)">删除选中菜单</a>
 			</div>
-			<table id="MenuItemsList" style="width: 100%; height: 100%" fit="true"></table>
+			<table id="MenuItemsList" style="width: 100%; height: 100%"
+				fit="true"></table>
 		</div>
 	</div>
 </body>
