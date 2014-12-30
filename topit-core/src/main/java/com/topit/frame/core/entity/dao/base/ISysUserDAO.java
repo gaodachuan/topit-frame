@@ -12,6 +12,7 @@
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.topit.frame.core.dao.IBaseDAO;
 import com.topit.frame.core.entity.data.SysOption;
@@ -62,7 +63,7 @@ public interface ISysUserDAO extends IBaseDAO<SysUser>{
          * @throws Exception        
          */
          
-        public List<SysUser> getListForPageBysql(String sql,int firstResult,int pageSize)throws Exception;
+        public List<Map<String, Object>>  getListForPageBysql(int pageNow,int pageSize)throws Exception;
         /**   
          * @Title: getCountBySysUserNameAndGroupId   
          * @Description:查询用户名和用户组获得查询的记录总数   
@@ -80,6 +81,6 @@ public interface ISysUserDAO extends IBaseDAO<SysUser>{
          * @return
          * @throws Exception        
          */ 
-        public List<SysUser> getListBySysUserNameAndGroupId(String sysUserName,String groupId,int firstResult,int pageSize)throws Exception;
+        public List<Map<String, Object>> getListBySysUserNameAndGroupId(String sysUserName,String groupId,int pageNow,int pageSize)throws Exception;
 
 }

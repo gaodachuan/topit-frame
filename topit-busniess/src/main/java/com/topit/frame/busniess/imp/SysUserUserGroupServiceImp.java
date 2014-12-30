@@ -47,6 +47,7 @@ public class SysUserUserGroupServiceImp implements ISysUserUserGroupService{
 		 
 	}
 	//保存系统用户用户组
+	@Transactional
 	public Boolean saveSysUserUserGroup(SysUserUserGroup entity) throws Exception{
 		 return sysUserUserGroupDaoImp.save(entity);
 	}
@@ -65,6 +66,7 @@ public class SysUserUserGroupServiceImp implements ISysUserUserGroupService{
 		return sysUserUserGroupDaoImp.update(entity);
 	}
 	//删除系统用户组用户
+	@Transactional
 	public Boolean deleteSysUserUserGroup(SysUserUserGroup entity) throws Exception{
 		return sysUserUserGroupDaoImp.delete(entity);
 	}

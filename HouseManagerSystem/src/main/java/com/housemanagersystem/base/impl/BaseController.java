@@ -37,27 +37,14 @@ public class BaseController implements IBaseController {
 	protected IIdGenerator idGenerator;
 	
 	
-<<<<<<< HEAD
-=======
-	
-	
-	@InitBinder   
-    public void initBinder(WebDataBinder binder) {   
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");   
-        dateFormat.setLenient(true);   
-        binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));   
-    }
-	
-	
-	
->>>>>>> 017b2250e8c8403bf3dedaa29a925815faf19b5d
+
 
 	@RequestMapping(value = "/getComboxdata", params = "type")
 	@ResponseBody
 	public List<ComboxDTO> getComboxdata(@RequestParam("type") String type)
 			throws Exception {
-		/*String string = new String(type.getBytes("ISO-8859-1"), "UTF-8");*/
-		List<ComboxDTO> list = comboxdataServiceImpl.getComboxdata(type);
+		String string = new String(type.getBytes("ISO-8859-1"), "UTF-8");
+		List<ComboxDTO> list = comboxdataServiceImpl.getComboxdata(string);
 		return list;
 	}
 
@@ -76,7 +63,6 @@ public class BaseController implements IBaseController {
 
 	public Map<String, Object> createParam(HttpServletRequest request) {
 
-		@SuppressWarnings("unchecked") 
 		Map<String, String[]> parmMap = request.getParameterMap();
 		Map<String, Object> conditions = new HashMap<String, Object>();
 		Set<Entry<String, String[]>> set = parmMap.entrySet();

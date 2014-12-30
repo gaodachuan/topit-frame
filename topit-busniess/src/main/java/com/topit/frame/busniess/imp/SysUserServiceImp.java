@@ -122,6 +122,7 @@ public class SysUserServiceImp implements ISysUserService {
 	 * @throws Exception   
 	 * @see com.topit.frame.busniess.base.ISysUserService#updateSysUser(com.topit.frame.core.entity.data.SysUser)   
 	 */
+	@Transactional
 	public boolean updateSysUser(SysUser user) throws Exception {
 		// TODO Auto-generated method stub
 		 return   sysUserImpl.update(user);
@@ -290,10 +291,10 @@ public class SysUserServiceImp implements ISysUserService {
 	 * @see com.topit.frame.busniess.base.ISysUserService#getListForPageBysql(java.lang.String, int, int)   
 	 */
 	 
-	public List<SysUser> getListForPageBysql(String sql, int firstResult,
+	public List<Map<String,Object>> getListForPageBysql( int pageNow,
 			int pageSize) throws Exception {
 		// TODO Auto-generated method stub
-		 return sysUserImpl.getListForPageBysql(sql, firstResult, pageSize);
+		 return sysUserImpl.getListForPageBysql(pageNow, pageSize);
 		 
 	}
 	/**   
@@ -347,10 +348,10 @@ public class SysUserServiceImp implements ISysUserService {
 	 * @see com.topit.frame.busniess.base.ISysUserService#getListBySysUserNameAndGroupId(java.lang.String, java.lang.String, int, int)   
 	 */
 	 
-	public List<SysUser> getListBySysUserNameAndGroupId(String sysUserName,
-			String groupId, int firstResult, int pageSize) throws Exception {
+	public List<Map<String,Object>> getListBySysUserNameAndGroupId(String sysUserName,
+			String groupId, int pageNow, int pageSize) throws Exception {
 		// TODO Auto-generated method stub
-		 return sysUserImpl.getListBySysUserNameAndGroupId(sysUserName, groupId, firstResult, pageSize);
+		 return sysUserImpl.getListBySysUserNameAndGroupId(sysUserName, groupId, pageNow, pageSize);
 		 
 	}
 

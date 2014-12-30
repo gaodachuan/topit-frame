@@ -11,6 +11,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.topit.frame.core.dao.BaseDAO;
 import com.topit.frame.core.dao.SqlQuery;
@@ -65,9 +66,8 @@ public class SysUserGroupDAOImp extends BaseDAO<SysUserGroup> implements
 	 * @throws Exception
 	 * @see com.topit.frame.core.dao.BaseDAO#delete(java.lang.Object)
 	 */
-
+	@Transactional
 	public boolean delete(SysUserGroup entity) throws Exception {
-
 		return super.delete(entity);
 
 	}

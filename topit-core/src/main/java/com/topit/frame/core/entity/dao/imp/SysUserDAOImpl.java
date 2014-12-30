@@ -25,7 +25,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.stereotype.Repository;
 
-
 import com.topit.frame.core.dao.BaseDAO;
 import com.topit.frame.core.dao.SqlQuery;
 import com.topit.frame.core.entity.dao.base.ISysUserDAO;
@@ -171,36 +170,16 @@ public class SysUserDAOImpl extends BaseDAO<SysUser> implements ISysUserDAO{
 	 * @see com.topit.frame.core.entity.dao.base.ISysUserDAO#getListForPageBysql(java.lang.String, int, int)   
 	 */
 	 
-	public List<SysUser> getListForPageBysql(String sql, int firstResult,
+	public List<Map<String, Object>>  getListForPageBysql( int pageNow,
 			int pageSize) throws Exception {
 		// TODO Auto-generated method stub
-        final List<SysUser> list=new ArrayList();
-		
-    	
-		sqlQuery.getJdbcTemplate().query(sql,new Object[]{firstResult, pageSize},new RowCallbackHandler() {
-			
-			public void processRow(ResultSet rs) throws SQLException {
-                   	SysUser user=new SysUser();
-                   	user.setId(new BigInteger(rs.getInt("Id")+""));
-                   	user.setLoginName(rs.getString("LoginName"));
-                   	user.setPassWord(rs.getString("Password"));
-                   	user.setRealName(rs.getString("RealName"));
-                   	user.setRemark(rs.getString("Remark"));
-                   	user.setLoginTimes(rs.getInt("LoginTimes"));
-                   	user.setLastLoginTime(rs.getTimestamp("LastLoginTime"));
-                   	user.setVersion(rs.getInt("Version"));
-                   	user.setGroupName(rs.getString("GroupName"));
-                   	user.setGroupIds(rs.getString("GroupIds"));
-                   	user.setAllowLoginWeekDay(rs.getString("AllowLoginWeekDay"));
-                	user.setAllowLoginTime1(rs.getTime("allowLoginTime1"));
-                   	user.setAllowLoginTime2(rs.getTime("allowLoginTime2"));
-                   	list.add(user);
-				}
-			
-		});
-		
-		 return list;
-		 
+		String sql="select A.*,GROUP_CONCAT(E.Name) as GroupName,GROUP_CONCAT(E.GroupId) as GroupIds from sys_user A "
+				+ "left join (select B.GroupId,B.`UserId`,C.Name "
+				+ "from `sys_user_user_group` B inner join `sys_user_group` C "
+				+ "on B.GroupId=C.Id	) as E on A.`Id`=E.`UserId` "
+				+ "group by A.`Id` ";
+		List<Map<String, Object>> list = sqlQuery.Page(sql, pageNow, pageSize);
+		return list;
 	}
 
 	/**   
@@ -220,7 +199,7 @@ public class SysUserDAOImpl extends BaseDAO<SysUser> implements ISysUserDAO{
 		sql.append("  (select A.`Id` as total  from sys_user  A left join ");
 		sql.append("  (select B.GroupId,B.`UserId`,C.Name from `sys_user_user_group` B inner join `sys_user_group` C ");
 		sql.append("  on B.GroupId=C.Id 	) as E ON A.`Id`=E.`UserId` where 1=1");
-		if(groupId!=null&&!("全部").equals(groupId)){
+		if(groupId!=null&&!("").equals(groupId)){
 			sql.append("  and E.GroupId ="+groupId+"");
 		}
 		if(sysUserName!=null&&!("").equals(sysUserName)){
@@ -261,48 +240,25 @@ public class SysUserDAOImpl extends BaseDAO<SysUser> implements ISysUserDAO{
 	 * @see com.topit.frame.core.entity.dao.base.ISysUserDAO#getListBySysUserNameAndGroupId(java.lang.String, java.lang.String, int, int)   
 	 */
 	 
-	public List<SysUser> getListBySysUserNameAndGroupId(String sysUserName,
-			String groupId, int firstResult, int pageSize) throws Exception {
+	public List<Map<String,Object>> getListBySysUserNameAndGroupId(String sysUserName,
+			String groupId, int pageNow, int pageSize) throws Exception {
 		// TODO Auto-generated method stub
 		StringBuffer sql=new StringBuffer();
 		sql.append("  select A.*,GROUP_CONCAT(E.Name) as GroupName,GROUP_CONCAT(E.GroupId) as GroupIds from sys_user A");
 		sql.append("  left join (select B.GroupId,B.`UserId`,C.Name");
 		sql.append("  from `sys_user_user_group` B inner join `sys_user_group` C");
 		sql.append("  on B.GroupId=C.Id	) as E on A.`Id`=E.`UserId` where 1=1 ");
-		if(!("全部").equals(groupId)&&groupId!=null){
+		if(!("").equals(groupId)&&groupId!=null){
 			sql.append("  and E.GroupId ="+groupId+"");
 		}
 		if(sysUserName!=null&&!("").equals(sysUserName)){
 			sysUserName="'"+"%"+sysUserName+"%"+"'";
 			sql.append("  and A.LoginName like"+sysUserName+"");
 		}
-		sql.append("  group by A.`Id` LIMIT ?,?");
-		  final List<SysUser> list=new ArrayList();
-			
-	    	
-			sqlQuery.getJdbcTemplate().query(sql.toString(),new Object[]{firstResult, pageSize},new RowCallbackHandler() {
-				
-				public void processRow(ResultSet rs) throws SQLException {
-	                   	SysUser user=new SysUser();
-	                   	user.setId(new BigInteger(rs.getInt("Id")+""));
-	                   	user.setLoginName(rs.getString("LoginName"));
-	                   	 user.setPassWord(rs.getString("Password"));
-	                    user.setRealName(rs.getString("RealName"));
-	                   	user.setRemark(rs.getString("Remark"));
-	                   	user.setLoginTimes(rs.getInt("LoginTimes"));
-	                   	user.setLastLoginTime(rs.getTimestamp("LastLoginTime"));
-	                   	user.setVersion(rs.getInt("Version"));
-	                   	user.setGroupName(rs.getString("GroupName"));
-	                	user.setAllowLoginWeekDay(rs.getString("AllowLoginWeekDay"));
-	                	user.setAllowLoginTime1(rs.getTime("allowLoginTime1"));
-	                   	user.setAllowLoginTime2(rs.getTime("allowLoginTime2"));
-	                	user.setGroupIds(rs.getString("GroupIds"));
-	                   	list.add(user);
-					}
-				
-			});
-			
-			 return list;
+		sql.append("  group by A.`Id` ");
+		List<Map<String, Object>> list = sqlQuery.Page(sql.toString(), pageNow, pageSize);
+		return list;
+		
 	} 
 }
 

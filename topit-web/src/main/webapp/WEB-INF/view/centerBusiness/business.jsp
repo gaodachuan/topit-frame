@@ -361,8 +361,7 @@
 			});
 		});
 		
-		$('#nextStep').click(function(){
-			
+		$('#nextStep').click(function(){		
 			$('#dialogtab').tabs('select','租房信息');
 		});
 
