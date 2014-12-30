@@ -36,21 +36,7 @@ public class BaseController implements IBaseController {
 	@Resource(name = "idGenerator")
 	protected IIdGenerator idGenerator;
 	
-	
-<<<<<<< HEAD
-=======
-	
-	
-	@InitBinder   
-    public void initBinder(WebDataBinder binder) {   
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");   
-        dateFormat.setLenient(true);   
-        binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));   
-    }
-	
-	
-	
->>>>>>> 017b2250e8c8403bf3dedaa29a925815faf19b5d
+
 
 	@RequestMapping(value = "/getComboxdata", params = "type")
 	@ResponseBody
@@ -76,7 +62,6 @@ public class BaseController implements IBaseController {
 
 	public Map<String, Object> createParam(HttpServletRequest request) {
 
-		@SuppressWarnings("unchecked") 
 		Map<String, String[]> parmMap = request.getParameterMap();
 		Map<String, Object> conditions = new HashMap<String, Object>();
 		Set<Entry<String, String[]>> set = parmMap.entrySet();
