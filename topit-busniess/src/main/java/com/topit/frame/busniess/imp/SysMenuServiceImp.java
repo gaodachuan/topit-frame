@@ -17,6 +17,7 @@ import org.hibernate.criterion.DetachedCriteria;
 import org.springframework.stereotype.Service;
 
 import com.topit.frame.busniess.base.ISysMenuService;
+import com.topit.frame.common.util.MenuConstant;
 import com.topit.frame.common.view.servlet.ResultObject;
 import com.topit.frame.common.view.servlet.ResultPageObject;
 import com.topit.frame.core.entity.dao.base.IMenuOptionDao;
@@ -169,7 +170,7 @@ public class SysMenuServiceImp implements ISysMenuService {
 			sysMenuItem = new SysMenuItem(sysModule);
 			sysMenuItem.setId(idGenerator.getNextId(
 					SysMenuItem.class.getSimpleName()).intValue());
-			
+			sysMenuItem.setIconfile(MenuConstant.DEFAULT_MENU_ICON);
 
 		} else {
 			sysMenuItem = new SysMenuItem();

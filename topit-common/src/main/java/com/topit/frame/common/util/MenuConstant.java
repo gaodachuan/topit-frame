@@ -6,4 +6,7 @@ public class MenuConstant {
 	
 	
 	public static String MENU_INCON_PATH="";
+	
+	
+	public static final String DEFAULT_MENU_ICON="icon-large-picture.png";
 }

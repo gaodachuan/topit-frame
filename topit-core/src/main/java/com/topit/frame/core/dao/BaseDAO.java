@@ -8,6 +8,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.hibernate.Query;
 import org.hibernate.criterion.DetachedCriteria;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @ClassName: BaseDAO
@@ -51,6 +52,7 @@ public class BaseDAO<T> extends HqlUtil implements IBaseDAO<T> {
 	 * @throws Exception
 	 * @see com.topit.frame.core.dao.IBaseDAO#save(java.lang.Object)
 	 */
+	@Transactional
 	public boolean save(T entity) throws Exception {
 		boolean flag = false;
 		try {

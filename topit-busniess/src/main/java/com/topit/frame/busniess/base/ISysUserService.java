@@ -11,8 +11,10 @@
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 import org.hibernate.criterion.DetachedCriteria;
+
 
 
 
@@ -151,7 +153,7 @@ public interface ISysUserService {
      * @throws Exception        
      */
      
-    public List<SysUser> getListForPageBysql(String sql,int firstResult,int pageSize)throws Exception;
+    public List<Map<String,Object>> getListForPageBysql(int pageNow,int pageSize)throws Exception;
     /**   
      * @Title: getSysUserGroupCount   
      * @Description: 系统用户组数量   
@@ -180,7 +182,7 @@ public interface ISysUserService {
      * @return
      * @throws Exception        
      */ 
-    public List<SysUser> getListBySysUserNameAndGroupId(String sysUserName,String groupId,int firstResult,int pageSize)throws Exception;
+    public List<Map<String,Object>> getListBySysUserNameAndGroupId(String sysUserName,String groupId,int pageNow,int pageSize)throws Exception;
 }
 
  

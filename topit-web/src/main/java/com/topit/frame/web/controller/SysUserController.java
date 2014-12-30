@@ -1,11 +1,3 @@
-/**   
-* @Title: SysUserController.java 
-* @Package com.topit.frame.web.controller 
-* @Description: TODO(��һ�仰�������ļ���ʲô) 
-* @author ivan.zhang
-* @date 2014��11��27�� ����11:46:45 
-* @version V1.0   
-*/ 
 
  package com.topit.frame.web.controller;
 
@@ -53,7 +45,7 @@ import com.topit.frame.core.util.DataDicDAO;
  * @ClassName: SysUserController 
  * @Description: 系统用户控制器
  * @author doc.zhou
- * @date 2014��11��27�� ����11:46:45 
+ * 
  *  
 */ 
 /** 
@@ -103,7 +95,6 @@ public class SysUserController {
 		resultPageObject.setRows(list);
 		resultPageObject.setTotal(String.valueOf(sysUserServiceImpl.getCount()));
 		return resultPageObject;
-		//return null;
 	}
 	/**   
 	 * @Title: getListBySql   
@@ -129,24 +120,17 @@ public class SysUserController {
 		int pageSize = Integer.parseInt(request.getParameter("rows"));
 		String sysUserName=request.getParameter("sysUserName");
 		String sysUserGroupId=request.getParameter("sysUserGroupId");
-		int firstResult = (pageNow - 1) * pageSize;
 		
 		List<SysModuleAction> sysModuleActionList=null;
 	   if((sysUserName!=null||sysUserGroupId!=null)){
-		   if(!("").equals(sysUserName)||!("全部").equals(sysUserGroupId)){
-		   return getlistByUserNameAndGroupId( sysUserName, sysUserGroupId,firstResult,pageSize);
+		   if(!("").equals(sysUserName)||!("").equals(sysUserGroupId)){
+		   return getlistByUserNameAndGroupId( sysUserName, sysUserGroupId,pageNow,pageSize);
 		   }
 	   }
-		List<SysUser> list = null;
-		String sql="select A.*,GROUP_CONCAT(E.Name) as GroupName,GROUP_CONCAT(E.GroupId) as GroupIds from sys_user A "
-				+ "left join (select B.GroupId,B.`UserId`,C.Name "
-				+ "from `sys_user_user_group` B inner join `sys_user_group` C "
-				+ "on B.GroupId=C.Id	) as E on A.`Id`=E.`UserId` "
-				+ "group by A.`Id` LIMIT ?,?";
-
+		List<Map<String,Object>> list = null;
 		try {
 			sysModuleActionList= sysModuleActionServiceImp.getListAction(modulePath, userId);
-			list = sysUserServiceImpl.getListForPageBysql(sql, firstResult, pageSize);
+			list = sysUserServiceImpl.getListForPageBysql(pageNow, pageSize);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -344,9 +328,7 @@ public class SysUserController {
 		 }
 	
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			 e.printStackTrace();
-			 
+			 e.printStackTrace(); 
 		}
 		
         user.setRealName(realName);
@@ -440,10 +422,7 @@ public class SysUserController {
 		String SysUserGroup[]=(String[])map.get("SysUserGroup");
 		BigInteger id=user.getId();//需要添加的用户的id
 		BigInteger localSysUserId= getSessionSysUser(request,response).getId();
-		//Date date=getCurrentTime();
 		 boolean flag=false;
-		//System.out.println(date);
-		//List<SysUserUserGroup> sysUserUserGroup=new ArrayList();
 		SysUserUserGroup sysUserUsergroup=new SysUserUserGroup();
 		for(int i=0;i<SysUserGroup.length;i++){
 			
@@ -454,9 +433,6 @@ public class SysUserController {
 			 sysUserUserGroupServiceImp.saveSysUserUserGroup(sysUserUsergroup);
 			 flag=true;
 		}
-	   
-		// flag=sysUserUserGroupServiceImp.saveSysUserUserGroup(sysUserUserGroup);
-		// System.out.println(flag);
 		 return flag;
 	}
 	/**   
@@ -478,12 +454,10 @@ public class SysUserController {
 		//删除系统用户用户组
 		if(list.size()>0){
 		for(SysUserUserGroup sysUserUserGroup:list){
-			System.out.println("sysUserUserGroup"+sysUserUserGroup.getGroupId());
 			sysUserUserGroupServiceImp.deleteSysUserUserGroup(sysUserUserGroup);
 		}
 		}
 		BigInteger localSysUserId= getSessionSysUser(request,response).getId();
-		//Date date=getCurrentTime();
 		
 		SysUserUserGroup sysUserUsergroup=new SysUserUserGroup();
 		sysUserUsergroup.setCreator(Integer.parseInt(localSysUserId+""));
@@ -497,9 +471,6 @@ public class SysUserController {
 			
 		}
 		 
-	   
-		// flag=sysUserUserGroupServiceImp.saveSysUserUserGroup(sysUserUserGroup);
-		// System.out.println(flag);
 		 return flag;
 	}
     /**   
@@ -517,12 +488,12 @@ public class SysUserController {
 	 * @Description:    
 	 * @return        
 	 */ 
-	private  ResultRightObject  getlistByUserNameAndGroupId(String sysUserName,String sysUserGroupId, int firstResult,int pageSize){
-		List<SysUser> list = null;
+	private  ResultRightObject  getlistByUserNameAndGroupId(String sysUserName,String sysUserGroupId, int pageNow,int pageSize){
+		List<Map<String,Object>> list = null;
 		ResultRightObject rightObject=new ResultRightObject();
 		ResultPageObject resultPageObject=null;
 		try {
-			list = sysUserServiceImpl.getListBySysUserNameAndGroupId(sysUserName, sysUserGroupId, firstResult, pageSize);
+			list = sysUserServiceImpl.getListBySysUserNameAndGroupId(sysUserName, sysUserGroupId, pageNow, pageSize);
 		    resultPageObject = new ResultPageObject();
 			resultPageObject.setRows(list);
 			resultPageObject.setTotal(String.valueOf(sysUserServiceImpl.getCountBySysUserNameAndGroupId(sysUserName, sysUserGroupId)));

@@ -260,6 +260,30 @@
 
 																	
 
+																																																																				
+
+																	
+
+																																		
+
+																	
+
+																																																			
+
+																	
+
+																																		
+
+																	
+
+																																																																				
+
+																	
+
+																																		
+
+																	
+
 																																																			
 
 																	
@@ -444,7 +468,7 @@
 
 function loadMenuSuccess(row) {
 	$(this).treegrid('enableDnd', row && row.Lid > 1 ? row.Lid : null);
-		
+
 }
 
 /**
@@ -472,8 +496,6 @@ function loadModuleSuccess(node) {
 		}
 	}
 }
-
-
 
 var parentId = -1;
 // 开始拖动
@@ -540,23 +562,29 @@ function insertNewMenuItem(url, moduleLid, name) {
 	var row = checkNewPosition();
 	if (row) {
 		var parentId = row._parentId;
-		if (row.moduleid == -1) {
-			parentId = row.id;
+		if (row.parentId == -1&& moduleLid!=-1) {
+			$.messager.alert('提示', '不能插入到根菜单，请先创建或者选择菜单分组！', 'error');
+			return 0;
+		} else {
+			if (row.moduleid == -1) {
+				parentId = row.id;
+			}
+			var data = {
+				parentId : parentId,
+				moduleLid : moduleLid,
+				textname : name,
+			};
+			doMenuAction(url, data);
+			return parentId;
 		}
-		var data = {
-			parentId : parentId,
-			moduleLid : moduleLid,
-			textname : name,
-		};
-		doMenuAction(url, data);
-		return parentId;
 
 	}
 }
 
 // 添加菜单分组
 function createFolder(url) {
-	if (checkNewPosition()) {
+	var row = checkNewPosition()
+	if (row && row.parentId==-1) {
 		$.messager.prompt('新增菜单分组', '请输入菜单分组的名称', function(r) {
 			if (r) {
 				var id = insertNewMenuItem(url, -1, r);
@@ -569,6 +597,9 @@ function createFolder(url) {
 
 			}
 		});
+	}
+	else{
+		$.messager.alert('提示', '不能再菜单分组中嵌套菜单分组！', 'error')
 	}
 }
 // 删除菜单
@@ -628,6 +659,3 @@ function refreshTree() {
 		setMenuNodeIcon(parent);
 	}
 }
-
-
-

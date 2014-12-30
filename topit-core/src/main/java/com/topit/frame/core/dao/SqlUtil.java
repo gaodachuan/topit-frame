@@ -25,7 +25,6 @@ public abstract class SqlUtil {
 	public JdbcTemplate getJdbcTemplate() {
 		return jdbcTemplate;
 	}
-
 	@Resource
 	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) throws SQLException {
 		this.jdbcTemplate = jdbcTemplate;

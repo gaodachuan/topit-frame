@@ -38,7 +38,6 @@ public class SqlQuery extends SqlUtil {
 		return list;
 
 	}
-
 	/**
 	 * @Title: Page
 	 * @Description: SQL语句带参数的分页查询方法
