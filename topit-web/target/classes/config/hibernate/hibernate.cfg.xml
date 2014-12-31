@@ -28,6 +28,8 @@
 		<mapping class="com.housemanagersystem.domain.ComboxDTO"/>
 		<mapping class="com.housemanagersystem.domain.Customer"/>
 		<mapping class="com.housemanagersystem.domain.Chargeitem"/>
+		<mapping class="com.housemanagersystem.domain.Chargedetail"/>
+		<mapping class="com.housemanagersystem.domain.Contact"/>
 		
 	</session-factory>
 

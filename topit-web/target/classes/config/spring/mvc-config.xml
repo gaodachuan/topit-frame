@@ -10,12 +10,18 @@
 
 	<context:component-scan
 		base-package="com.topit.frame.web.controller,com.housemanagersystem.web.controller" />
-	<mvc:annotation-driven />
+	<mvc:annotation-driven >
+	    <mvc:argument-resolvers>
+	        <bean class="com.topit.frame.common.util.FormObjArgumentResolver"></bean>
+	    </mvc:argument-resolvers>
+	</mvc:annotation-driven>
 	<bean
 		class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
 		<property name="cacheSeconds" value="0"></property>
+		<property name="synchronizeOnSession" value="true"></property>
 		<property name="messageConverters">
 			<list>
+
 				<bean
 					class="org.springframework.http.converter.BufferedImageHttpMessageConverter" />
 				<bean

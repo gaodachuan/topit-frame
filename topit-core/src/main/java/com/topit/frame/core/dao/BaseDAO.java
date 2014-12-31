@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.hibernate.Query;
+import org.hibernate.Session;
 import org.hibernate.criterion.DetachedCriteria;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -201,8 +202,18 @@ public class BaseDAO<T> extends HqlUtil implements IBaseDAO<T> {
 	}
 
 	public boolean save(List<T> entityList) throws Exception {
-		// TODO Auto-generated method stub
-		return false;
+		boolean flag=false;
+		Session session=getSessionFactory().getCurrentSession();
+		for(int i=0;i<entityList.size();i++)
+		{
+			session.save(entityList.get(i));
+			if(i%20==0)
+			{
+				session.flush();
+			}
+		}
+		flag=true;
+		return flag;
 	}
 
 	public boolean remove(T entity) throws Exception {
@@ -244,9 +255,23 @@ public class BaseDAO<T> extends HqlUtil implements IBaseDAO<T> {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
+    
+	public List<T> find(String where,String[] args,Object... params){
+		Query query=getSessionFactory().getCurrentSession().createQuery("From "+ entityClass.getSimpleName()+" where "+where);
+		for(int i=0;i<params.length;i++)
+		{
+			Object parm=params[i];
+			if(parm instanceof Object[])
+			{
+				query.setParameterList(args[i], (Object[])parm);
+				
+			}else{
+				query.setParameter(args[i], params[i]);
+			}
+		}
+		return query.list();
+	}
 	public List<T> find(String where, String order, Object... params) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

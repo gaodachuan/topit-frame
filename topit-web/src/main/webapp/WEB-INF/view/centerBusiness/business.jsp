@@ -167,19 +167,19 @@
 														.form(
 																'load',
 																{
-																	id : arr[0].id,
-																	name : arr[0].name,
-																	number : arr[0].number,
-																	area : arr[0].area,
-																	usetype : arr[0].usetype,
-																	decorate : arr[0].decorate,
-																	equipment : arr[0].equipment,
-																	dayrentpri : arr[0].dayrentpri,
-																	monthrentpri : arr[0].monthrentpri,
-																	dealType : arr[0].dealType,
-																	housetype : arr[0].housetype,
-																	ElectricStart : arr[0].electricStart,
-																	WaterStart : arr[0].waterStart
+																	'h.id' : arr[0].id,
+																	'h.name' : arr[0].name,
+																	'h.number' : arr[0].number,
+																	'h.area' : arr[0].area,
+																	'h.usetype' : arr[0].usetype,
+																	'h.decorate' : arr[0].decorate,
+																	'h.equipment' : arr[0].equipment,
+																	'h.dayrentpri' : arr[0].dayrentpri,
+																	'h.monthrentpri' : arr[0].monthrentpri,
+																	'h.dealType': arr[0].dealType,
+																	'h.housetype' : arr[0].housetype,
+																	'h.ElectricStart' : arr[0].electricStart,
+																	'h.WaterStart' : arr[0].waterStart
 
 																});
 
@@ -211,12 +211,12 @@
 						});
 
 		//加载客户信息
-		$('#CustomerName')
+		$('#customername')
 				.combogrid(
 						{
 							panelWidth : 400,
 							value : '选择客户',
-							idField : 'id',
+							idField : 'name',
 							textField : 'name',
 							url : '${pageContext.request.contextPath}/customer/getCustomerInfo.do',
 							striped : true, //隔行变色特性 
@@ -249,7 +249,7 @@
 							} ] ]
 						});
 		//加载资费信息
-		$('#ChargeitemSet')
+		$('#chargeitem')
 				.combogrid(
 						{
 							panelWidth : 400,
@@ -261,7 +261,7 @@
 							loadMsg : '数据正在加载,请耐心的等待...',
 							rownumbers : true,
 							multiple : true,
-							separator:'|',
+							separator : '|',
 							pagination : true,
 							pageSize : 5,
 							pageList : [ 5, 10, 15, 20, 50 ],
@@ -290,11 +290,11 @@
 						});
 
 		//初始化日期组件
-		$('#rentstart').datetimebox({
+		$('#contactstart').datetimebox({
 			showSeconds : true
 		});
 
-		$('#rentend').datetimebox({
+		$('#contactend').datetimebox({
 			showSeconds : true
 		});
 		//保存	 
@@ -303,8 +303,7 @@
 					if ($('#houseInfoform').form('validate')) {
 						$.ajax({
 							type : 'post',
-							url : flag == 'save' ? 'saveHouseInfo.do'
-									: 'updateHouseInfo.do',
+							url : 'centerService.do',								
 							cache : false,
 							data : $('#houseInfoform').serialize(),
 							dataType : 'json',
@@ -360,9 +359,9 @@
 				housetype : houseType
 			});
 		});
-		
-		$('#nextStep').click(function(){		
-			$('#dialogtab').tabs('select','租房信息');
+
+		$('#nextStep').click(function() {
+			$('#dialogtab').tabs('select', '租房信息');
 		});
 
 	})
@@ -398,165 +397,142 @@
 		</div>
 		<div id="houseInfodialog" modal=true draggable=false
 			class="easyui-dialog" closed=true style="width: 55%; height: 70%;">
-
 			<!--当前业务处理的房源信息  -->
-
-			<div id="dialogtab" class="easyui-tabs" fit=false plain=true
-				style="padding: 3%;">
-				<div title="房源信息" align="center" style="width: 100%; height: 50%"
-					fit=true>
-					<form id="houseInfoform" action="" method="post"
-						style="margin-top: 20px; margin-bottom: 20px">
-						<input type="hidden" name="id" value="-1" />
-						<table>
+			<!--一个大的Form表单  -->
+			<form id="houseInfoform"
+				style="margin-top: 20px; margin-bottom: 20px">
+				<input type="hidden" name="h.id" value="-1" />
+				<div id="dialogtab" class="easyui-tabs" fit=false plain=true
+					style="padding: 3%;">
+					<div title="房源信息" align="center" style="width: 100%; height: 50%"
+						fit=true>
+						<table style="margin-top: 5%; margin-left: 5%">
 							<tr>
-								<td style="width: 30%;"><label for="number"
+								<td style="width: 30%;"><label for="h.number"
 									style="padding-left: 6px;">房源编号:</label> <input
-									class="easyui-validatebox" type="text" name="number"
-									style="width: 182px;" disabled="true" /></td>
-								<td style="width: 30%;"><label for="name"
+									class="easyui-validatebox" type="text" name="h.number"
+									style="width: 182px;" readonly="readonly" /></td>
+								<td style="width: 30%;"><label for="h.name"
 									style="padding-left: 6px;">房源名称:</label> <input
-									class="easyui-validatebox " type="text" name="name"
-									style="width: 182px;" disabled="true" /></td>
+									class="easyui-validatebox " type="text" name="h.name"
+									style="width: 182px;" readonly="readonly" /></td>
 							</tr>
 
 							<tr>
-								<td style="width: 30%;"><label for="area"
+								<td style="width: 30%;"><label for="h.area"
 									style="padding-left: 6px;">房源面积:</label> <input
-									class="easyui-validatebox " type="text" name="area"
-									style="width: 182px;" disabled="true" /></td>
-								<td style="width: 30%;"><label for="decorate"
+									class="easyui-validatebox " type="text" name="h.area"
+									style="width: 182px;" readonly="readonly" /></td>
+								<td style="width: 30%;"><label for="h.decorate"
 									style="padding-left: 6px;">装修情况:</label> <input
-									class="easyui-validatebox " type="text" name="decorate"
-									style="width: 182px;" disabled="true" /></td>
+									class="easyui-validatebox " type="text" name="h.decorate"
+									style="width: 182px;" readonly="readonly" /></td>
 							</tr>
 							<tr>
-								<td style="width: 30%;"><label for="housetype"
+								<td style="width: 30%;"><label for="h.housetype"
 									style="padding-left: 6px;">房源类型: </label> <input
-									class="easyui-validatebox " type="text" name="housetype"
-									style="width: 182px;" disabled="true" /></td>
-								<td style="width: 30%;"><label for="equipment"
+									class="easyui-validatebox " type="text" name="h.housetype"
+									style="width: 182px;" readonly="readonly" /></td>
+								<td style="width: 30%;"><label for="h.equipment"
 									style="padding-left: 6px;">房间设施: </label> <input
-									class="easyui-validatebox " type="text" name="equipment"
-									style="width: 182px;" disabled="true" /></td>
+									class="easyui-validatebox " type="text" name="h.equipment"
+									style="width: 182px;" readonly="readonly" /></td>
 							</tr>
 							<tr>
-								<td style="width: 30%;"><label for="usetype"
+								<td style="width: 30%;"><label for="h.usetype"
 									style="padding-left: 6px;">房源用途: </label><input
-									class="easyui-validatebox " type="text" name="usetype"
-									style="width: 182px;" disabled="true" /></td>
-								<td style="width: 30%;"><label for="dealType"
+									class="easyui-validatebox " type="text" name="h.usetype"
+									style="width: 182px;" readonly="readonly" /></td>
+								<td style="width: 30%;"><label for="h.dealType"
 									style="padding-left: 6px;">租售方式:</label> <input
-									class="easyui-validatebox " type="text" name="dealType"
-									style="width: 182px;" disabled="true" /></td>
+									class="easyui-validatebox " type="text" name="h.dealType"
+									style="width: 182px;" readonly="readonly" /></td>
 							</tr>
 							<tr>
-								<td style="width: 30%;"><label for="dayrentpri"
+								<td style="width: 30%;"><label for="h.dayrentpri"
 									style="padding-left: 6px;">日供价格:</label> <input
-									class="easyui-validatebox " type="text" name="dayrentpri"
-									style="width: 182px;" disabled="true" /></td>
-								<td style="width: 30%;"><label for="monthrentpri"
+									class="easyui-validatebox " type="text" name="h.dayrentpri"
+									style="width: 182px;" readonly="readonly" /></td>
+								<td style="width: 30%;"><label for="h.monthrentpri"
 									style="padding-left: 6px;">月租价格: </label><input
-									class="easyui-validatebox " type="text" name="monthrentpri"
-									style="width: 182px;" disabled="true" /></td>
+									class="easyui-validatebox " type="text" name="h.monthrentpri"
+									style="width: 182px;" readonly="readonly" /></td>
 							</tr>
 							<tr>
 
-								<td style="width: 30%;"><label for="ElectricStart"
+								<td style="width: 30%;"><label for="h.ElectricStart"
 									style="padding-left: 6px;">电表度数:</label> <input
-									class="easyui-validatebox " type="text" name="ElectricStart"
-									style="width: 182px;" disabled="true" /></td>
-								<td style="width: 30%;"><label for="WaterStart"
+									class="easyui-validatebox " type="text" name="h.ElectricStart"
+									style="width: 182px;" readonly="readonly" /></td>
+								<td style="width: 30%;"><label for="h.WaterStart"
 									style="padding-left: 6px;">水表度数:</label> <input
-									class="easyui-validatebox " type="text" name="WaterStart"
-									style="width: 182px;" disabled="true" /></td>
+									class="easyui-validatebox " type="text" name="h.WaterStart"
+									style="width: 182px;"  readonly="readonly"/></td>
 
 							</tr>
 						</table>
-						<div align="center" style="margin-top: 5%">
+						<div align="center"  style="margin-bottom: 1%;margin-top: 3%">
 							<a id="nextStep" class="easyui-linkbutton" style="width: 90px;">业务办理-></a>
 						</div>
-					</form>
-				</div>
+
+					</div>
 
 
-				<!--业务办理信息  -->
-				<div title="租房信息" align="center" style="width: 100%; height: 50%"
-					fit=true>
-					<form id="rentInfoform" action="" method="post"
-						style="margin-top: 20px; margin-bottom: 20px">
-						<input type="hidden" name="id" value="-1" />
-						<table>
+					<!--业务办理信息  -->
+					<div title="租房信息" align="center" style="width: 90%; height: 50%"
+						fit=true>
+						<table style="margin-top: 5%; margin-left: 5%">
 							<tr>
-
-								<td style="width: 30%;"><label for="Transactor"
+								<td style="width: 30%;"><label for="con.servername"
 									style="padding-left: 6px;">办理人员:</label> <input
-									class="easyui-validatebox " type="text" name="Transactor"
+									class="easyui-validatebox " type="text" name="con.servername"
 									style="width: 182px;" required="required" /></td>
-								<td style="width: 30%;"><label for="CustomerName"
+								<td style="width: 30%;"><label for="con.customername"
 									style="padding-left: 6px;">租客姓名:</label> <select
-									id="CustomerName" name="CustomerName" style="width: 182px;">
+									id="customername" name="con.customername" style="width: 182px;">
 								</select></td>
-
 							</tr>
-
 							<tr>
-
-								<td style="width: 30%;"><label for="CustomerCounts"
+								<td style="width: 30%;"><label for="con.customerno"
 									style="padding-left: 6px;">房客人数:</label> <input
-									class="easyui-numberbox " type="text" name="CustomerCounts"
+									class="easyui-numberbox " type="text" name="con.customerno"
 									style="width: 182px;" required="required" /></td>
 
-								<td style="width: 30%;"><label for="rentType"
-									style="padding-left: 6px;">租赁方式: </label> <select id="rentType"
-									class="easyui-combobox " name="rentType" panelHeight="100"
+								<td style="width: 30%;"><label for="con.servicetype"
+									style="padding-left: 6px;">租赁方式: </label> <select id="servicetype"
+									class="easyui-combobox " name="con.servicetype" panelHeight="100"
 									url="getComboxdata.do?type=<%=Constant.Comboxdata.HOUSEINFO_DEALTYPE%>"
 									valueField="name" textField="name" value=""
 									style="width: 182px; height: auto"></select></td>
 
 							</tr>
 							<tr>
-								<td style="width: 30%;"><label for="rentstart"
-									style="padding-left: 6px;">合同起始: </label> <input id="rentstart"
-									name="rentstart" style="width: 182px;"></td>
-								<td style="width: 30%;"><label for="rentend"
-									style="padding-left: 6px;">合同截止: </label> <input id="rentend"
-									name="rentend" style="width: 182px;"></td>
+								<td style="width: 30%;"><label for="con.contactstart"
+									style="padding-left: 6px;">合同起始: </label> <input id="contactstart"
+									name="con.contactstart" style="width: 182px;"></td>
+								<td style="width: 30%;"><label for="con.contactend"
+									style="padding-left: 6px;">合同截止: </label> <input id="contactend"
+									name="con.contactend" style="width: 182px;"></td>
 
-							</tr>
-
-
-							<tr style="display: none">
-								<td style="width: 30%;"><label for="ElectricStart"
-									style="padding-left: 6px;">电表度数:</label> <input
-									class="easyui-numberbox " type="text" name="ElectricStart"
-									style="width: 182px;" required="required" /></td>
-								<td style="width: 30%;"><label for="WaterStart"
-									style="padding-left: 6px;">水表度数:</label> <input
-									class="easyui-numberbox " type="text" name="WaterStart"
-									style="width: 182px;" required="required" /></td>
 							</tr>
 							<tr>
 								<!--资费项目设置  -->
-								<td style="width: 30%;"><label for="ChargeitemSet"
+								<td style="width: 30%;"><label for="con.chargeitem"
 									style="padding-left: 6px;">资费设置:</label> <select
-									id="ChargeitemSet" name="ChargeitemSet" style="width: 182px;">
+									id="chargeitem" name="con.chargeitem" style="width: 182px;">
 								</select></td>
 							</tr>
 						</table>
-						<div align="center" style="margin-top: 5%">
+						<div align="center" style="margin-bottom: 1%;margin-top: 3%">
 							<a id="btnSave" class="easyui-linkbutton" style="width: 90px;">确定</a>
 							<a id="btnCancel" class="easyui-linkbutton" style="width: 90px;">关闭</a>
 						</div>
-					</form>
+
+					</div>
+
 				</div>
 
-
-
-			</div>
-
-
-
+			</form>
 		</div>
 
 	</div>

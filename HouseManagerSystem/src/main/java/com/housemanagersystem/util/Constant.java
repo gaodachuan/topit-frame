@@ -9,6 +9,10 @@ package com.housemanagersystem.util;
  *
  */
 public class Constant {
+	public static class Product{
+		public final static String OGNIZATION = "IT";
+	}
+	
 
 	public static class Entity_Field {
 
@@ -92,6 +96,21 @@ public class Constant {
 		 * 客户性别
 		 */
 		public final static String CUSTOMER_SEX="性别";
+		
+		/**
+		 * 已租
+		 */
+		public final static String HOUSEINFO_STATUS_1="已租";
+		/**
+		 * 已售
+		 */
+		public final static String HOUSEINFO_STATUS_2="已售";
+		/**
+		 * 空闲
+		 */
+		public final static String HOUSEINFO_STATUS_3="空闲";
+		
+		
 		
 	}
 
