@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
  * @author Administrator
  *
  */
-@Target({ ElementType.PACKAGE })
+@Target({ElementType.PARAMETER, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface FormObj {
 	// 参数别名

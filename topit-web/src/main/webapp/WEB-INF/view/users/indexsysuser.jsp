@@ -254,7 +254,7 @@ html, body {
 				<input type="hidden" name="id" value="" />
 				<table>
 					<tr>
-						<td><label style="padding-left: 6px;">登陆名:</label></td>
+						<td><label style="padding-left: 6px;" for="loginName">登陆名:</label></td>
 						<td><input type="text" name="loginName" class="easyui-validatebox" style="width:200px;height:18px"
 							required=true missingMessage="(建议用字母或汉字构成用户登录名)" value="" /></td>
 							<td></td>
@@ -262,7 +262,7 @@ html, body {
  
 					</tr>
 					<tr>
-						<td><label style="padding-left: 6px;">密码:</label></td>
+						<td><label style="padding-left: 6px;" for="password">密码:</label></td>
 						<td><input id="password" type="password" name="password" style="width:200px;height:18px"
 							class="easyui-validatebox" required=true missingMessage="(建议设置复杂一点的密码，以确保用户安全)"
 							validType="minLength[5]" value="" /></td>
@@ -270,7 +270,7 @@ html, body {
 							<td></td> 
 					</tr>
 					<tr>
-						<td><label style="padding-left: 6px;">确认密码:</label></td>
+						<td><label style="padding-left: 6px;" for="repassword">确认密码:</label></td>
 						<td><input type="password" name="repassword" style="width:200px;height:18px"
 							class="easyui-validatebox" validType="equalTo['#password']" required=true invalidMessage="(两次输入密码不匹配)"
 							 missingMessage="(建议设置复杂一点的密码，以确保用户安全)"
@@ -280,30 +280,22 @@ html, body {
  
 					</tr>
 					<tr>
-						<td><label style="padding-left: 6px;">姓名：</label></td>
+						<td><label style="padding-left: 6px;" for="realName">姓名：</label></td>
 						<td><input type="text" name="realName" style="width:200px;height:18px"
 							class="easyui-validatebox" required=true missingMessage="(用户的真实姓名)"
 							value="" /></td>
 							<td></td>
 							<td></td>
 					</tr>
+					
 					<tr>
-						<td><label style="padding-left: 6px;">主属门店:</label></td>
-						<td><input type="combox" name="description" style="width:200px;height:25px"
-							class="easyui-combobox" /></td>
-						<td><label style="padding-left: 6px;">主属部门:</label></td>
-						<td><input type="text" name="description" style="width:200px;height:25px"
-							class="easyui-combobox" /></td>
-							<td></td> 
-					</tr>
-					<tr>
-						<td><label style="padding-left: 6px;">隶属用户组:</label></td>
+						<td><label style="padding-left: 6px;" for="safeLoginTime">隶属用户组:</label></td>
 						<td colspan="3"><input type="text" name="safeLoginTime" style="width:500px;height:25px"
 							class="easyui-combobox" /></td>
 						
 					</tr>
 					<tr >
-						<td><label style="padding-left: 6px;">安全登录时间:</label></td>
+						<td><label style="padding-left: 6px;" for="safeLoginTime">安全登录时间:</label></td>
 						<td ><input type="text" name="safeLoginTime" style="width:200px;height:25px"
 							class="easyui-combobox" /></td>
 						<td><input type="text" name="safeLoginTime" style="width:70px;height:25px;float:left"

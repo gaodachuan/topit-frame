@@ -10,6 +10,7 @@ import org.springframework.core.MethodParameter;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.util.StringUtils;
+import org.springframework.validation.BindException;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -18,9 +19,13 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 import org.springframework.web.servlet.mvc.method.annotation.ExtendedServletRequestDataBinder;
 
 import com.topit.frame.common.view.servlet.FormObj;
-
+/**
+ * 自定义绑定多对象参数的解析器
+ * @author Administrator
+ *
+ */
 public class FormObjArgumentResolver implements HandlerMethodArgumentResolver{
-
+     
 	public boolean supportsParameter(MethodParameter parameter) {
 		
 		return parameter.hasParameterAnnotation(FormObj.class);
@@ -48,17 +53,23 @@ public class FormObjArgumentResolver implements HandlerMethodArgumentResolver{
 		 {
 			 if(isBindExceptionRequried(binder,parameter))
 			 {
-				 
+				 throw new BindException(binder.getBindingResult());
 			 }
 		 }
 	   }
-	   return null;
+	   if(formObj.show())
+	   {
+		   mavContainer.addAttribute(alias,target);
+	   }
+	   return target;
 	}
 
 	private boolean isBindExceptionRequried(WebDataBinder binder,
 			MethodParameter parameter) {
 		int i=parameter.getParameterIndex();
-		return false;
+		Class<?>[] paramTypes=parameter.getMethod().getParameterTypes();
+		boolean hasBindingResult=(paramTypes.length>(i+1)&&Error.class.isAssignableFrom(paramTypes[i+1]));
+		return !hasBindingResult;
 	}
 
 	private void validateIfApplication(WebDataBinder binder,
@@ -70,8 +81,7 @@ public class FormObjArgumentResolver implements HandlerMethodArgumentResolver{
 			binder.validate(hints instanceof Object[] ? (Object[])hints:new Object[]{hints});
 		    break;
 		}
-		
-		
+			
 	}
 
 	private void bindParameters(NativeWebRequest request,
@@ -95,7 +105,12 @@ public class FormObjArgumentResolver implements HandlerMethodArgumentResolver{
 		
 		return BeanUtils.instantiateClass(parameter.getParameterType());
 	}
-
+    /**
+     * 构造参数别名
+     * @param formObj
+     * @param parameter
+     * @return
+     */
 	private String getAlias(FormObj formObj, MethodParameter parameter) {
 		//得到FormObj的属性value,也就是对象参数的简称
 		String alias=formObj.value();
