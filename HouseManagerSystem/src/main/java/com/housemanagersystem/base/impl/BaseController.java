@@ -22,8 +22,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.housemanagersystem.base.IBaseController;
 import com.housemanagersystem.domain.ComboxDTO;
 import com.housemanagersystem.service.ICenterBusinessService;
+<<<<<<< HEAD
 import com.housemanagersystem.service.IChargeDetailService;
 import com.housemanagersystem.service.IContactService;
+=======
+>>>>>>> 07280d9f254d6281d2dd82fdff1830d2c99d603b
 import com.housemanagersystem.service.ICustomerInfoService;
 import com.housemanagersystem.service.IHouseInfoService;
 import com.housemanagersystem.service.impl.ChargeItemInfoServiceImpl;
@@ -50,12 +53,20 @@ public class BaseController implements IBaseController {
 	protected IChargeDetailService chargeDetailServiceImpl;
 	@Resource(name = "idGenerator")
 	protected IIdGenerator idGenerator;
+<<<<<<< HEAD
 
 	@InitBinder
 	protected void initBinder(WebDataBinder binder) {
 		binder.registerCustomEditor(Date.class, new CustomDateEditor(
 				new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"), true));
 	}
+=======
+	
+	@InitBinder
+	   protected void initBinder(WebDataBinder binder) {    
+	       binder.registerCustomEditor(Date.class, new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"), true));       
+	   } 
+>>>>>>> 07280d9f254d6281d2dd82fdff1830d2c99d603b
 
 	@RequestMapping(value = "/getComboxdata", params = "type")
 	@ResponseBody

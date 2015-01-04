@@ -101,11 +101,15 @@ public class CenterBusinessServiceImpl implements ICenterBusinessService{
         contact.setHouseid(houseinfo.getNumber());
         contact.setHousename(houseinfo.getName());
         contact.setHousetype(houseinfo.getHousetype());
+<<<<<<< HEAD
         contact.setHouseArea(houseinfo.getArea());
         contact.setHouseDecorate(houseinfo.getDecorate());
         contact.setHouseUseType(houseinfo.getUsetype());
         contact.setHouseDaypri(houseinfo.getDayrentpri());
         contact.setHouseMonthpri(houseinfo.getMonthrentpri());
+=======
+        
+>>>>>>> 07280d9f254d6281d2dd82fdff1830d2c99d603b
 	}
 
 }

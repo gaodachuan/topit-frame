@@ -204,6 +204,7 @@ public class BaseDAO<T> extends HqlUtil implements IBaseDAO<T> {
 	public boolean save(List<T> entityList) throws Exception {
 		boolean flag=false;
 		Session session=getSessionFactory().getCurrentSession();
+<<<<<<< HEAD
 		try {
 			for(int i=0;i<entityList.size();i++)
 			{
@@ -220,6 +221,17 @@ public class BaseDAO<T> extends HqlUtil implements IBaseDAO<T> {
 		
 		}
 		
+=======
+		for(int i=0;i<entityList.size();i++)
+		{
+			session.save(entityList.get(i));
+			if(i%20==0)
+			{
+				session.flush();
+			}
+		}
+		flag=true;
+>>>>>>> 07280d9f254d6281d2dd82fdff1830d2c99d603b
 		return flag;
 	}
 
