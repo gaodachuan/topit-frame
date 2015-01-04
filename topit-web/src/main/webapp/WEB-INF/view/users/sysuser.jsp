@@ -14,7 +14,6 @@
 <link rel="stylesheet" type="text/css" href="../css/jquery.marquee.css" />
 <script type="text/javascript" src="../js/jquery.min.js"></script>
 <script type="text/javascript" src="../js/jquery.easyui.min.js"></script>
-
 <script type="text/javascript" src="../js/topit.frame.js"></script>
 <style type="text/css">
 html, body {
@@ -53,7 +52,7 @@ html, body {
 					var groupNames=[];
 					$('#SysUserGroup').combobox('clear');
 					/*获取用户组Id*/
-					groupName=array.groupIds;
+					groupName=array.GroupIds;
 						groupNames=groupName.split(",");
 					for(var i=0;i<groupNames.length;i++){
 						var j;
@@ -67,7 +66,7 @@ html, body {
 					var loginWeekdays=[];
 					 $('#AllowLoginWeekDay').combobox('clear');
 					 /*获取登陆的星期天*/
-					 loginWeekday=array.allowLoginWeekDay;
+					 loginWeekday=array.AllowLoginWeekDay;
 					 loginWeekdays= loginWeekday.split(","); 
 					 for(var i=0;i< loginWeekdays.length;i++){
 							var j;
@@ -76,7 +75,7 @@ html, body {
 						}
 				    }
 				$('#sys_user').datagrid({
-					idField : 'id', //只要创建数据表格 就必须要加 ifField
+					idField : 'Id', //只要创建数据表格 就必须要加 ifField
 					title : '系统用户',
 					fit : true,
 					height : 600,
@@ -100,18 +99,18 @@ html, body {
 					                
 					              ]],**/
 					columns : [ [ {
-						field : 'loginName',
+						field : 'LoginName',
 						title : '登录名',
-						width : 100,
+						width : $(this).width()*0.2,
 					}, {
-						field : 'realName',
+						field : 'RealName',
 						title : '姓名',
-						width : 100,
+						width :$(this).width()*0.2,
 						sortable : true
 					}, {
-						field : 'groupName',
+						field : 'GroupName',
 						title : '隶属用户组',
-						width : 100,
+						width : $(this).width()*0.4,
 						sortable : true,
 						formatter:function(value,rec,index){
 							var flag=value;
@@ -124,37 +123,47 @@ html, body {
 							return flag;
 						}
 					} ,{
-						field : 'createTime',
+						field : 'CreateTime',
 						title : '主属门店',
-						width : 100,
+						width : $(this).width()*0.2,
 						sortable : true,
-						formatter:Common.DateFormatter
+						formatter:function(value,rec,index){
+							if(value==null){
+								value='暂无';
+							}
+							return value;
+						}
 					} ,{
-						field : 'createTime',
+						field : 'CreateTime',
 						title : '主属部门',
-						width : 100,
+						width : $(this).width()*0.2,
 						sortable : true,
-						formatter:Common.DateFormatter
+						formatter:function(value,rec,index){
+							if(value==null){
+								value='暂无';
+							}
+							return value;
+						}
 					},{
-						field : 'isOnline',
+						field : 'IsOnline',
 						title : '状态',
-						width : 100,
+						width : $(this).width()*0.2,
 						sortable : true
 					},{
-						field : 'loginTimes',
+						field : 'LoginTimes',
 						title : '登录次数',
-						width : 100,
+						width : $(this).width()*0.2,
 						sortable : true
 					},{
-						field : 'lastLoginTime',
+						field : 'LastLoginTime',
 						title : '上次登录时间',
-						width : 100,
+						width : $(this).width()*0.2,
 						sortable : true,
 					    formatter: Common.DateFormatter
 					},{
-						field : 'remark',
+						field : 'Remark',
 						title : '备注',
-						width : 100,
+						width :$(this).width()*0.3,
 						sortable : true,
 						formatter:function(value){
 							if(value==null){
@@ -203,6 +212,10 @@ html, body {
 											    msg:'只能选择一行记录进行修改！'
 											});
 										}else{
+											
+											$('#sysuser').dialog({
+												title:'修改用户信息'
+											});
 											$('#sysuser').dialog('open');//打开窗口
 											$('#sysuserform').get(0).reset();//清空表单数据
 											//console.info(arr[0]);
@@ -210,31 +223,30 @@ html, body {
 										     LoginWeekDayselect(arr[0]);
 										     //日期字符串截取
 										     var allowTime=function (array){
+										    	 var arrays=[];
 										    	 if(array!=null&&array!=undefined){
-											     var i= array.lastIndexOf(":");
-											     array= array.substring(0,i);
+										        var time= Common.DateFormatter(array);
+										        arrays=time.split(" ");
+										           //console.info(arrays[1]);
+											     var i= arrays[1].lastIndexOf(":");
+											     array= arrays[1].substring(0,i);
 										         }
 											     return array;
 										     }
-										   //  var allowLoginTimes;
-										     //allowLoginTimes=arr[0].allowLoginTime1;
-										     //var i=allowLoginTimes.lastIndexOf(":");
-										     //allowLoginTimes=allowLoginTimes.substring(0,i);
-										     //console.info(allowLoginTimes);
-										   // $('#AllowLoginTime1').timespinner('setValue', allowLoginTime[1]);
+		                                
 										   
 											$('#sysuserform').form('load',{ 
-										        sysUserId:arr[0].id,
-										        vers:arr[0].version,
-                                                loginName:arr[0].loginName,
-                                                realName:arr[0].realName,  
-                                                password:arr[0].passWord,  
-                                                repassword:arr[0].passWord,
-												remark:arr[0].remark,
+										        sysUserId:arr[0].Id,
+										        vers:arr[0].Version,
+                                                loginName:arr[0].LoginName,
+                                                realName:arr[0].RealName,  
+                                                password:arr[0].Password,  
+                                                repassword:arr[0].Password,
+												remark:arr[0].Remark,
                                                // AllowLoginWeekDay:arr[0].allowLoginWeekDay,
                                                 //  AllowLoginTime1:allowLoginTimes,
-                                                  AllowLoginTime1:allowTime(arr[0].allowLoginTime1),
-                                                  AllowLoginTime2:allowTime(arr[0].allowLoginTime2)
+                                                  AllowLoginTime1:allowTime(arr[0].AllowLoginTime1),
+                                                  AllowLoginTime2:allowTime(arr[0].AllowLoginTime2)
 												}
 											);
 									  
@@ -260,7 +272,7 @@ html, body {
 											
 													var ids='';
 													for(var i=0;i<arr.length;i++){
-														ids+=arr[i].id+',';
+														ids+=arr[i].Id+',';
 													}
 													ids=ids.substring(0,ids.length-1);
 													$.post('sysuser.do?method=delete',{ids:ids},function(result){
@@ -306,7 +318,7 @@ html, body {
 														$('#sysuser')
 																.dialog('close');
 														$('#sys_user')
-														.datagrid('reload',{sysUserName:'',sysUserGroupId:'全部'});
+														.datagrid('reload',{sysUserName:'',sysUserGroupId:''});
 														$.messager
 																.show({
 																	title : result.status,
@@ -355,7 +367,7 @@ html, body {
 								formatter: function(row){
 									var opts = $(this).combobox('options');
 									if(opts.valueField==-1){
-										return "全部";
+										return "";
 									}else{
 										var ti=row[opts.textField];
 										var flag;
@@ -422,7 +434,10 @@ html, body {
 				return flag;
 			}
 	 });
-   
+	
+      $(window).resize(function(){
+    	  $('#sys_user').datagrid('resize');
+      });
  })
  </script>
 </head>
@@ -438,7 +453,7 @@ html, body {
 						<label for="moduleName">用户:</label> <input
 							class="easyui-validatebox " type="text" name="sysUser" id="sysUser"
 							style="width: 200px;" required="true" /> <label for="moduleType">用户组:</label>
-						<input type="text" name="SysUserGroup" style="width:200px;" value="全部" id="SysUserGroupSearch"
+						<input type="text" name="SysUserGroup" style="width:200px;" value="" id="SysUserGroupSearch"
 							class="easyui-combobox" data-options="valueField:'id',textField:'name',url:'sysUserGroupCombox.do'"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 						<a id="dosearch" href="#" class="easyui-linkbutton"
 							data-options="iconcls:'icon-search'" style="width: 90px;">搜索</a>
@@ -451,13 +466,13 @@ html, body {
       <div region="center">
 	  <table id="sys_user"></table>
       </div>   
-		<div id="sysuser" title="新增系统用户" modal=true draggable=false
-			class="easyui-dialog" closed=true style="width: 625px;">
+		<div id="sysuser" modal=true draggable=false
+			class="easyui-dialog" closed=true style="width: 700px;">
 			<form id="sysuserform" action="" method="post">
 				<input type="hidden" name="id" value="" />
 				<table>
 					<tr>
-						<td><label style="padding-left: 6px;">登陆名:</label></td>
+						<td ><label style="padding-left: 6px; ">登陆名:</label></td>
 						<td><input type="text" name="loginName" class="easyui-validatebox" style="width:200px;height:18px" id="loginName"
 							required=true missingMessage="(建议用字母或汉字构成用户登录名)" value="" /></td>
 							<td></td>
@@ -491,7 +506,7 @@ html, body {
 							<td></td>
 					</tr>
 					<tr>
-						<td><label style="padding-left: 6px;">主属门店:</label></td>
+						<td><label style="padding-left: 6px;" >主属门店:</label></td>
 						<td><input type="combox" name="description" style="width:200px;height:25px"
 							class="easyui-combobox" /></td>
 						<td><label style="padding-left: 6px;">主属部门:</label></td>

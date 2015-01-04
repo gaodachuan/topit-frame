@@ -156,33 +156,41 @@
 													msg : '请选择一行记录进行修改!'
 												});
 											} else {
-												$('#houseInfodialog').dialog({
-													title : '房屋出租'
-												});
-												$('#houseInfoform').get(0)
-														.reset();
-												$('#houseInfodialog').dialog(
-														'open');
-												$('#houseInfoform')
-														.form(
-																'load',
-																{
-																	'h.id' : arr[0].id,
-																	'h.name' : arr[0].name,
-																	'h.number' : arr[0].number,
-																	'h.area' : arr[0].area,
-																	'h.usetype' : arr[0].usetype,
-																	'h.decorate' : arr[0].decorate,
-																	'h.equipment' : arr[0].equipment,
-																	'h.dayrentpri' : arr[0].dayrentpri,
-																	'h.monthrentpri' : arr[0].monthrentpri,
-																	'h.dealType': arr[0].dealType,
-																	'h.housetype' : arr[0].housetype,
-																	'h.ElectricStart' : arr[0].electricStart,
-																	'h.WaterStart' : arr[0].waterStart
+												if (arr[0].status != '空闲') {
+													$.messager.show({
+														title : '提示信息',
+														msg : '房间已出租，不能操作'
+													});
+												} else {
+													$('#houseInfodialog')
+															.dialog({
+																title : '房屋出租'
+															});
+													$('#houseInfoform').get(0)
+															.reset();
+													$('#houseInfodialog')
+															.dialog('open');
+													$('#houseInfoform')
+															.form(
+																	'load',
+																	{
+																		'h.id' : arr[0].id,
+																		'h.name' : arr[0].name,
+																		'h.number' : arr[0].number,
+																		'h.area' : arr[0].area,
+																		'h.usetype' : arr[0].usetype,
+																		'h.decorate' : arr[0].decorate,
+																		'h.equipment' : arr[0].equipment,
+																		'h.dayrentpri' : arr[0].dayrentpri,
+																		'h.monthrentpri' : arr[0].monthrentpri,
+																		'h.dealType' : arr[0].dealType,
+																		'h.housetype' : arr[0].housetype,
+																		'h.ElectricStart' : arr[0].electricStart,
+																		'h.WaterStart' : arr[0].waterStart
 
-																});
+																	});
 
+												}
 											}
 										}
 
@@ -303,7 +311,7 @@
 					if ($('#houseInfoform').form('validate')) {
 						$.ajax({
 							type : 'post',
-							url : 'centerService.do',								
+							url : 'centerService.do',
 							cache : false,
 							data : $('#houseInfoform').serialize(),
 							dataType : 'json',
@@ -467,11 +475,11 @@
 								<td style="width: 30%;"><label for="h.WaterStart"
 									style="padding-left: 6px;">水表度数:</label> <input
 									class="easyui-validatebox " type="text" name="h.WaterStart"
-									style="width: 182px;"  readonly="readonly"/></td>
+									style="width: 182px;" readonly="readonly" /></td>
 
 							</tr>
 						</table>
-						<div align="center"  style="margin-bottom: 1%;margin-top: 3%">
+						<div align="center" style="margin-bottom: 1%; margin-top: 3%">
 							<a id="nextStep" class="easyui-linkbutton" style="width: 90px;">业务办理-></a>
 						</div>
 
@@ -499,8 +507,9 @@
 									style="width: 182px;" required="required" /></td>
 
 								<td style="width: 30%;"><label for="con.servicetype"
-									style="padding-left: 6px;">租赁方式: </label> <select id="servicetype"
-									class="easyui-combobox " name="con.servicetype" panelHeight="100"
+									style="padding-left: 6px;">租赁方式: </label> <select
+									id="servicetype" class="easyui-combobox "
+									name="con.servicetype" panelHeight="100"
 									url="getComboxdata.do?type=<%=Constant.Comboxdata.HOUSEINFO_DEALTYPE%>"
 									valueField="name" textField="name" value=""
 									style="width: 182px; height: auto"></select></td>
@@ -508,11 +517,11 @@
 							</tr>
 							<tr>
 								<td style="width: 30%;"><label for="con.contactstart"
-									style="padding-left: 6px;">合同起始: </label> <input id="contactstart"
-									name="con.contactstart" style="width: 182px;"></td>
+									style="padding-left: 6px;">合同起始: </label> <input
+									id="contactstart" name="con.contactstart" style="width: 182px;"></td>
 								<td style="width: 30%;"><label for="con.contactend"
-									style="padding-left: 6px;">合同截止: </label> <input id="contactend"
-									name="con.contactend" style="width: 182px;"></td>
+									style="padding-left: 6px;">合同截止: </label> <input
+									id="contactend" name="con.contactend" style="width: 182px;"></td>
 
 							</tr>
 							<tr>
@@ -523,7 +532,7 @@
 								</select></td>
 							</tr>
 						</table>
-						<div align="center" style="margin-bottom: 1%;margin-top: 3%">
+						<div align="center" style="margin-bottom: 1%; margin-top: 3%">
 							<a id="btnSave" class="easyui-linkbutton" style="width: 90px;">确定</a>
 							<a id="btnCancel" class="easyui-linkbutton" style="width: 90px;">关闭</a>
 						</div>

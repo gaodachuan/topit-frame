@@ -9,7 +9,6 @@ import org.apache.log4j.Logger;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.criterion.DetachedCriteria;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @ClassName: BaseDAO
@@ -53,7 +52,6 @@ public class BaseDAO<T> extends HqlUtil implements IBaseDAO<T> {
 	 * @throws Exception
 	 * @see com.topit.frame.core.dao.IBaseDAO#save(java.lang.Object)
 	 */
-	@Transactional
 	public boolean save(T entity) throws Exception {
 		boolean flag = false;
 		try {
@@ -204,24 +202,6 @@ public class BaseDAO<T> extends HqlUtil implements IBaseDAO<T> {
 	public boolean save(List<T> entityList) throws Exception {
 		boolean flag=false;
 		Session session=getSessionFactory().getCurrentSession();
-<<<<<<< HEAD
-		try {
-			for(int i=0;i<entityList.size();i++)
-			{
-				session.save(entityList.get(i));
-				if(i%20==0)
-				{
-					session.flush();
-				}
-			}
-			flag=true;
-		} catch (Exception e) {
-			
-			e.printStackTrace();
-		
-		}
-		
-=======
 		for(int i=0;i<entityList.size();i++)
 		{
 			session.save(entityList.get(i));
@@ -231,22 +211,20 @@ public class BaseDAO<T> extends HqlUtil implements IBaseDAO<T> {
 			}
 		}
 		flag=true;
->>>>>>> 07280d9f254d6281d2dd82fdff1830d2c99d603b
 		return flag;
 	}
 
 	public boolean remove(T entity) throws Exception {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	public boolean remove(List<T> entityList) throws Exception {
-		// TODO Auto-generated method stub
+	 
 		return false;
 	}
 
 	public boolean refresh(T entity) throws Exception {
-		// TODO Auto-generated method stub
+	 
 		return false;
 	}
 
@@ -266,12 +244,12 @@ public class BaseDAO<T> extends HqlUtil implements IBaseDAO<T> {
 	}
 
 	public boolean delete(String where, Object... params) throws Exception {
-		// TODO Auto-generated method stub
+	 
 		return false;
 	}
 
 	public T retrieve(Serializable id) {
-		// TODO Auto-generated method stub
+	 
 		return null;
 	}
     
@@ -301,37 +279,37 @@ public class BaseDAO<T> extends HqlUtil implements IBaseDAO<T> {
 
 	public List<T> find(int offset, int limit, String where, String order,
 			Object... params) {
-		// TODO Auto-generated method stub
+	 
 		return null;
 	}
 
 	public List<T> find(int top, String where, String order, Object... params) {
-		// TODO Auto-generated method stub
+	 
 		return null;
 	}
 
 	public T first(String where, String order, Object... params) {
-		// TODO Auto-generated method stub
+	 
 		return null;
 	}
 
 	public Object min(String field, String where, Object... params) {
-		// TODO Auto-generated method stub
+	 
 		return null;
 	}
 
 	public Object max(String field, String where, Object... params) {
-		// TODO Auto-generated method stub
+	 
 		return null;
 	}
 
 	public Object count(String where, Object... params) {
-		// TODO Auto-generated method stub
+	 
 		return null;
 	}
 
 	public boolean exists(String where, Object... params) {
-		// TODO Auto-generated method stub
+	 
 		return false;
 	}
 
