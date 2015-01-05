@@ -19,6 +19,10 @@ html, body {
 	var flag='';
 	var groupId;	
 	var listAction;
+	//对应节点下拥有的所有模块
+	var allModule=[];
+	var allModuleNo=0;
+	
 	$(function() {		
 		$('#sys_user_group').datagrid({
 			idField : 'id',
@@ -326,7 +330,9 @@ function setAuthorization(id){
 	
 	groupId='';
 	groupId = id;
-
+	allModuleNo=0;
+	allModule=[];
+	
 	/*  #####表格的加载######  */
 	$('#sys_module_action').datagrid({	
 		data : null,
@@ -346,7 +352,6 @@ function setAuthorization(id){
 								var moduleId=treeNode.tabId;
 								for(var i=0;i<getChecked.length;i++){
 									if((typeof getChecked[i])!='undefined'){
-										console.log(getChecked[i]);
 										var checked=getChecked[i];
 										str+='{"groupId" : '+groupId+' ,'+'"moduleId" : '+checked.moduleId+' ,'+' "actionId" : '+checked.actionId+'},';
 									}	
@@ -493,8 +498,9 @@ function setAuthorization(id){
 			lines : true,
 			checkbox : true,
 			onLoadSuccess : function(node, data){
+				getChildren(data[0]);
 				//将节点转化成DOM对象
-				var obj = document.getElementById(getChildren(data).domId); 
+				var obj = document.getElementById(allModule[0].domId); 
 				$('#mudletree').tree('select',obj);
 			},
 			onSelect : function(node){
@@ -519,23 +525,20 @@ function setAuthorization(id){
 		});
 	
 		//打开对话框
-		 $('#authorization').dialog('open');
-		
-		 
-		
-		 
+		 $('#authorization').dialog('open').dialog('refresh');
+ 
 }
 
 //通过递归，找到第一个叶子节点
-var getChildren=function(data){
-	for(var i=0;i<data.length;i++){
-		if (data[i].children != null){
-			for (var j=0;j<data[i].children.length;j++){
-				getChildren((data[i].children)[j]);
-				return ((data[i].children)[j]).children[0];
+var getChildren=function(data){		
+		if (data.children != null){
+			for (var j=0;j<data.children.length;j++){
+				getChildren((data.children)[j]);
 			}
+		}else{
+			allModule[allModuleNo]=data;
+			allModuleNo=allModuleNo+1;
 		}
-	};
 }
 
 </script>

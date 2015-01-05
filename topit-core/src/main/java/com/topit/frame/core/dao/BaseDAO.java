@@ -9,6 +9,7 @@ import org.apache.log4j.Logger;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.criterion.DetachedCriteria;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @ClassName: BaseDAO
@@ -52,6 +53,7 @@ public class BaseDAO<T> extends HqlUtil implements IBaseDAO<T> {
 	 * @throws Exception
 	 * @see com.topit.frame.core.dao.IBaseDAO#save(java.lang.Object)
 	 */
+	@Transactional
 	public boolean save(T entity) throws Exception {
 		boolean flag = false;
 		try {
@@ -199,32 +201,31 @@ public class BaseDAO<T> extends HqlUtil implements IBaseDAO<T> {
 		return count;
 	}
 
-	public boolean save(List<T> entityList) throws Exception {
-		boolean flag=false;
-		Session session=getSessionFactory().getCurrentSession();
-		for(int i=0;i<entityList.size();i++)
-		{
+	public boolean save(List<T> entityList) {
+		boolean flag = false;
+		Session session = getSessionFactory().getCurrentSession();
+		for (int i = 0; i < entityList.size(); i++) {
 			session.save(entityList.get(i));
-			if(i%20==0)
-			{
+			if (i % 20 == 0) {
 				session.flush();
 			}
 		}
-		flag=true;
+		flag = true;
 		return flag;
 	}
 
 	public boolean remove(T entity) throws Exception {
+		// TODO Auto-generated method stub
 		return false;
 	}
 
 	public boolean remove(List<T> entityList) throws Exception {
-	 
+		// TODO Auto-generated method stub
 		return false;
 	}
 
 	public boolean refresh(T entity) throws Exception {
-	 
+		// TODO Auto-generated method stub
 		return false;
 	}
 
@@ -243,32 +244,24 @@ public class BaseDAO<T> extends HqlUtil implements IBaseDAO<T> {
 		return flag;
 	}
 
+	public void excuteSQL(String sql) {
+		getSessionFactory().getCurrentSession().createSQLQuery(sql)
+				.executeUpdate();
+
+	}
+
 	public boolean delete(String where, Object... params) throws Exception {
-	 
+
 		return false;
 	}
 
 	public T retrieve(Serializable id) {
-	 
+		// TODO Auto-generated method stub
 		return null;
 	}
-    
-	public List<T> find(String where,String[] args,Object... params){
-		Query query=getSessionFactory().getCurrentSession().createQuery("From "+ entityClass.getSimpleName()+" where "+where);
-		for(int i=0;i<params.length;i++)
-		{
-			Object parm=params[i];
-			if(parm instanceof Object[])
-			{
-				query.setParameterList(args[i], (Object[])parm);
-				
-			}else{
-				query.setParameter(args[i], params[i]);
-			}
-		}
-		return query.list();
-	}
+
 	public List<T> find(String where, String order, Object... params) {
+		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -277,39 +270,54 @@ public class BaseDAO<T> extends HqlUtil implements IBaseDAO<T> {
 		return null;
 	}
 
+	public List<T> find(String where, String[] args, Object... params) {
+		Query query = getSessionFactory().getCurrentSession().createQuery(
+				"From " + entityClass.getSimpleName() + " where " + where);
+		for (int i = 0; i < params.length; i++) {
+			Object parm = params[i];
+			if (parm instanceof Object[]) {
+				query.setParameterList(args[i], (Object[]) parm);
+
+			} else {
+				query.setParameter(args[i], params[i]);
+			}
+		}
+		return query.list();
+	}
+
 	public List<T> find(int offset, int limit, String where, String order,
 			Object... params) {
-	 
+		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public List<T> find(int top, String where, String order, Object... params) {
-	 
+		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public T first(String where, String order, Object... params) {
-	 
+		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public Object min(String field, String where, Object... params) {
-	 
+		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public Object max(String field, String where, Object... params) {
-	 
+		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public Object count(String where, Object... params) {
-	 
+		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public boolean exists(String where, Object... params) {
-	 
+		// TODO Auto-generated method stub
 		return false;
 	}
 
@@ -356,11 +364,10 @@ public class BaseDAO<T> extends HqlUtil implements IBaseDAO<T> {
 			throws Exception {
 		Query query = this.getSessionFactory().getCurrentSession()
 				.createQuery(hql);
-        if(firstResult!=0 && pageSize!=0)
-        {
-        	query.setFirstResult(firstResult);
-    		query.setMaxResults(pageSize);
-        }
+		if (firstResult != 0 && pageSize != 0) {
+			query.setFirstResult(firstResult);
+			query.setMaxResults(pageSize);
+		}
 		List<T> list = query.list();
 		return list;
 	}

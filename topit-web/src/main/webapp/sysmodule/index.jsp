@@ -138,9 +138,10 @@ html, body {
 						<td style="width: 25%"><input id=" " name=" " class="textbox"
 							style="width: 80%"></td>
 						<td style="width: 25%"><label style="padding-left: 6px;">分类：</label></td>
-						<td style="width: 25%"><input name="" class="easyui-combobox"
-							url="datadic.do?method=getData" valueField="id" textField="name"
-							value="" /></td>
+						<td style="width: 25%">
+						<input name="" class="easyui-combobox" url="datadic.do?method=getData"  valueField="id" 
+						textField="name" value="" />
+	    				</td>
 					</tr>
 					<tr>
 						<td colspan="3" align="right"></td>
@@ -176,7 +177,7 @@ html, body {
 					<tr>
 						<td><label style="padding-left: 6px;">模块路径:</label></td>
 						<td><input type="text" name="modulePath"
-							class="easyui-validatebox" required="true" missingMessage="模块路径必填！"
+							class="easyui-validatebox" required=true missingMessage="模块路径必填！"
 							value="" /></td>
 					</tr>
 					<tr>

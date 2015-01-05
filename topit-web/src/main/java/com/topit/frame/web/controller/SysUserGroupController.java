@@ -26,6 +26,7 @@ import com.topit.frame.core.entity.dao.base.IIdGenerator;
 import com.topit.frame.core.entity.data.SysModuleAction;
 import com.topit.frame.core.entity.data.SysUser;
 import com.topit.frame.core.entity.data.SysUserGroup;
+import com.topit.frame.core.ui.entity.RequestRight;
 import com.topit.frame.core.ui.entity.ResultRightObject;
 import com.topit.frame.core.util.entity.Node;
 
@@ -88,6 +89,8 @@ public class SysUserGroupController {
 	 * @return
 	 * @throws Exception
 	 */
+
+	@RequestRight(name="设置权限",moduleId=24,actionId=5,descrption="设置权限")
 	@RequestMapping(value = "/sysusergroup", params = "method=getList")
 	@ResponseBody
 	public ResultRightObject getList(HttpServletRequest request,
@@ -132,6 +135,7 @@ public class SysUserGroupController {
 	 * @return
 	 */
 
+	@RequestRight(name="更改状态",moduleId=24,actionId=4,line=1,descrption="更改用户组状态")
 	@RequestMapping(value = "/changestatus")
 	@ResponseBody
 	public ResultObject changeStatus(HttpServletRequest request,
@@ -170,6 +174,7 @@ public class SysUserGroupController {
 	 * @throws UnsupportedEncodingException
 	 */
 
+	@RequestRight(name="新增",moduleId=24,actionId=1,descrption="新增用户组")
 	@RequestMapping(value = "/save")
 	@ResponseBody
 	public ResultObject save(HttpServletRequest request,
@@ -211,6 +216,7 @@ public class SysUserGroupController {
 	 * @return
 	 */
 
+	@RequestRight(name="删除",moduleId=24,actionId=2,descrption="删除用户组")
 	@SuppressWarnings("unused")
 	@RequestMapping(value = "/delete/{ids}")
 	@ResponseBody
@@ -242,6 +248,7 @@ public class SysUserGroupController {
 	 * @throws UnsupportedEncodingException
 	 */
 
+	@RequestRight(name="修改",moduleId=24,actionId=3,descrption="修改用户组")
 	@RequestMapping(value = "/edit")
 	@ResponseBody
 	public ResultObject edit(HttpServletRequest request,

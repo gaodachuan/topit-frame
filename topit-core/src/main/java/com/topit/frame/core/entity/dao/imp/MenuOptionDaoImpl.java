@@ -124,7 +124,6 @@ public class MenuOptionDaoImpl extends BaseDAO<SysMenuItem> implements
 		List<SysMenuItem> list = getSession().createQuery(s)
 				.setInteger(0, MenuGroupId).list();
 		SysMenuItem lastSon = list.get(0);
-
 		lastSon.setNextbrotherid(sourceId);
 
 		// 保存

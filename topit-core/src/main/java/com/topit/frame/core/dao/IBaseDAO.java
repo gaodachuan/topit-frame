@@ -159,7 +159,7 @@ public abstract interface IBaseDAO<T> {
 	 * @param params
 	 * @return        
 	 */
-	 
+	public void excuteSQL(String sql);
 	public boolean update(String hql,Object ...params )throws Exception;
 	
 	T retrieve(Serializable id);

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.topit.frame.busniess.base.ISysModuleActionService;
 import com.topit.frame.common.view.servlet.ResultObject;
+import com.topit.frame.common.view.servlet.ResultPageObject;
 
 /**
  * @ClassName: SysModuleActionController
@@ -152,7 +153,7 @@ public class SysModuleActionController {
 			resultObject.setErrorCode(0);
 			resultObject.setErrorDetail("权限更改成功！");
 		} catch (Exception e) {
-			;
+
 			resultObject.setErrorCode(1);
 			resultObject.setErrorDetail("权限更改失败！");
 			e.printStackTrace();
@@ -160,6 +161,48 @@ public class SysModuleActionController {
 
 		return resultObject;
 
+	}
+
+	@RequestMapping("/getAllSysModuleActions")
+	@ResponseBody
+	public ResultPageObject getAllSysModuleActions(HttpServletRequest request) {
+		int currentPage = Integer.parseInt(request.getParameter("page"));
+		int pageSize = Integer.parseInt(request.getParameter("rows"));
+
+		ResultPageObject result = new ResultPageObject();
+
+		try {
+
+			result.setRows(sysModuleActionServiceImp.getAllSysActions(
+					currentPage, pageSize));
+			result.setTotal(sysModuleActionServiceImp.getCount() + "");
+
+		} catch (Exception e) {
+			e.printStackTrace();
+
+		}
+		return result;
+	}
+
+	@RequestMapping("/create")
+	@ResponseBody
+	public ResultObject initRights() {
+		ResultObject result=new ResultObject();
+		boolean flag=sysModuleActionServiceImp.initActions();
+		if(flag)
+		{
+			result.setErrorCode(0);
+			result.setErrorDetail("生成成功！");
+		}else{
+			result.setErrorCode(1);
+			result.setErrorDetail("生成失败！");
+		}
+		return result;
+	}
+
+	@RequestMapping("/init")
+	public String init() {
+		return "/module/moduleAction";
 	}
 
 }

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+
 import com.topit.frame.busniess.base.IComObjectSortTypeService;
 import com.topit.frame.busniess.base.ISysMenuService;
 import com.topit.frame.common.util.CategoryConstant;
@@ -20,6 +21,7 @@ import com.topit.frame.common.view.servlet.ResultObject;
 import com.topit.frame.common.view.servlet.ResultPageObject;
 import com.topit.frame.core.entity.data.SysMenu;
 import com.topit.frame.core.entity.data.SysMenuItem;
+import com.topit.frame.core.ui.entity.RequestRight;
 import com.topit.frame.core.util.entity.Node;
 
 /**
@@ -48,7 +50,7 @@ public class MenuOptionController {
 	public String init() {
 		return "/menu/MenuManager";
 	}
-
+	@RequestRight(name="获取系统菜单",actionId=1,descrption="获取系统菜单",line=1,moduleId=2)
 	@RequestMapping("/getSysMenus")
 	@ResponseBody
 	public ResultPageObject getSysMenus(HttpServletRequest request)
@@ -60,20 +62,20 @@ public class MenuOptionController {
 		return sysMenuService.getSysMenus((currentPage - 1) * pageSize,
 				pageSize);
 	}
-
+	@RequestRight(name="新建菜单",actionId=2,descrption="新建系统菜单",line=1,moduleId=2)
 	@RequestMapping("/createMenu")
 	@ResponseBody
 	public ResultObject createMenu(SysMenu menu) throws Exception {
 
 		return sysMenuService.createMenu(menu);
 	}
-
+	@RequestRight(name="跟新菜单",actionId=3,descrption="跟新系统菜单",line=1,moduleId=2)
 	@RequestMapping("/updateMenu")
 	@ResponseBody
 	public ResultObject updateMenu(SysMenu menu) throws Exception {
 		return sysMenuService.updateMenu(menu);
 	}
-
+	@RequestRight(name="删除菜单",actionId=4,descrption="删除系统菜单",line=1,moduleId=2)
 	@RequestMapping("/deleteMenu")
 	@ResponseBody
 	public ResultObject deleteMenu(HttpServletRequest request) throws Exception {

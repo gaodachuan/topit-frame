@@ -67,4 +67,21 @@ public interface ISysModuleActionService {
 	 */
 
 	public int getCount() throws Exception;
+    /**
+     * 初始化系统的所有操作权限
+     * @return 
+     * @Title: initActions   
+     * @Description: TODO(这里用一句话描述这个方法的作用)
+     */
+	public boolean initActions();
+    /**
+     * 
+     * @Title: getAllSysActions   
+     * @Description: 获取系统的所有操作  
+     * @param currentPage
+     * @param pageSize
+     * @return
+     * @throws Exception
+     */
+	public List<SysModuleAction> getAllSysActions(int currentPage,int pageSize) throws Exception;
 }
