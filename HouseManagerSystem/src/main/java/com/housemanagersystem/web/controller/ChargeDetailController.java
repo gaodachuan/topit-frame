@@ -11,6 +11,7 @@ import com.housemanagersystem.domain.Chargedetail;
 import com.housemanagersystem.domain.Contact;
 import com.topit.frame.common.view.servlet.ResultObject;
 import com.topit.frame.common.view.servlet.ResultPageObject;
+import com.topit.frame.core.ui.entity.RequestRight;
 @Controller
 @RequestMapping("chargeDetail")
 public class ChargeDetailController extends BaseController{
@@ -18,9 +19,10 @@ public class ChargeDetailController extends BaseController{
 	public String initUI() {
 		return "/chargeDetails/chargeDetailInfo";
 	}
+	@RequestRight(name="查询",moduleId=32,actionId=4,descrption="查询")
 	@RequestMapping("/getChargedetailInfo")
 	@ResponseBody
-	public ResultPageObject getHouseInfo(HttpServletRequest request) {
+	public ResultPageObject getChargedetailInfo(HttpServletRequest request) {
 		ResultPageObject resultpage = null;
 		try {
 			resultpage = chargeDetailServiceImpl.getEntityinfo(createParam(request));
@@ -29,7 +31,7 @@ public class ChargeDetailController extends BaseController{
 		}
 		return resultpage;
 	}
-
+	@RequestRight(name="新增",moduleId=32,actionId=1,descrption="新增")
 	@RequestMapping("/saveChargedetailInfo")
 	@ResponseBody
 	public ResultObject save(Chargedetail chargedetail ) {
@@ -43,7 +45,7 @@ public class ChargeDetailController extends BaseController{
 		}
 		return creatResult(flag);
 	}
-
+	@RequestRight(name="修改",moduleId=32,actionId=3,descrption="修改")
 	@RequestMapping("/updateChargedetailInfo")
 	@ResponseBody
 	public ResultObject update(Chargedetail contact) {
@@ -55,7 +57,7 @@ public class ChargeDetailController extends BaseController{
 		}
 		return creatResult(flag);
 	}
-
+	@RequestRight(name="删除",moduleId=32,actionId=2,descrption="删除")
 	@RequestMapping("/delChargeDetailInfo")
 	@ResponseBody
 	public ResultObject delete(HttpServletRequest request) {

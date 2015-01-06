@@ -10,6 +10,7 @@ import com.housemanagersystem.base.impl.BaseController;
 import com.housemanagersystem.domain.Chargeitem;
 import com.topit.frame.common.view.servlet.ResultObject;
 import com.topit.frame.common.view.servlet.ResultPageObject;
+import com.topit.frame.core.ui.entity.RequestRight;
 
 @Controller
 @RequestMapping("/chargeitem")
@@ -18,6 +19,7 @@ public class ChargeItemController extends BaseController{
 	public String initUI() {
 		return "/chargeitem/chargeItems";
 	}
+	@RequestRight(name="查询",moduleId=30,actionId=4,descrption="查询")
 	@RequestMapping("/getChargeitems")
 	@ResponseBody
 	public ResultPageObject getHouseInfo(HttpServletRequest request) {
@@ -29,7 +31,7 @@ public class ChargeItemController extends BaseController{
 		}
 		return resultpage;
 	}
-
+	@RequestRight(name="新增",moduleId=30,actionId=1,descrption="新增")
 	@RequestMapping("/saveChargeitem")
 	@ResponseBody
 	public ResultObject save(Chargeitem chargeitem) {
@@ -43,7 +45,7 @@ public class ChargeItemController extends BaseController{
 		}
 		return creatResult(flag);
 	}
-
+	@RequestRight(name="修改",moduleId=30,actionId=3,descrption="修改")
 	@RequestMapping("/updateChargeitem")
 	@ResponseBody
 	public ResultObject update(Chargeitem chargeitem) {
@@ -55,7 +57,7 @@ public class ChargeItemController extends BaseController{
 		}
 		return creatResult(flag);
 	}
-
+	@RequestRight(name="删除",moduleId=30,actionId=2,descrption="删除")
 	@RequestMapping("/delChargeitem")
 	@ResponseBody
 	public ResultObject delete(HttpServletRequest request) {

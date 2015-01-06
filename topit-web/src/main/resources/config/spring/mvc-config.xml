@@ -55,7 +55,7 @@
 	<mvc:interceptors>
 		<mvc:interceptor>
 			<mvc:mapping path="/*/**/*.do" />
-			<bean class="com.topit.frame.web.interceptor.ControllerInterceptor" />
+			<bean class="com.topit.frame.web.interceptor.CheckRightInterceptor" />
 		</mvc:interceptor>
 	</mvc:interceptors>
 

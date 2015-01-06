@@ -24,7 +24,6 @@
 							loadMsg : '数据正在加载,请耐心的等待...',
 							rownumbers : true,
 							singleSelect : false,
-
 							frozenColumns : [ [ //冻结列特性 ,不要与fitColumns 特性一起使用 
 							{
 								field : 'ck',
@@ -50,29 +49,24 @@
 								title : '住户姓名',
 								width : 100,
 								align : 'center',
-
-							},
-
-							{
+							},{
 								field : 'servicetype',
 								title : '租售类型',
 								width : 60,
 								align : 'center',
-							},
-
-							{
+							},{
 								field : 'contactstart',
 								title : '合同开始时期',
 								width : 150,
 								align : 'center',
 								formatter : Common.DateFormatter
-							}, {
+							},{
 								field : 'contactend',
 								title : '合同结束时期',
 								width : 150,
 								align : 'center',
 								formatter : Common.DateFormatter
-							}, {
+							},{
 								field : 'housetype',
 								title : '房间类型',
 								width : 60,
@@ -443,19 +437,12 @@
 				style="margin-top: 10px; margin-bottom: 20px">
 				<tr>
 					<div class="dv-form-item">
-						<label for="customername"> 客户姓名:</label>
-						 <input
+						<label for="customername"> 客户姓名:</label> <input
 							class="easyui-validatebox " type="text" name="customername"
-							id="customerName" style="width: 200px;" required="true" /> 
-							<label
-							for="houseid">房源编号:</label> 
-							<input
-							class="easyui-validatebox " type="text" name="houseid"
-							id="houseId" style="width: 200px;" required="true" />
-							
-							<label
-							for="housename">房源名称:</label> 
-							<input
+							id="customerName" style="width: 200px;" required="true" /> <label
+							for="houseid">房源编号:</label> <input class="easyui-validatebox "
+							type="text" name="houseid" id="houseId" style="width: 200px;"
+							required="true" /> <label for="housename">房源名称:</label> <input
 							class="easyui-validatebox " type="text" name="housename"
 							id="houseName" style="width: 200px;" required="true" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 						<a id="dosearch" href="#" class="easyui-linkbutton"

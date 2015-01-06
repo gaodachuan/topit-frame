@@ -11,6 +11,7 @@ import com.housemanagersystem.domain.Contact;
 import com.housemanagersystem.domain.Houseinfo;
 import com.topit.frame.common.view.servlet.FormObj;
 import com.topit.frame.common.view.servlet.ResultObject;
+import com.topit.frame.core.ui.entity.RequestRight;
 
 /**
  * 
@@ -28,7 +29,7 @@ public class CenterBusinessController extends BaseController {
 	public String initUI() {
 		return "/centerBusiness/business";
 	}
-
+	@RequestRight(name="房屋出租",moduleId=29,actionId=1,descrption="房屋出租")
 	@RequestMapping("/centerService")
 	@ResponseBody
 	public ResultObject centerService(@FormObj("h") Houseinfo houseinfo,

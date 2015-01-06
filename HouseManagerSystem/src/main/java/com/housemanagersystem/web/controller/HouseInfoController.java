@@ -12,6 +12,7 @@ import com.housemanagersystem.base.impl.BaseController;
 import com.housemanagersystem.domain.Houseinfo;
 import com.topit.frame.common.view.servlet.ResultObject;
 import com.topit.frame.common.view.servlet.ResultPageObject;
+import com.topit.frame.core.ui.entity.RequestRight;
 
 
 /**
@@ -30,6 +31,7 @@ public class HouseInfoController extends BaseController{
 	public String initUI() {
 		return "/houses/houseinfo";
 	}
+	@RequestRight(name="查询",moduleId=28,actionId=4,descrption="查询")
 	@RequestMapping("/getHouseInfo")
 	@ResponseBody
 	public ResultPageObject getHouseInfo(HttpServletRequest request) {
@@ -41,7 +43,7 @@ public class HouseInfoController extends BaseController{
 		}
 		return resultpage;
 	}
-
+    @RequestRight(name="新增",moduleId=28,actionId=1,descrption="新增")
 	@RequestMapping("/saveHouseInfo")
 	@ResponseBody
 	public ResultObject save(Houseinfo houseinfo) {
@@ -55,7 +57,7 @@ public class HouseInfoController extends BaseController{
 		}
 		return creatResult(flag);
 	}
-
+    @RequestRight(name="修改",moduleId=28,actionId=3,descrption="修改")
 	@RequestMapping("/updateHouseInfo")
 	@ResponseBody
 	public ResultObject update(Houseinfo houseinfo) {
@@ -67,7 +69,7 @@ public class HouseInfoController extends BaseController{
 		}
 		return creatResult(flag);
 	}
-
+    @RequestRight(name="删除",moduleId=28,actionId=2,descrption="删除")
 	@RequestMapping("/delHouseInfo")
 	@ResponseBody
 	public ResultObject delete(HttpServletRequest request) {

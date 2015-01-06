@@ -13,6 +13,7 @@ import com.housemanagersystem.domain.Customer;
 import com.housemanagersystem.domain.Houseinfo;
 import com.topit.frame.common.view.servlet.ResultObject;
 import com.topit.frame.common.view.servlet.ResultPageObject;
+import com.topit.frame.core.ui.entity.RequestRight;
 
 /**
  * 客户信息管理
@@ -28,7 +29,7 @@ public class CustomerInfoController extends BaseController {
 	public String initUI() {
 		return "/customer/customerinfo";
 	}
-
+	@RequestRight(name="查询",moduleId=27,actionId=4,descrption="查询")
 	@RequestMapping("/getCustomerInfo")
 	@ResponseBody
 	public ResultPageObject getHouseInfo(HttpServletRequest request) {
@@ -41,7 +42,7 @@ public class CustomerInfoController extends BaseController {
 		}
 		return resultpage;
 	}
-
+	@RequestRight(name="新增",moduleId=27,actionId=1,descrption="新增")
 	@RequestMapping("/saveCustomerInfo")
 	@ResponseBody
 	public ResultObject save(Customer customer) {
@@ -55,7 +56,7 @@ public class CustomerInfoController extends BaseController {
 		}
 		return creatResult(flag);
 	}
-
+	@RequestRight(name="修改",moduleId=27,actionId=3,descrption="修改")
 	@RequestMapping("/updateCustomerInfo")
 	@ResponseBody
 	public ResultObject update(Customer customer) {
@@ -68,7 +69,7 @@ public class CustomerInfoController extends BaseController {
 		}
 		return creatResult(flag);
 	}
-
+	@RequestRight(name="删除",moduleId=27,actionId=2,descrption="删除")
 	@RequestMapping("/delCustomerInfo")
 	@ResponseBody
 	public ResultObject delete(HttpServletRequest request) {

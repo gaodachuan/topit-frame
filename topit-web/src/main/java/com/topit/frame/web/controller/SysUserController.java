@@ -39,6 +39,7 @@ import com.topit.frame.core.entity.data.SysModuleAction;
 import com.topit.frame.core.entity.data.SysUser;
 import com.topit.frame.core.entity.data.SysUserGroup;
 import com.topit.frame.core.entity.data.SysUserUserGroup;
+import com.topit.frame.core.ui.entity.RequestRight;
 import com.topit.frame.core.ui.entity.ResultRightObject;
 import com.topit.frame.core.util.DataDicDAO;
  /** 
@@ -154,6 +155,7 @@ public class SysUserController {
 	 */
 	 
 	@SuppressWarnings("unused")
+	@RequestRight(name="新增",moduleId=26,actionId=1,descrption="新增系统用户")
 	@RequestMapping(value = "/sysuser.do", params = "method=save")
 	@ResponseBody
 	@Transactional
@@ -196,6 +198,7 @@ public class SysUserController {
 	 */
 	 
 	@SuppressWarnings("unused")
+	@RequestRight(name="删除",moduleId=26,actionId=2,descrption="删除系统用户")
 	@RequestMapping(value = "/sysuser.do", params = "method=delete")
 	@ResponseBody
 	@Transactional
@@ -233,6 +236,7 @@ public class SysUserController {
 	 */
 	 
 	@SuppressWarnings("unused")
+	@RequestRight(name="修改",moduleId=26,actionId=3,descrption="修改系统用户")
 	@RequestMapping(value = "/sysuser.do", params = "method=update")
 	@ResponseBody
 	@Transactional

@@ -143,7 +143,7 @@ public class SysModuleActionServiceImp implements ISysModuleActionService {
 	public boolean initActions() {
         boolean flag=false;
 		Set<SysModuleAction> actions = ActionRightUtil
-				.readAllActions("com.topit.frame.web.controller");
+				.readAllActions(new String[]{"com.topit.frame.web.controller","com.housemanagersystem.web.controller"});
 		List<SysModuleAction> temp = new ArrayList<SysModuleAction>();
 		temp.addAll(actions);
 		try {

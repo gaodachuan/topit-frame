@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.hibernate.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.topit.frame.core.dao.HqlUtil;
 import com.topit.frame.core.entity.dao.base.IAuthorityCheck;
@@ -37,7 +38,7 @@ public class AuthorityCheck extends HqlUtil implements IAuthorityCheck {
 	 * @see com.topit.frame.core.entity.dao.base.IAuthorityCheck#check(int,
 	 *      java.lang.String, java.lang.String)
 	 */
-
+    @Transactional
 	@SuppressWarnings("unchecked")
 	public boolean check(int userid, String controllerClassName,
 			String actionFunctionName) throws Exception {
