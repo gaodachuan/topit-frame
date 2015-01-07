@@ -17,8 +17,8 @@
 	<div region="south" border="true" style="overflow: hidden; height: 30px; resize: none;">
 		<iframe align="center" width="100%" height="130px" src="<c:url value='/main/footer.do'/>" frameborder="no" border="0" marginwidth="0" marginheight="0" scrolling="no"></iframe>
 	</div>
-	<div region="west" title="导航菜单" style="width: 200px; resize: none;">
-		<div id="aa" class="easyui-accordion" style="position: absolute; top: 27px; left: 0px; right: 0px; bottom: 0px">
+	<div region="west" title="导航菜单" style="width: 200px; resize: none;" >
+		<div id="aa" class="easyui-accordion" style="position: absolute; top: 27px; left: 0px; right: 0px; bottom: 0px" fit="true">
 			<div title="系统维护" data-options="iconCls:'icon-reload',collapsed:false">
 				<ul style="list-style-type: none;">
 					

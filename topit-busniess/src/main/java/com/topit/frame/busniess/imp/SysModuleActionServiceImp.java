@@ -82,51 +82,6 @@ public class SysModuleActionServiceImp implements ISysModuleActionService {
 
 	}
 
-	/**
-	 * <p>
-	 * Title: saveAllAuthorization
-	 * </p>
-	 * <p>
-	 * Description: 将所选模块的所有权限赋予用户组
-	 * </p>
-	 * 
-	 * @param groupId
-	 * @param moduleId
-	 * @throws Exception
-	 * @see com.topit.frame.busniess.base.ISysModuleActionService#saveAllAuthorization(java.lang.String,
-	 *      java.lang.String)
-	 */
-
-	public void saveAllAuthorization(String groupId, String moduleId)
-			throws Exception {
-
-		sysModuleActionDAOImp.saveAllAuthorization(groupId, moduleId);
-
-	}
-
-	/**
-	 * <p>
-	 * Title: saveCheckedAuthorization
-	 * </p>
-	 * <p>
-	 * Description: 将勾选的模块操作权限赋予用户组
-	 * </p>
-	 * 
-	 * @param groupId
-	 * @param moduleIds
-	 * @param values
-	 * @throws Exception
-	 * @see com.topit.frame.busniess.base.ISysModuleActionService#saveCheckedAuthorization(java.lang.String,
-	 *      java.lang.String, java.lang.String)
-	 */
-
-	public void saveCheckedAuthorization(String groupId, String moduleIds,
-			String values) throws Exception {
-
-		sysModuleActionDAOImp.saveCheckedAuthorization(groupId, moduleIds,
-				values);
-
-	}
 
 	/**
 	 * 

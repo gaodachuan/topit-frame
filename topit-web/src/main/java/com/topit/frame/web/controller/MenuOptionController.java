@@ -50,7 +50,7 @@ public class MenuOptionController {
 	public String init() {
 		return "/menu/MenuManager";
 	}
-	@RequestRight(name="获取系统菜单",actionId=1,descrption="获取系统菜单",line=1,moduleId=2)
+	@RequestRight(name="获取系统菜单",actionId=1,descrption="获取系统菜单",line=1,moduleId=34)
 	@RequestMapping("/getSysMenus")
 	@ResponseBody
 	public ResultPageObject getSysMenus(HttpServletRequest request)
@@ -62,20 +62,20 @@ public class MenuOptionController {
 		return sysMenuService.getSysMenus((currentPage - 1) * pageSize,
 				pageSize);
 	}
-	@RequestRight(name="新建菜单",actionId=2,descrption="新建系统菜单",line=1,moduleId=2)
+	@RequestRight(name="新建菜单",actionId=2,descrption="新建系统菜单",line=1,moduleId=34)
 	@RequestMapping("/createMenu")
 	@ResponseBody
 	public ResultObject createMenu(SysMenu menu) throws Exception {
 
 		return sysMenuService.createMenu(menu);
 	}
-	@RequestRight(name="跟新菜单",actionId=3,descrption="跟新系统菜单",line=1,moduleId=2)
+	@RequestRight(name="跟新菜单",actionId=3,descrption="跟新系统菜单",line=1,moduleId=34)
 	@RequestMapping("/updateMenu")
 	@ResponseBody
 	public ResultObject updateMenu(SysMenu menu) throws Exception {
 		return sysMenuService.updateMenu(menu);
 	}
-	@RequestRight(name="删除菜单",actionId=4,descrption="删除系统菜单",line=1,moduleId=2)
+	@RequestRight(name="删除菜单",actionId=4,descrption="删除系统菜单",line=1,moduleId=34)
 	@RequestMapping("/deleteMenu")
 	@ResponseBody
 	public ResultObject deleteMenu(HttpServletRequest request) throws Exception {

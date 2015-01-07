@@ -1,6 +1,7 @@
 package com.topit.frame.busniess.imp;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -12,7 +13,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.topit.frame.busniess.base.ISysUserGroupService;
 import com.topit.frame.core.entity.dao.base.ISysUserGroupDAO;
+import com.topit.frame.core.entity.dao.base.ISysUserGroupModuleRightDAO;
 import com.topit.frame.core.entity.data.SysUserGroup;
+import com.topit.frame.core.entity.data.SysUserGroupModuleRight;
 
 /**
  * @ClassName: SysUserGroupServiceImp
@@ -28,6 +31,9 @@ public class SysUserGroupServiceImp implements ISysUserGroupService {
 	@Resource(name = "sysUserGroupDAOImp")
 	private ISysUserGroupDAO sysUserGroupDAOImp;
 
+	@Resource(name= "sysUserGroupModuleRightDAOImpl")
+	private ISysUserGroupModuleRightDAO sysUserGroupModuleRightDAOImpl;
+	
 	/**
 	 * <p>
 	 * Title: save
@@ -214,6 +220,15 @@ public class SysUserGroupServiceImp implements ISysUserGroupService {
 	public List<SysUserGroup> getListForCombox() throws Exception {
 
 		 return sysUserGroupDAOImp.getListForCombox();
+		 
+	}
+
+	public List<SysUserGroupModuleRight> LoadModuleByGroupid(String groupId)
+			throws Exception {
+		List<Integer> list=new ArrayList<Integer>();
+		list.add(Integer.parseInt(groupId));
+		 
+		return sysUserGroupModuleRightDAOImpl.findByGroupIds(list);
 		 
 	}
 	

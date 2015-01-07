@@ -134,53 +134,9 @@ public class SysModuleActionDAOImp extends BaseDAO<SysModuleAction> implements
 
 
 	
-	/**   
-	 * <p>Title: saveAllAuthorization</p>   
-	 * <p>Description: 将所选模块的所有权限赋予用户组</p>   
-	 * @param groupId
-	 * @param moduleId
-	 * @throws Exception   
-	 * @see com.topit.frame.core.entity.dao.base.ISysModuleActionDAO#saveAllAuthorization(java.lang.String, java.lang.String)   
-	 */
-	 
-	public void saveAllAuthorization(String groupId, String moduleId)
-			throws Exception {
-		
-		 String sql="INSERT INTO sys_user_group_action_right "
-		 		+ "SELECT "+groupId+" AS GroupId,A.ModuleId,A.ActionId,0,sysdate() "
-		 		+ "FROM sys_module_action A LEFT JOIN ("
-		 		+ "SELECT * FROM sys_user_group_action_right WHERE GroupId = "+groupId+") B "
-		 		+ "ON A.ModuleId=B.ModuleId AND A.ActionId=B.ActionId "
-		 		+ "WHERE A.ModuleId = "+moduleId+" AND B.GroupId is null;";
-		 
-		 sqlQuery.getJdbcTemplate().execute(sql);
-	}
+	
 
-	/**   
-	 * <p>Title: saveCheckedAuthorization</p>   
-	 * <p>Description: 将选定的权限赋给相应用户组</p>   
-	 * @param groupId
-	 * @param values
-	 * @throws Exception   
-	 * @see com.topit.frame.core.entity.dao.base.ISysModuleActionDAO#saveCheckedAuthorization(java.lang.String, java.lang.String)   
-	 */
-	 
-	public void saveCheckedAuthorization(String groupId,String moduleIds, String values)
-			throws Exception {
-
-		String hql="DELETE FROM SysUserGroupActionRight WHERE groupId="+groupId+" AND moduleId IN "+moduleIds;
-		
-		Session session=this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-		
-		session.createQuery(hql).executeUpdate();
-		if(!"".equals(values)){
-			String sql="INSERT INTO sys_user_group_action_right VALUES "+values+";";
-			
-			session.createSQLQuery(sql).executeUpdate();
-		}
-		
-		 
-	}
+	
 
 
 }

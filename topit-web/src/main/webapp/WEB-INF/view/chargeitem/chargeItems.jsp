@@ -158,12 +158,19 @@
 																												result.errorDetail,
 																												'error');
 																							}
+																							
 																						});
 
 																	} else {
+																		
 																		return;
 																	}
+																	$(
+																	'#chargeIntem_data')
+																	.datagrid(
+																			'unselectAll');
 																});
+												
 											}
 										}
 									} ]

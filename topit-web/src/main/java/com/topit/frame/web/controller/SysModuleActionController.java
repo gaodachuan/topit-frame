@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.topit.frame.busniess.base.ISysModuleActionService;
+import com.topit.frame.busniess.base.ISysUserGroupActionRightService;
 import com.topit.frame.common.view.servlet.ResultObject;
 import com.topit.frame.common.view.servlet.ResultPageObject;
 
@@ -34,6 +35,9 @@ public class SysModuleActionController {
 	@Resource(name = "sysModuleActionServiceImp")
 	ISysModuleActionService sysModuleActionServiceImp;
 
+	@Resource(name="sysUserGroupActionRightServiceImp")
+	ISysUserGroupActionRightService sysUserGroupActionRightServiceImp;
+	
 	/**
 	 * @Title: getCurrentDateTime
 	 * @Description: 获取系统当前时间
@@ -115,7 +119,7 @@ public class SysModuleActionController {
 				values = values.substring(0, values.length() - 1);
 			}
 			moduleIds = "(" + moduleIds + ")";
-			sysModuleActionServiceImp.saveCheckedAuthorization(groupId,
+			sysUserGroupActionRightServiceImp.saveCheckedAuthorization(groupId,
 					moduleIds, values);
 			resultObject.setErrorCode(0);
 			resultObject.setErrorDetail("权限更改成功！");
@@ -148,7 +152,7 @@ public class SysModuleActionController {
 			String groupId = request.getParameter("groupId");
 			String moduleId = request.getParameter("tabId");
 
-			sysModuleActionServiceImp.saveAllAuthorization(groupId, moduleId);
+			sysUserGroupActionRightServiceImp.saveAllAuthorization(groupId, moduleId);
 
 			resultObject.setErrorCode(0);
 			resultObject.setErrorDetail("权限更改成功！");

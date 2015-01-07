@@ -53,7 +53,7 @@ public class LoginController {
 		String loginname=request.getParameter("loginname");
 		String password=request.getParameter("password");
 		       password=MD5Encrypt.encipher(password);//Md5加密
-		   HttpSession session=request.getSession();
+		HttpSession session=request.getSession();
 	
 		try {
 			SysUser user=getLoginUser(loginname,password);

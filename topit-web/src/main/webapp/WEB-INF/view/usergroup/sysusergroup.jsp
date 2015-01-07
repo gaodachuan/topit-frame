@@ -21,7 +21,7 @@ html, body {
 	var listAction;
 	//对应节点下拥有的所有模块
 	var allModule=[];
-	var allModuleNo=0;
+	var moduleNo=0;
 	
 	$(function() {		
 		$('#sys_user_group').datagrid({
@@ -330,9 +330,9 @@ function setAuthorization(id){
 	
 	groupId='';
 	groupId = id;
-	allModuleNo=0;
+	moduleNo=0;
 	allModule=[];
-	
+	var groupHasModule=[];
 	/*  #####表格的加载######  */
 	$('#sys_module_action').datagrid({	
 		data : null,
@@ -348,7 +348,7 @@ function setAuthorization(id){
 							if (r){
 								var str='';
 								var getChecked = $('#sys_module_action').datagrid('getChecked');
-								var treeNode=$('#mudletree').tree('getSelected');
+								var treeNode=$('#moduletree').tree('getSelected');
 								var moduleId=treeNode.tabId;
 								for(var i=0;i<getChecked.length;i++){
 									if((typeof getChecked[i])!='undefined'){
@@ -396,7 +396,7 @@ function setAuthorization(id){
 		        	text : '保存选定模块具备所有操作权',
 					iconCls : 'icon-save',
 					handler : function() {
-						var node = $('#mudletree').tree('getChecked');
+						var node = $('#moduletree').tree('getChecked');
 						if(node.length != 0){
 							var selectedModuleNums=0;
 							for(var i=0;i<node.length;i++){
@@ -492,16 +492,109 @@ function setAuthorization(id){
 		});
 		
 		/*  #####模块树的展现######  */
-		 $('#mudletree').tree({
-			url:'${pageContext.request.contextPath}/usergroup/LoadMudelList.do',
+		 $('#moduletree').tree({
+			url:'${pageContext.request.contextPath}/usergroup/LoadModuleList.do',
 			animate : true,
 			lines : true,
 			checkbox : true,
 			onLoadSuccess : function(node, data){
-				getChildren(data[0]);
-				//将节点转化成DOM对象
+				
+				$.ajax({
+					type : 'post',
+					url : '${pageContext.request.contextPath}/usergroup/LoadModuleByGroupid.do',
+					cache : false,
+					dataType : 'json',
+					async : false,
+					data : {
+						groupId : groupId
+					},
+					success : function(result){
+						groupHasModule = result;
+					}
+					
+				});
+				
+				for(var i=0;i<data.length;i++){
+					getChildren(data[i]);
+				}
+				
+				//将第一个模块节点转化成DOM对象，并默认选中
 				var obj = document.getElementById(allModule[0].domId); 
-				$('#mudletree').tree('select',obj);
+				$('#moduletree').tree('select',obj);
+				
+				//将该用户组所具有的模块check上
+				for(var i=0;i<groupHasModule.length;i++){
+					for (var j=0;j<allModule.length;j++){
+						if (allModule[j].tabId===groupHasModule[i].moduleid){
+							var obj = document.getElementById(allModule[j].domId);
+							$('#moduletree').tree('check',obj);
+						}
+					}
+				}
+				
+				
+			},
+			onCheck : function(node,checked){
+				var alreadyHasModule=false;
+				var isAddRights;
+				if (!(checked===false && groupId === 1 && node.tabId === 24)){
+					if(checked){
+						for (var i=0;i<groupHasModule.length;i++){
+							if (typeof(groupHasModule[i])!='undefined'){
+								if (groupHasModule[i].moduleid === node.tabId){
+									alreadyHasModule=true;
+								}
+							}	
+						}
+						if (!alreadyHasModule){
+							isAddRights=true;
+						}
+					}else{
+						isAddRights=false;
+					}
+					if(typeof(isAddRights) != 'undefined'){
+						$.ajax({
+							type : 'post',
+							url : '${pageContext.request.contextPath }/usergroup/modifyGroupModuleRight.do',
+							cache : false,
+							dataType : 'json',
+							data : {
+								groupId : groupId,
+								moduleId : node.tabId,
+								isAddRights : isAddRights
+							},
+							success : function(result){
+								if(result.errorCode==0){
+									moduleNo=0;
+									allModule=[];
+									groupHasModule=[];
+									$('#authorization').dialog('refresh');
+									var selectedNode=$('#moduletree').tree('getSelected');	
+									$('#moduletree').tree('select', selectedNode.target);
+									$('#sys_user_group').datagrid({
+										toolbar : []
+									});
+									$('#sys_user_group').datagrid('reload');
+									$('#sys_module').datagrid("resize");
+									$.messager.show({
+										title:'提示信息',
+										msg:result.errorDetail
+									});
+								}else{
+									$.messager.show({
+										title:'提示信息',
+										msg:result.errorDetail
+									});
+								}
+							}
+						});
+					}
+				}else{
+					$.messager.alert('提示消息','超级管理员的该模块权限无法全部取消！','warning');
+					$('#moduletree').tree('check', node.target);
+				}
+				
+				
 			},
 			onSelect : function(node){
 				//取出对应sys_module（系统模块）表中模块的Id
@@ -536,8 +629,8 @@ var getChildren=function(data){
 				getChildren((data.children)[j]);
 			}
 		}else{
-			allModule[allModuleNo]=data;
-			allModuleNo=allModuleNo+1;
+			allModule[moduleNo]=data;
+			moduleNo=moduleNo+1;
 		}
 }
 
@@ -592,7 +685,7 @@ var getChildren=function(data){
 		data-options="iconCls:'icon-man',closed:true,modal:true">
 			<div id="authorization_lay" class="easyui-layout" style="width:100%;height:100%">
 				<div region="west" title="系统模块权限" style="width:200px;border:false" collapsible=false>
-					<ul id="mudletree"></ul>
+					<ul id="moduletree"></ul>
 				</div>	
 				<div region="center">
 					<div id="moduleaction" plain=true class="easyui-tabs" fit=true border=false>

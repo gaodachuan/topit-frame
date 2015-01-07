@@ -7,7 +7,8 @@ import java.util.Map;
 import org.hibernate.criterion.DetachedCriteria;
 
 import com.topit.frame.core.entity.data.SysUserGroup;
- /** 
+ import com.topit.frame.core.entity.data.SysUserGroupModuleRight;
+/** 
 * @ClassName: ISysUserGroupService 
 * @Description: 系统用户组的服务类接口 
 * @author qiugui 
@@ -128,6 +129,15 @@ public interface ISysUserGroupService {
 	 * @throws Exception        
 	 */
 	public List<SysUserGroup> getListForCombox() throws Exception;
+	
+	/**   
+	 * @Title: LoadModuleByGroupid   
+	 * @Description: 根据用户组id加载其对应的模块信息   
+	 * @param groupId
+	 * @return
+	 * @throws Exception        
+	 */ 
+	public List<SysUserGroupModuleRight> LoadModuleByGroupid(String groupId) throws Exception;
 }
 
  

@@ -219,15 +219,23 @@
 																												result.errorDetail,
 																												'error');
 																							}
+																							
 																						});
 
 																	} else {
+																		
 																		return;
 																	}
+																	$(
+																	'#customerinfo_data')
+																	.datagrid(
+																			'unselectAll');
 																});
+												
+											}
 											}
 										}
-									} ]
+									 ]
 						});
 		$('#btnSave').click(
 				function() {
@@ -280,7 +288,6 @@
 		  搜索
 		
 		 */
-
 		$('#dosearch').click(function() {
 			var customerName = $('#customerName').val();
 			var customer_isruzhu = $('#customer_isruzhu').val();

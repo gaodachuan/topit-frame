@@ -183,6 +183,7 @@
 												$('#houseInfoform').form('load',
 																{
 																	id : arr[0].id,
+																	status:arr[0].status,
 																	name : arr[0].name,
 																	number:arr[0].number,
 																	area: arr[0].area,
@@ -222,6 +223,7 @@
 													msg : '请选择进行需要删除的记录!'
 												});
 											} else {
+												
 												$.messager
 														.confirm(
 																'提示信息',
@@ -230,6 +232,16 @@
 																	if (r) {
 																		var id = '';
 																		for (var i = 0; i < arr.length; i++) {
+																			if(arr[i].status!='空闲')
+																			{
+																				$.messager
+																				.alert(
+																						'提示信息',
+																						'还有非空闲房源，不能删除！',
+																						'error');
+																				return;
+																			}
+																			
 																			id += arr[i].id
 																					+ ',';
 																		}
@@ -262,12 +274,18 @@
 																												result.errorDetail,
 																												'error');
 																							}
+										
 																						});
 
 																	} else {
 																		return;
 																	}
+																	$(
+																	'#houseinfo_data')
+																	.datagrid(
+																			'unselectAll');
 																});
+												
 											}
 										}
 									} ]
@@ -368,9 +386,9 @@
 					<form id="houseInfoform" action="" method="post"
 						style="margin-top: 20px; margin-bottom: 20px">
 						<input type="hidden" name="id" value="-1" />
-						
 						<input type="hidden" name="rentstart" value="-1" />
 						<input type="hidden" name="rentend" value="-1" />
+						<input type="hidden" name="status" value="-1" />
 						<table>
 							<tr>
 								<td style="width: 30%;"><label for="number"

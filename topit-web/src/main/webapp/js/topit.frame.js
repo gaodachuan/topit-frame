@@ -139,3 +139,27 @@ $(function() {
 					}
 			});
 })
+
+function buildToobarItem(name, flag, actions) {
+
+	for (var j = 0; j < actions.length; j++) {
+		var actionObj = actions[j]
+		for (var i = 0; i < flag.length; i++) {
+			var option = flag[i];
+			if (option.actionId == actionObj.action) {
+				$('#' + name).datagrid("addToolbarItem", [ {
+					"text" : option.name,
+					"iconCls" : actionObj.icon,
+					"actionId" : option.actionId,
+					"handler" : function() {
+						eval(actions.functionname+"()");
+					}
+				} ]);
+
+			}
+		}
+	}
+}
+	
+	
+	

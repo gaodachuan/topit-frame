@@ -70,4 +70,18 @@ public class ChargeDetailController extends BaseController{
 		}
 		return creatResult(flag);
 	}
+	/*@RequestRight(name="收取费用",moduleId=32,actionId=5,descrption="收取费用")*/
+	@RequestMapping("/PayforChargeDetails")
+	@ResponseBody
+	public ResultObject pay(HttpServletRequest request)
+	{
+		boolean flag = false;
+		try {
+			flag = chargeDetailServiceImpl.pay(request.getParameter("id"));
+		} catch (Exception e) {
+
+			e.printStackTrace();
+		}
+		return creatResult(flag);
+	}
 }

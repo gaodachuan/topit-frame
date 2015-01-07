@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.topit.frame.busniess.base.IComObjectSortTypeService;
 import com.topit.frame.busniess.base.ISysModuleActionService;
+import com.topit.frame.busniess.base.ISysUserGroupActionRightService;
+import com.topit.frame.busniess.base.ISysUserGroupModuleRightService;
 import com.topit.frame.busniess.base.ISysUserGroupService;
 import com.topit.frame.busniess.base.ISysUserUserGroupService;
 import com.topit.frame.common.util.CategoryConstant;
@@ -26,6 +28,7 @@ import com.topit.frame.core.entity.dao.base.IIdGenerator;
 import com.topit.frame.core.entity.data.SysModuleAction;
 import com.topit.frame.core.entity.data.SysUser;
 import com.topit.frame.core.entity.data.SysUserGroup;
+import com.topit.frame.core.entity.data.SysUserGroupModuleRight;
 import com.topit.frame.core.ui.entity.RequestRight;
 import com.topit.frame.core.ui.entity.ResultRightObject;
 import com.topit.frame.core.util.entity.Node;
@@ -53,6 +56,12 @@ public class SysUserGroupController {
 	@Resource(name = "idGenerator")
 	IIdGenerator idGenerator;
 
+	@Resource(name = "sysUserGroupModuleRightServiceImp")
+	ISysUserGroupModuleRightService sysUserGroupModuleRightServiceImp;
+	
+	@Resource(name = "sysUserGroupActionRightServiceImp")
+	ISysUserGroupActionRightService sysUserGroupActionRightServiceImp;
+	
 	@Resource(name = "comObjectSortTypeService")
 	private IComObjectSortTypeService comObjectSortTypeService;
 
@@ -287,9 +296,9 @@ public class SysUserGroupController {
 	 * @return
 	 */
 
-	@RequestMapping(value = "/LoadMudelList")
+	@RequestMapping(value = "/LoadModuleList")
 	@ResponseBody
-	public List<Node> loadMudelList() {
+	public List<Node> LoadModuleList() {
 		List<Node> list;
 		try {
 			list = comObjectSortTypeService
@@ -301,5 +310,57 @@ public class SysUserGroupController {
 		}
 		return null;
 	}
+	
+	@RequestMapping(value="/LoadModuleByGroupid")
+	@ResponseBody
+	public List<SysUserGroupModuleRight> LoadModuleByGroupid(HttpServletRequest request,
+			HttpServletResponse response){
+		List<SysUserGroupModuleRight> list=null;
+		String groupId=request.getParameter("groupId");
+		try {
+			list=sysUserGroupServiceImp.LoadModuleByGroupid(groupId);
+			return list;
+		} catch (Exception e) {
+			 e.printStackTrace();
+		}
+		return null;
+	}
 
+	@RequestMapping(value="/modifyGroupModuleRight")
+	@ResponseBody
+	public ResultObject ModifyGroupModuleRight(HttpServletRequest request,
+			HttpServletResponse response){
+		ResultObject resultObject = new ResultObject();
+		String groupId = request.getParameter("groupId");
+		String moduleId = request.getParameter("moduleId");
+		String isAddRights = request.getParameter("isAddRights");
+		SysUserGroupModuleRight sysUserGroupModuleRight=new SysUserGroupModuleRight();
+		sysUserGroupModuleRight.setGroupid(Integer.parseInt(groupId));
+		sysUserGroupModuleRight.setModuleid(Integer.parseInt(moduleId));
+		try {
+			if("true".equals(isAddRights)){
+				sysUserGroupModuleRight.setCreator(0);
+				sysUserGroupModuleRight.setCreatetime(getCurrentDateTime());
+				sysUserGroupModuleRightServiceImp.add(sysUserGroupModuleRight);
+			}else if("false".equals(isAddRights)){
+				sysUserGroupModuleRightServiceImp.delete(sysUserGroupModuleRight);
+				sysUserGroupActionRightServiceImp.deleteAllAuthorization(groupId, moduleId);
+			}
+			resultObject.setErrorCode(0);
+			if("true".equals(isAddRights)){
+				resultObject.setErrorDetail("增加模块成功！");
+			}else{
+				resultObject.setErrorDetail("删除模块成功！");
+			}
+		} catch (Exception e) {
+			resultObject.setErrorCode(1);
+			if("true".equals(isAddRights)){
+				resultObject.setErrorDetail("增加模块失败！");
+			}else{
+				resultObject.setErrorDetail("删除模块失败！");
+			}
+		}
+		
+		return resultObject;
+	}
 }

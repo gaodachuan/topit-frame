@@ -155,7 +155,7 @@
 																	dealid : arr[0].dealid,
 																	isComplete : arr[0].isComplete,
 																	createTime : TimeFormater(arr[0].createTime),
-																	completeTime :TimeFormater(arr[0].completeTime),
+																	completeTime : TimeFormater(arr[0].completeTime),
 																	servername : arr[0].servername,
 																	countcharge : arr[0].countcharge,
 																	number : arr[0].number,
@@ -226,19 +226,96 @@
 																												result.errorDetail,
 																												'error');
 																							}
-																							$(
-																									'#chargeDetailinfo_data')
-																									.datagrid(
-																											'unselectAll');
 
 																						});
 
 																	} else {
+
 																		return;
 																	}
+																	$(
+																			'#chargeDetailinfo_data')
+																			.datagrid(
+																					'unselectAll');
 																});
+
 											}
 										}
+									},
+									{
+										text : '费用收取',
+										iconCls : 'icon-edit',
+										handler : function() {
+											var arr = $(
+													'#chargeDetailinfo_data')
+													.datagrid('getSelections');
+											if (arr.length == 0) {
+												$.messager.show({
+													title : '提示信息!',
+													msg : '请至少选择一行记录进行修改!'
+												});
+											} else {
+												var i = 0;
+												var ids = '';
+												for (i; i < arr.length; i++) {
+													if (arr[i].isComplete == '已完成') {
+														$.messager
+																.alert(
+																		'提示信息',
+																		'所选收费含有已完成缴费项目，不能重复收费！',
+																		'error');
+														return;
+													} else {
+														ids += arr[i].id + ',';
+													}
+												}
+												ids = ids.substring(0,
+														ids.length - 1);
+												$
+														.post(
+																'PayforChargeDetails.do',
+																{
+																	id : ids
+																},
+																function(result) {
+																	$(
+																			'#chargeDetailinfo_data')
+																			.datagrid(
+																					'reload');
+																	if (result.errorCode == 0) {
+																		$.messager
+																				.alert(
+																						'提示信息',
+																						result.errorDetail,
+																						'info');
+																		$.messager
+																				.confirm(
+																						'提示信息',
+																						'是否需要打印凭据?',
+																						function(
+																								r) {
+																							if (r) {
+																								$.messager
+																										.alert(
+																												'提示信息',
+																												'未连接打印机设备',
+																												'error');
+																							}
+																						});
+																	} else {
+																		$.messager
+																				.alert(
+																						'提示信息',
+																						result.errorDetail,
+																						'error');
+																	}
+
+																});
+
+											}
+
+										}
+
 									} ]
 						});
 		$('#btnSave').click(
@@ -402,8 +479,8 @@
 									id="contactend" name="completeTime" style="width: 188px;"></td>
 
 							</tr>
-                            
-                            <tr>
+
+							<tr>
 								<td style="width: 30%;"><label for="dealid"
 									style="padding-left: 6px;">手工单号:</label> <input
 									class="easyui-validatebox" type="text" name="dealid"

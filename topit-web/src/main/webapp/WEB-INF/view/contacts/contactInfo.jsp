@@ -265,12 +265,18 @@
 																												result.errorDetail,
 																												'error');
 																							}
+																							
 																						});
 
 																	} else {
 																		return;
 																	}
+																	$(
+																	'#contactinfo_data')
+																	.datagrid(
+																			'unselectAll');
 																});
+												
 											}
 										}
 									} ]

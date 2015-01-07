@@ -32,7 +32,7 @@ public class CustomerInfoController extends BaseController {
 	@RequestRight(name="查询",moduleId=27,actionId=4,descrption="查询")
 	@RequestMapping("/getCustomerInfo")
 	@ResponseBody
-	public ResultPageObject getHouseInfo(HttpServletRequest request) {
+	public ResultPageObject getCustomerInfo(HttpServletRequest request) {
 		ResultPageObject resultpage = null;
 		try {
 			resultpage = customerInfoService

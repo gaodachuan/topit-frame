@@ -20,16 +20,12 @@ import com.topit.frame.core.ui.entity.RequestRight;
  *
  */
 public class CheckRightInterceptor implements HandlerInterceptor {
-
 	@Resource
 	private AuthorityCheck authorityCheck;
-
 	public void afterCompletion(HttpServletRequest request,
 			HttpServletResponse response, Object handler, Exception arg3)
 			throws Exception {
-
 	}
-
 	public void postHandle(HttpServletRequest request,
 			HttpServletResponse response, Object handler, ModelAndView mv)
 			throws Exception {
@@ -38,7 +34,6 @@ public class CheckRightInterceptor implements HandlerInterceptor {
 
 	public boolean preHandle(HttpServletRequest request,
 			HttpServletResponse response, Object handler) throws Exception {
-
 		HandlerMethod handlerMethod = (HandlerMethod) handler;
 		boolean res = true;
 		Method method = handlerMethod.getMethod();

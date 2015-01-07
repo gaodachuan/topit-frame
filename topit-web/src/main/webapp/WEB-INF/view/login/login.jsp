@@ -41,7 +41,7 @@ html, body {
 					var passworld;
 					loginname=$("#loginName").val();
 					password=$("#password").val();
-					$.post('login.do?method=login',{loginname:loginname,password:password},function(result){
+					$.post('${pageContext.request.contextPath}/login/login.do?method=login',{loginname:loginname,password:password},function(result){
 						$.messager.show({
 							title :'提示信息',	
 							msg : result.errorDetail

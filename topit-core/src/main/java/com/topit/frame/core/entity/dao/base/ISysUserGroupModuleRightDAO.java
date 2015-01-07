@@ -12,7 +12,11 @@ import com.topit.frame.core.entity.data.SysUserGroupModuleRight;
 	     * @return
 	     * @throws Exception
 	     */
-		public List<SysUserGroupModuleRight> findByGroupIds(Integer[] groupids) throws Exception;
+		public List<SysUserGroupModuleRight> findByGroupIds(List<Integer> groupids) throws Exception;
+		
+		public boolean add(SysUserGroupModuleRight sysUserGroupModuleRight) throws Exception;
+		
+		public boolean delete(SysUserGroupModuleRight sysUserGroupModuleRight) throws Exception;
 }
 
  

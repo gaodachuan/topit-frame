@@ -28,27 +28,9 @@ public interface ISysModuleActionDAO extends IBaseDAO<SysModuleAction> {
 	public SysModuleAction findByModuleIdAndActionId(Serializable moduleid,
 			Serializable actionid) throws Exception;
 
-	/**
-	 * @Title: saveAllAuthorization
-	 * @Description: 将所选模块的所有权限赋予用户组
-	 * @param groupId
-	 * @param moduleId
-	 * @throws Exception
-	 */
+	
 
-	public void saveAllAuthorization(String groupId, String moduleId)
-			throws Exception;
-
-	/**
-	 * @Title: saveCheckedAuthorization
-	 * @Description: 将选定的权限保存到数据库中
-	 * @param groupId
-	 * @param values
-	 * @throws Exception
-	 */
-
-	public void saveCheckedAuthorization(String groupId, String moduleIds,
-			String values) throws Exception;
+	
 
 	/**
 	 * @Title: getList

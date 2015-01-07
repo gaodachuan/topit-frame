@@ -53,11 +53,13 @@ html, body {
 					$('#SysUserGroup').combobox('clear');
 					/*获取用户组Id*/
 					groupName=array.GroupIds;
+					if(groupName!=null&&groupName!=undefined){
 						groupNames=groupName.split(",");
 					for(var i=0;i<groupNames.length;i++){
 						var j;
 						j=parseInt(groupNames[i]);
 						$('#SysUserGroup').combobox('select',j);	
+					}
 					}
 				}
 				
@@ -67,12 +69,14 @@ html, body {
 					 $('#AllowLoginWeekDay').combobox('clear');
 					 /*获取登陆的星期天*/
 					 loginWeekday=array.AllowLoginWeekDay;
+					 if(loginWeekday!=null&&loginWeekday!=undefined){
 					 loginWeekdays= loginWeekday.split(","); 
 					 for(var i=0;i< loginWeekdays.length;i++){
 							var j;
 							j=parseInt( loginWeekdays[i]);
 							$('#AllowLoginWeekDay').combobox('select',j);	
 						}
+					 }
 				    }
 				$('#sys_user').datagrid({
 					idField : 'Id', //只要创建数据表格 就必须要加 ifField
@@ -243,10 +247,8 @@ html, body {
                                                 password:arr[0].Password,  
                                                 repassword:arr[0].Password,
 												remark:arr[0].Remark,
-                                               // AllowLoginWeekDay:arr[0].allowLoginWeekDay,
-                                                //  AllowLoginTime1:allowLoginTimes,
-                                                  AllowLoginTime1:allowTime(arr[0].AllowLoginTime1),
-                                                  AllowLoginTime2:allowTime(arr[0].AllowLoginTime2)
+                                                AllowLoginTime1:allowTime(arr[0].AllowLoginTime1),
+                                                AllowLoginTime2:allowTime(arr[0].AllowLoginTime2)
 												}
 											);
 									  
@@ -467,7 +469,7 @@ html, body {
 	  <table id="sys_user"></table>
       </div>   
 		<div id="sysuser" modal=true draggable=false
-			class="easyui-dialog" closed=true style="width: 700px;">
+			class="easyui-dialog" closed=true style="width: 625px;">
 			<form id="sysuserform" action="" method="post">
 				<input type="hidden" name="id" value="" />
 				<table>
