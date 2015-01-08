@@ -163,6 +163,7 @@ public abstract interface IBaseDAO<T> {
 	public boolean update(String hql,Object ...params )throws Exception;
 	
 	T retrieve(Serializable id);
+	 List<T> find(String where, String[] args, Object... params);
 
 	List<T> find(String where, String order, Object... params);
 

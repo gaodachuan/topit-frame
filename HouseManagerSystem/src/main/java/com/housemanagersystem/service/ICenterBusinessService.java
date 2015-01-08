@@ -14,4 +14,10 @@ public interface ICenterBusinessService {
      * @throws Exception
      */
 	public boolean  rentHouse(Houseinfo houseinfo,Contact contact, String[] chargeItems);
+     /**
+      * 房屋续租
+      * @param houseinfo 房源
+      * @return
+      */
+	public boolean xuzuService(Houseinfo houseinfo);
 }

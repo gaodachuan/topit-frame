@@ -36,7 +36,15 @@ public class CenterBusinessController extends BaseController {
 			@FormObj("con") Contact contact,HttpServletRequest request) throws Exception {
 		String[] ChargeItems=request.getParameterValues("con.chargeitem");
 		boolean flag=centerBusinessServiceImpl.rentHouse(houseinfo, contact,ChargeItems);
+		
 		return creatResult(flag);
 	}
-
+   
+	@RequestRight(name="房屋续租",moduleId=29,actionId=2,descrption="房屋续租")
+	@RequestMapping("/xuzuService")
+	@ResponseBody
+	public ResultObject xuzuService(@FormObj("h") Houseinfo houseinfo) throws Exception {
+		boolean flag=centerBusinessServiceImpl.xuzuService(houseinfo);
+		return creatResult(flag);
+	}
 }

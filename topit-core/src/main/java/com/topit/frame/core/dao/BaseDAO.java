@@ -109,7 +109,7 @@ public class BaseDAO<T> extends HqlUtil implements IBaseDAO<T> {
 	public boolean update(T entity) throws Exception {
 		boolean flag = false;
 		try {
-			this.getHibernateTemplate().update(entity);
+			this.getSessionFactory().getCurrentSession().update(entity);
 			flag = true;
 		} catch (Exception e) {
 			e.printStackTrace();

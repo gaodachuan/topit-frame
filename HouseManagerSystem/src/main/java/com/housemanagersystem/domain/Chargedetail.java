@@ -1,7 +1,10 @@
 
 package com.housemanagersystem.domain;import java.util.Date;
 
-import javax.persistence.Column;import javax.persistence.Entity;import javax.persistence.Id;import javax.persistence.Table;/******************************************************************************* * javaBeans * chargedetail --> Chargedetail  * <table explanation> * @author 2014-12-29 15:38:22 *  */	@Entity@Table(name= "chargedetail")public class Chargedetail implements java.io.Serializable {		private static final long serialVersionUID = 1L;	/** 缴费完成情况 **/
+import javax.persistence.Column;import javax.persistence.Entity;import javax.persistence.Id;import javax.persistence.Table;
+import org.hibernate.annotations.DynamicUpdate;
+/******************************************************************************* * javaBeans * chargedetail --> Chargedetail  * <table explanation> * @author 2014-12-29 15:38:22 *  */	@Entity@Table(name= "chargedetail")
+@DynamicUpdatepublic class Chargedetail implements java.io.Serializable {		private static final long serialVersionUID = 1L;	/** 缴费完成情况 **/
 	@Column(name="isComplete")	private String isComplete="未完成";
 	/** 收费生成时间 **/
 	@Column(name="createTime")

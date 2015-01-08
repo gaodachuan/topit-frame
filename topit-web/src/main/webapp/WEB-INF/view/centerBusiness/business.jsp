@@ -205,7 +205,53 @@
 										text : '房屋续租',
 										iconCls : 'icon-remove',
 										handler : function() {
+											flag = '续租';
+											var arr = $('#houseinfo_data')
+													.datagrid('getSelections');
+											if (arr.length != 1) {
+												$.messager.show({
+													title : '提示信息!',
+													msg : '请选择一行记录处理!'
+												});
+											} else {
+												if (arr[0].status != '已租') {
+													$.messager.show({
+														title : '提示信息',
+														msg : '房间未出租，不能续租'
+													});
+												} else {
+													$('#xuzuInfodialog')
+															.dialog({
+																title : '房屋续租'
+															});
+													$('#xuzu_houseInfoform').get(0)
+															.reset();
+													$('#xuzuInfodialog')
+															.dialog('open');
+													$('#xuzu_houseInfoform')
+															.form(
+																	'load',
+																	{
+																		'h.id' : arr[0].id,
+																		'h.name' : arr[0].name,
+																		'h.number' : arr[0].number,
+																		'h.area' : arr[0].area,
+																		'h.usetype' : arr[0].usetype,
+																		'h.decorate' : arr[0].decorate,
+																		'h.equipment' : arr[0].equipment,
+																		'h.dayrentpri' : arr[0].dayrentpri,
+																		'h.monthrentpri' : arr[0].monthrentpri,
+																		'h.dealType' : arr[0].dealType,
+																		'h.housetype' : arr[0].housetype,
+																		'h.ElectricStart' : arr[0].electricStart,
+																		'h.WaterStart' : arr[0].waterStart,
+					                                                    'h.rentstart':TimeFormater(arr[0].rentstart),
+					                                                    'h.rentend':TimeFormater(arr[0].rentend)
+																	});
+													//除了
 
+												}
+											}
 										}
 
 									}, {
@@ -305,6 +351,14 @@
 		$('#contactend').datetimebox({
 			showSeconds : true
 		});
+		//初始化日期组件
+		$('#rentstart').datetimebox({
+			showSeconds : true
+		});
+
+		$('#rentend').datetimebox({
+			showSeconds : true
+		});
 		//保存	 
 		$('#btnSave').click(
 				function() {
@@ -313,11 +367,11 @@
 							type : 'post',
 							url : 'centerService.do',
 							cache : false,
-							data : $('#houseInfoform').serialize(),
+							data : $('#xuzuhouseInfoform').serialize(),
 							dataType : 'json',
 							success : function(result) {
-								$('#houseInfoform').get(0).reset();
-								$('#houseInfodialog').dialog('close');
+								$('#xuzuhouseInfoform').get(0).reset();
+								$('#xuzuInfodialog').dialog('close');
 								$('#houseinfo_data').datagrid('reload');
 								if (result.errorCode == 0) {
 									$.messager.alert('提示信息',
@@ -344,7 +398,51 @@
 						});
 					}
 				});
+          
+		//续租保存
+		$('#xuzu_commit').click(function(){
+			if ($('#xuzu_houseInfoform').form('validate')) {
+				$.ajax({
+					type : 'post',
+					url : 'xuzuService.do',
+					cache : false,
+					data : $('#xuzu_houseInfoform').serialize(),
+					dataType : 'json',
+					success : function(result) {
+						$('#houseInfoform').get(0).reset();
+						$('#houseInfodialog').dialog('close');
+						$('#houseinfo_data').datagrid('reload');
+						if (result.errorCode == 0) {
+							$.messager.alert('提示信息',
+									result.errorDetail, 'info');
+						} else {
+							$.messager.alert('提示信息',
+									result.errorDetail, 'error');
+						}
+						//清空所选择的行
+						$('#houseinfo_data').datagrid('unselectAll');
 
+					},
+					error : function(result) {
+						$.meesager.show({
+							title : result.status,
+							msg : result.errorDetail
+						});
+					}
+				});
+			} else {
+				$.messager.show({
+					title : '提示信息!',
+					msg : '数据验证不通过,不能保存!'
+				});
+			}
+			
+			
+			
+			
+		});
+		
+		
 		/**
 		 * 关闭窗口方法
 		 */
@@ -380,6 +478,8 @@
 	<div id="lay" class="easyui-layout" style="width: 100%; height: 600px">
 		<div region="north" title="条件搜索" collapsible="true" padding-top=20px
 			padding-bottom=20px style="height: 12%;">
+			
+			<!--搜索  -->
 			<form id="houseInfo_search" method="post" action=""
 				style="margin-top: 10px; margin-bottom: 20px">
 				<tr>
@@ -403,6 +503,8 @@
 		<div region="center">
 			<table id="houseinfo_data"></table>
 		</div>
+			
+		<!--业务表单  -->
 		<div id="houseInfodialog" modal=true draggable=false
 			class="easyui-dialog" closed=true style="width: 55%; height: 70%;">
 			<!--当前业务处理的房源信息  -->
@@ -478,6 +580,8 @@
 									style="width: 182px;" readonly="readonly" /></td>
 
 							</tr>
+							
+						
 						</table>
 						<div align="center" style="margin-bottom: 1%; margin-top: 3%">
 							<a id="nextStep" class="easyui-linkbutton" style="width: 90px;">业务办理-></a>
@@ -543,7 +647,96 @@
 
 			</form>
 		</div>
+        <!--续租  -->
+		<div id="xuzuInfodialog" modal=true draggable=false
+			class="easyui-dialog" closed=true style="width: 55%; height: 70%;">
+			   <form id="xuzu_houseInfoform"
+				style="margin-top: 20px; margin-bottom: 20px">
+				<input type="hidden" name="h.id" value="-1" />
+				<div id="dialogtab" class="easyui-tabs" fit=false plain=true
+					style="padding: 3%;">
+					<div title="房源信息" align="center" style="width: 100%; height: 50%"
+						fit=true>
+						<table style="margin-top: 5%; margin-left: 5%">
+							<tr>
+								<td style="width: 30%;"><label for="h.number"
+									style="padding-left: 6px;">房源编号:</label> <input
+									class="easyui-validatebox" type="text" name="h.number"
+									style="width: 182px;" readonly="readonly" /></td>
+								<td style="width: 30%;"><label for="h.name"
+									style="padding-left: 6px;">房源名称:</label> <input
+									class="easyui-validatebox " type="text" name="h.name"
+									style="width: 182px;" readonly="readonly" /></td>
+							</tr>
 
+							<tr>
+								<td style="width: 30%;"><label for="h.area"
+									style="padding-left: 6px;">房源面积:</label> <input
+									class="easyui-validatebox " type="text" name="h.area"
+									style="width: 182px;" readonly="readonly" /></td>
+								<td style="width: 30%;"><label for="h.decorate"
+									style="padding-left: 6px;">装修情况:</label> <input
+									class="easyui-validatebox " type="text" name="h.decorate"
+									style="width: 182px;" readonly="readonly" /></td>
+							</tr>
+							<tr>
+								<td style="width: 30%;"><label for="h.housetype"
+									style="padding-left: 6px;">房源类型: </label> <input
+									class="easyui-validatebox " type="text" name="h.housetype"
+									style="width: 182px;" readonly="readonly" /></td>
+								<td style="width: 30%;"><label for="h.equipment"
+									style="padding-left: 6px;">房间设施: </label> <input
+									class="easyui-validatebox " type="text" name="h.equipment"
+									style="width: 182px;" readonly="readonly" /></td>
+							</tr>
+							<tr>
+								<td style="width: 30%;"><label for="h.usetype"
+									style="padding-left: 6px;">房源用途: </label><input
+									class="easyui-validatebox " type="text" name="h.usetype"
+									style="width: 182px;" readonly="readonly" /></td>
+								<td style="width: 30%;"><label for="h.dealType"
+									style="padding-left: 6px;">租售方式:</label> <input
+									class="easyui-validatebox " type="text" name="h.dealType"
+									style="width: 182px;" readonly="readonly" /></td>
+							</tr>
+							<tr>
+								<td style="width: 30%;"><label for="h.dayrentpri"
+									style="padding-left: 6px;">日供价格:</label> <input
+									class="easyui-validatebox " type="text" name="h.dayrentpri"
+									style="width: 182px;" readonly="readonly" /></td>
+								<td style="width: 30%;"><label for="h.monthrentpri"
+									style="padding-left: 6px;">月租价格: </label><input
+									class="easyui-validatebox " type="text" name="h.monthrentpri"
+									style="width: 182px;" readonly="readonly" /></td>
+							</tr>
+							<tr>
+
+								<td style="width: 30%;"><label for="h.ElectricStart"
+									style="padding-left: 6px;">电表度数:</label> <input
+									class="easyui-validatebox " type="text" name="h.ElectricStart"
+									style="width: 182px;" readonly="readonly" /></td>
+								<td style="width: 30%;"><label for="h.WaterStart"
+									style="padding-left: 6px;">水表度数:</label> <input
+									class="easyui-validatebox " type="text" name="h.WaterStart"
+									style="width: 182px;" readonly="readonly" /></td>
+
+							</tr>
+								<tr>
+								<td style="width: 30%;"><label for="h.rentstart"
+									style="padding-left: 6px;">合同起始: </label> <input
+									id="rentstart" name="h.rentstart" style="width: 182px;" readonly="readonly"></td>
+								<td style="width: 30%;"><label for="h.rentend"
+									style="padding-left: 6px;">合同截止: </label> <input
+									id="rentend" name="h.rentend" style="width: 182px;"></td>
+
+							</tr>
+						</table>
+                        <div align="center" style="margin-bottom: 1%; margin-top: 3%">
+							<a id="xuzu_commit" class="easyui-linkbutton" style="width: 90px;">确定</a>
+						</div>
+
+					</div>
+		</div>
 	</div>
 </body>
 </html>
