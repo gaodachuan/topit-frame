@@ -156,12 +156,19 @@
 													msg : '请选择一行记录进行修改!'
 												});
 											} else {
-												if (arr[0].status != '空闲') {
+												if (arr[0].status == '已租') {
 													$.messager.show({
 														title : '提示信息',
 														msg : '房间已出租，不能操作'
 													});
-												} else {
+												} else if (arr[0].dealType == '出售') {
+													$.messager.show({
+														title : '提示信息',
+														msg : '此房间只用于出售，不能出租！'
+													});
+												}
+
+												else {
 													$('#houseInfodialog')
 															.dialog({
 																title : '房屋出租'
@@ -194,14 +201,16 @@
 											}
 										}
 
-									}, {
+									},
+									{
 										text : '房屋出售',
 										iconCls : 'icon-edit',
 										handler : function() {
 
 										}
 
-									}, {
+									},
+									{
 										text : '房屋续租',
 										iconCls : 'icon-remove',
 										handler : function() {
@@ -224,8 +233,8 @@
 															.dialog({
 																title : '房屋续租'
 															});
-													$('#xuzu_houseInfoform').get(0)
-															.reset();
+													$('#xuzu_houseInfoform')
+															.get(0).reset();
 													$('#xuzuInfodialog')
 															.dialog('open');
 													$('#xuzu_houseInfoform')
@@ -245,8 +254,8 @@
 																		'h.housetype' : arr[0].housetype,
 																		'h.ElectricStart' : arr[0].electricStart,
 																		'h.WaterStart' : arr[0].waterStart,
-					                                                    'h.rentstart':TimeFormater(arr[0].rentstart),
-					                                                    'h.rentend':TimeFormater(arr[0].rentend)
+																		'h.rentstart' : TimeFormater(arr[0].rentstart),
+																		'h.rentend' : TimeFormater(arr[0].rentend)
 																	});
 													//除了
 
@@ -254,11 +263,55 @@
 											}
 										}
 
-									}, {
+									},
+									{
 										text : '房屋退组',
 										iconCls : 'icon-remove',
 										handler : function() {
+											flag = '续租';
+											var arr = $('#houseinfo_data')
+													.datagrid('getSelections');
+											if (arr.length != 1) {
+												$.messager.show({
+													title : '提示信息!',
+													msg : '请选择一行记录处理!'
+												});
+											} else {
+												if (arr[0].status != '已租') {
+													$.messager.show({
+														title : '提示信息',
+														msg : '房间未出租，不能退租'
+													});
+												} else {                                                     
+													$.ajax({
+														type : 'post',
+														url : 'tuizuService.do',
+														cache : false,
+														data : {id:arr[0].id},
+														dataType : 'json',
+														success : function(result) {
+															$('#houseinfo_data').datagrid('reload');
+															if (result.errorCode == 0) {
+																$.messager.alert('提示信息',
+																		result.errorDetail, 'info');
+															} else {
+																$.messager.alert('提示信息',
+																		result.errorDetail, 'error');
+															}
+															//清空所选择的行
+															$('#houseinfo_data').datagrid('unselectAll');
 
+														},
+														error : function(result) {
+															$.meesager.show({
+																title : result.status,
+																msg : result.errorDetail
+															});
+														}
+													});
+													
+												}
+											}
 										}
 
 									} ]
@@ -367,11 +420,11 @@
 							type : 'post',
 							url : 'centerService.do',
 							cache : false,
-							data : $('#xuzuhouseInfoform').serialize(),
+							data : $('#houseInfoform').serialize(),
 							dataType : 'json',
 							success : function(result) {
-								$('#xuzuhouseInfoform').get(0).reset();
-								$('#xuzuInfodialog').dialog('close');
+								$('#houseInfoform').get(0).reset();
+								$('#houseInfodialog').dialog('close');
 								$('#houseinfo_data').datagrid('reload');
 								if (result.errorCode == 0) {
 									$.messager.alert('提示信息',
@@ -398,51 +451,48 @@
 						});
 					}
 				});
-          
-		//续租保存
-		$('#xuzu_commit').click(function(){
-			if ($('#xuzu_houseInfoform').form('validate')) {
-				$.ajax({
-					type : 'post',
-					url : 'xuzuService.do',
-					cache : false,
-					data : $('#xuzu_houseInfoform').serialize(),
-					dataType : 'json',
-					success : function(result) {
-						$('#houseInfoform').get(0).reset();
-						$('#houseInfodialog').dialog('close');
-						$('#houseinfo_data').datagrid('reload');
-						if (result.errorCode == 0) {
-							$.messager.alert('提示信息',
-									result.errorDetail, 'info');
-						} else {
-							$.messager.alert('提示信息',
-									result.errorDetail, 'error');
-						}
-						//清空所选择的行
-						$('#houseinfo_data').datagrid('unselectAll');
 
-					},
-					error : function(result) {
-						$.meesager.show({
-							title : result.status,
-							msg : result.errorDetail
+		//续租保存
+		$('#xuzu_commit').click(
+				function() {
+					if ($('#xuzu_houseInfoform').form('validate')) {
+						$.ajax({
+							type : 'post',
+							url : 'xuzuService.do',
+							cache : false,
+							data : $('#xuzu_houseInfoform').serialize(),
+							dataType : 'json',
+							success : function(result) {
+								$('#houseInfoform').get(0).reset();
+								$('#houseInfodialog').dialog('close');
+								$('#houseinfo_data').datagrid('reload');
+								if (result.errorCode == 0) {
+									$.messager.alert('提示信息',
+											result.errorDetail, 'info');
+								} else {
+									$.messager.alert('提示信息',
+											result.errorDetail, 'error');
+								}
+								//清空所选择的行
+								$('#houseinfo_data').datagrid('unselectAll');
+
+							},
+							error : function(result) {
+								$.meesager.show({
+									title : result.status,
+									msg : result.errorDetail
+								});
+							}
+						});
+					} else {
+						$.messager.show({
+							title : '提示信息!',
+							msg : '数据验证不通过,不能保存!'
 						});
 					}
+
 				});
-			} else {
-				$.messager.show({
-					title : '提示信息!',
-					msg : '数据验证不通过,不能保存!'
-				});
-			}
-			
-			
-			
-			
-		});
-		
-		
+
 		/**
 		 * 关闭窗口方法
 		 */
@@ -464,6 +514,8 @@
 				number : houseNumber,
 				housetype : houseType
 			});
+			$('#houseInfo_search').get(
+					0).reset();
 		});
 
 		$('#nextStep').click(function() {
@@ -478,7 +530,7 @@
 	<div id="lay" class="easyui-layout" style="width: 100%; height: 600px">
 		<div region="north" title="条件搜索" collapsible="true" padding-top=20px
 			padding-bottom=20px style="height: 12%;">
-			
+
 			<!--搜索  -->
 			<form id="houseInfo_search" method="post" action=""
 				style="margin-top: 10px; margin-bottom: 20px">
@@ -503,7 +555,7 @@
 		<div region="center">
 			<table id="houseinfo_data"></table>
 		</div>
-			
+
 		<!--业务表单  -->
 		<div id="houseInfodialog" modal=true draggable=false
 			class="easyui-dialog" closed=true style="width: 55%; height: 70%;">
@@ -580,8 +632,8 @@
 									style="width: 182px;" readonly="readonly" /></td>
 
 							</tr>
-							
-						
+
+
 						</table>
 						<div align="center" style="margin-bottom: 1%; margin-top: 3%">
 							<a id="nextStep" class="easyui-linkbutton" style="width: 90px;">业务办理-></a>
@@ -647,10 +699,10 @@
 
 			</form>
 		</div>
-        <!--续租  -->
+		<!--续租  -->
 		<div id="xuzuInfodialog" modal=true draggable=false
 			class="easyui-dialog" closed=true style="width: 55%; height: 70%;">
-			   <form id="xuzu_houseInfoform"
+			<form id="xuzu_houseInfoform"
 				style="margin-top: 20px; margin-bottom: 20px">
 				<input type="hidden" name="h.id" value="-1" />
 				<div id="dialogtab" class="easyui-tabs" fit=false plain=true
@@ -721,22 +773,23 @@
 									style="width: 182px;" readonly="readonly" /></td>
 
 							</tr>
-								<tr>
+							<tr>
 								<td style="width: 30%;"><label for="h.rentstart"
-									style="padding-left: 6px;">合同起始: </label> <input
-									id="rentstart" name="h.rentstart" style="width: 182px;" readonly="readonly"></td>
+									style="padding-left: 6px;">合同起始: </label> <input id="rentstart"
+									name="h.rentstart" style="width: 182px;" readonly="readonly"></td>
 								<td style="width: 30%;"><label for="h.rentend"
-									style="padding-left: 6px;">合同截止: </label> <input
-									id="rentend" name="h.rentend" style="width: 182px;"></td>
+									style="padding-left: 6px;">合同截止: </label> <input id="rentend"
+									name="h.rentend" style="width: 182px;"></td>
 
 							</tr>
 						</table>
-                        <div align="center" style="margin-bottom: 1%; margin-top: 3%">
-							<a id="xuzu_commit" class="easyui-linkbutton" style="width: 90px;">确定</a>
+						<div align="center" style="margin-bottom: 1%; margin-top: 3%">
+							<a id="xuzu_commit" class="easyui-linkbutton"
+								style="width: 90px;">确定</a>
 						</div>
 
 					</div>
+				</div>
 		</div>
-	</div>
 </body>
 </html>

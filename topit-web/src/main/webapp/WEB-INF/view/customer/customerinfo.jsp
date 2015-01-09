@@ -295,6 +295,8 @@
 				name : customerName,
 				isruzhu : customer_isruzhu
 			});
+			$('#houseInfo_search').get(
+					0).reset();
 		});
 
 	})

@@ -309,6 +309,10 @@
 																						result.errorDetail,
 																						'error');
 																	}
+																	$(
+																	'#chargeDetailinfo_data')
+																	.datagrid(
+																			'unselectAll');
 
 																});
 
@@ -387,6 +391,8 @@
 				housename : houseName,
 				isComplete : isComplete
 			});
+			$('#houseInfo_search').get(
+					0).reset();
 		});
 
 	})

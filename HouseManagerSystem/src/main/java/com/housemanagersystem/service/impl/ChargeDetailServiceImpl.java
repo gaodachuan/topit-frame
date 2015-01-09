@@ -1,5 +1,7 @@
 package com.housemanagersystem.service.impl;
 
+import java.util.Date;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,9 +20,11 @@ public class ChargeDetailServiceImpl extends BaseService<Chargedetail> implement
 			delids[i] = Integer.parseInt(id[i]);
 		}
 		String hql = "UPDATE " + entityClass.getSimpleName()
-				+ " SET isComplete='已完成' where id in(:ids)";
+				+ " SET isComplete='已完成', completeTime=:completeTime where id in(:ids)";
 		int res = getSessionFactory().getCurrentSession().createQuery(hql)
-				.setParameterList("ids", delids).executeUpdate();
+				.setParameter("completeTime", new Date(System.currentTimeMillis()))
+				.setParameterList("ids", delids)		
+				.executeUpdate();
 		return res == id.length;
 	}
 

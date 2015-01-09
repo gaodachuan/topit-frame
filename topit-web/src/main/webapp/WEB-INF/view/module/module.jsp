@@ -250,6 +250,8 @@ html, body {
 								url : 'sysmodule.do?method=getList&'
 										+ $('#module_search').serialize()
 							})
+							$('#module_search').get(
+									0).reset();
 				});
 
 		$('#reset').click(function() {
@@ -271,7 +273,7 @@ html, body {
 
 <body>
 	<div id="lay" class="easyui-layout" style="width: 100%; height: 600px">
-		<div region="north" title="查询条件" collapsible=false padding-top=20px
+		<div region="north" title="查询条件" collapsible=true padding-top=20px
 			padding-bottom=20px style="height: auto;">
 			<form id="module_search" method="post" action=""
 				style="margin-top: 10px; margin-bottom: 20px">

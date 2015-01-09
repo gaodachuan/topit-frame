@@ -349,6 +349,8 @@
 				name : houseName,
 				number : houseNumber
 			});
+			$('#houseInfo_search').get(
+					0).reset();
 		});
 
 	})

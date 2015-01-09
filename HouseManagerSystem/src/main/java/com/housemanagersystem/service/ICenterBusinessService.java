@@ -2,6 +2,7 @@ package com.housemanagersystem.service;
 
 import com.housemanagersystem.domain.Contact;
 import com.housemanagersystem.domain.Houseinfo;
+import com.topit.frame.common.view.servlet.ResultObject;
 
 
 public interface ICenterBusinessService {
@@ -20,4 +21,10 @@ public interface ICenterBusinessService {
       * @return
       */
 	public boolean xuzuService(Houseinfo houseinfo);
+	/**
+	 * 房屋退租
+	 * @param id
+	 * @return
+	 */
+	public ResultObject tuizuService(int id);
 }

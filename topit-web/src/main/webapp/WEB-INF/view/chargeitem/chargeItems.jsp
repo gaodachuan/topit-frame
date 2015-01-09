@@ -231,6 +231,8 @@
 			$('#chargeIntem_data').datagrid('load', {
 				name : ChargeItemName,
 			});
+			$('#houseInfo_search').get(
+					0).reset();
 		});
 
 	})

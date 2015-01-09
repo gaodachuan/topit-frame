@@ -35,8 +35,7 @@ public class CenterBusinessController extends BaseController {
 	public ResultObject centerService(@FormObj("h") Houseinfo houseinfo,
 			@FormObj("con") Contact contact,HttpServletRequest request) throws Exception {
 		String[] ChargeItems=request.getParameterValues("con.chargeitem");
-		boolean flag=centerBusinessServiceImpl.rentHouse(houseinfo, contact,ChargeItems);
-		
+		boolean flag=centerBusinessServiceImpl.rentHouse(houseinfo, contact,ChargeItems);		
 		return creatResult(flag);
 	}
    
@@ -47,4 +46,13 @@ public class CenterBusinessController extends BaseController {
 		boolean flag=centerBusinessServiceImpl.xuzuService(houseinfo);
 		return creatResult(flag);
 	}
+	
+	@RequestRight(name="房屋退租",moduleId=29,actionId=3,descrption="房屋退租")
+	@RequestMapping("/tuizuService")
+	@ResponseBody
+	public ResultObject tuizuService(int id) throws Exception {
+		
+		return centerBusinessServiceImpl.tuizuService(id);
+	}
+	
 }

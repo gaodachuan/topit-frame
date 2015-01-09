@@ -1,9 +1,7 @@
 package com.housemanagersystem.service.impl;
 
 import java.math.BigInteger;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -21,10 +19,12 @@ import com.housemanagersystem.service.IContactService;
 import com.housemanagersystem.service.IHouseInfoService;
 import com.housemanagersystem.util.Constant;
 import com.housemanagersystem.util.DateUtils;
+import com.housemanagersystem.util.ResultFactory;
+import com.topit.frame.common.view.servlet.ResultObject;
 import com.topit.frame.core.entity.dao.base.IIdGenerator;
 
 @Service
-@Transactional(rollbackFor=Exception.class)
+@Transactional(rollbackFor = Exception.class)
 public class CenterBusinessServiceImpl implements ICenterBusinessService {
 	@Resource
 	private IHouseInfoService houseInfoServiceImpl;
@@ -37,19 +37,16 @@ public class CenterBusinessServiceImpl implements ICenterBusinessService {
 	@Resource(name = "idGenerator")
 	private IIdGenerator idGenerator;
 
-	
 	public boolean rentHouse(Houseinfo houseinfo, Contact contact,
 			String[] chargeItems) {
 		boolean flag = false;
-		if(contact.getContactstart().after(contact.getContactend()))
-		{	
-			StringBuffer items=new StringBuffer("");
-			for(String s:chargeItems)
-			{
-				items.append(s+",");
+		if (contact.getContactstart().before(contact.getContactend())) {
+			StringBuffer items = new StringBuffer("");
+			for (String s : chargeItems) {
+				items.append(s + ",");
 			}
-			String res=items.toString();
-			res=res.substring(0, res.length()-1);
+			String res = items.toString();
+			res = res.substring(0, res.length() - 1);
 			contact.setChargeitem(res);
 			// 完整合同和房源信息
 			CompleteHouseInfo(houseinfo, contact);
@@ -125,27 +122,66 @@ public class CenterBusinessServiceImpl implements ICenterBusinessService {
 		contact.setHouseMonthpri(houseinfo.getMonthrentpri());
 
 	}
+
 	public boolean xuzuService(Houseinfo houseinfo) {
-		boolean flag=false;
+		boolean flag = false;
 		try {
-			Houseinfo presist_house=houseInfoServiceImpl.findById(houseinfo.getId());
-			if(houseinfo.getRentend().after(presist_house.getRentend()))
-			{		
+			Houseinfo presist_house = houseInfoServiceImpl.findById(houseinfo
+					.getId());
+			if (houseinfo.getRentend().after(presist_house.getRentend())) {
 				presist_house.setRentend(houseinfo.getRentend());
-				presist_house.setDays(DateUtils.getDiffDay(houseinfo.getRentstart(), houseinfo.getRentend()));
-				Contact presist_contact=contactServiceImpl.
-						find("houseid=:houseid and housename=:housename and isVariable=:isVariable",
-								new String[]{"houseid","housename","isVariable"}, 
-								new Object[]{houseinfo.getNumber(),houseinfo.getName(),"有效"}).get(0);
+				presist_house.setDays(DateUtils.getDiffDay(
+						houseinfo.getRentstart(), houseinfo.getRentend()));
+				Contact presist_contact = contactServiceImpl
+						.find("houseid=:houseid and housename=:housename and isVariable=:isVariable",
+								new String[] { "houseid", "housename",
+										"isVariable" },
+								new Object[] { houseinfo.getNumber(),
+										houseinfo.getName(), "有效" }).get(0);
 				presist_contact.setContactend(houseinfo.getRentend());
-				contactServiceImpl.update(presist_contact);
-				houseInfoServiceImpl.update(presist_house);
-				
-				flag=true;
+				contactServiceImpl.updateEntity(presist_contact);
+				houseInfoServiceImpl.updateEntity(presist_house);
+
+				flag = true;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return flag;
 	}
+
+	public ResultObject tuizuService(int id) {
+		
+		try {
+			Houseinfo presist_house = houseInfoServiceImpl.findById(id);
+			List<Chargedetail> qianfeiItems=chargeDetailServiceImpl
+					.find("houseid=:houseid and housename=:housename and isComplete='未完成'",
+							new String[] { "houseid", "housename" },
+							new Object[] { presist_house.getNumber(),
+									presist_house.getName() });
+			if(qianfeiItems.size()!=0)//还有欠费，不能退租
+			{
+				return ResultFactory.createResult(1, "用户还有欠费，请结算缴费！");
+			}else{
+				presist_house.setStatus("空闲");
+				Contact presist_contact = contactServiceImpl
+						.find("houseid=:houseid and housename=:housename and isVariable=:isVariable",
+								new String[] { "houseid", "housename",
+										"isVariable" },
+								new Object[] { presist_house.getNumber(),
+								presist_house.getName(), "有效" }).get(0);
+				presist_contact.setIsVariable("无效");
+				contactServiceImpl.updateEntity(presist_contact);
+				houseInfoServiceImpl.updateEntity(presist_house);
+				return ResultFactory.createResult(0, "退租成功");
+			}		
+		} catch (Exception e) {
+			e.printStackTrace();
+			 return ResultFactory.createResult(1, "操作失败！");
+		}
+		
+	}
+	
+	
 }
+

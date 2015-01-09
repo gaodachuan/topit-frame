@@ -116,6 +116,11 @@
 								title : '附加资费',
 								width : 150,
 								align : 'center',
+							},  {
+								field : 'isVariable',
+								title : '是否有效',
+								width : 150,
+								align : 'center',
 							}, {
 								field : 'servername',
 								title : '办理人员',
@@ -143,7 +148,7 @@
 
 									},
 									{
-										text : '编辑客户信息',
+										text : '新建合同',
 										iconCls : 'icon-edit',
 										handler : function() {
 											$.messager
@@ -213,7 +218,7 @@
 
 									},
 									{
-										text : '删除模块',
+										text : '删除合同',
 										iconCls : 'icon-remove',
 										handler : function() {
 											flag = 'del';
@@ -429,6 +434,8 @@
 				houseid : houseId,
 				housename:houseName
 			});
+			$('#houseInfo_search').get(
+					0).reset();
 		});
 
 	})
